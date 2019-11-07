@@ -91,6 +91,7 @@ try {
 ### Pagination
 
 ```
+<?php
 /**
  * Each of the API Instances supports the next methods:
  *
@@ -110,5 +111,6 @@ do {
 
 } while ($machinesInstance->paginationHasMore());
 
+?>
 ```
 
