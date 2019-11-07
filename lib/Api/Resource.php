@@ -26,7 +26,7 @@ class Resource
     public function __construct()
     {
         if (!self::$requestCreator) {
-            self::setRequestCreator(new Request());
+            self::setRequestCreator(new RequestCreator());
         }
     }
 

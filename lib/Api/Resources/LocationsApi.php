@@ -48,225 +48,283 @@ class LocationsApi extends Resource
      */
     protected $headerSelector;
 
-    /**
-     * @param ClientInterface $client
-     * @param Configuration   $config
-     * @param HeaderSelector  $selector
-     */
-    public function __construct(
-        ClientInterface $client = null,
-        Configuration $config = null,
-        HeaderSelector $selector = null
-    ) {
-        parent::__construct();
-        $this->client = $client ?: new Client();
-        $this->config = $config ?: new Configuration();
-        $this->headerSelector = $selector ?: new HeaderSelector();
-    }
+    private $pagination = null;
+    private $paginationCurrentPage = 1;
+    private $paginationLimit = 50;
 
-    /**
-     * @return Configuration
-     */
-    public function getConfig()
+    public function paginationSetLimit($limit)
     {
-        return $this->config;
-    }
+        $this->paginationLimit = $limit;
+}
 
-    /**
-     * Operation locationsGet
-     *
-     * Returns list of locations available for new machines.
-     *
-     *
-     * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
-     * @return \Fozzy\WinVPS\Api\Models\LocationDefinition[]
-     */
-    public function locationsGet()
-    {
+public function paginationSetPage($num)
+{
+$this->paginationCurrentPage = $num;
+}
+
+public function paginationNext()
+{
+$this->paginationCurrentPage = $this->paginationCurrentPage + 1;
+
+if (!$this->pagination || $this->paginationCurrentPage > $this->pagination->pages) {
+$this->paginationCurrentPage = 1;
+return false;
+}
+}
+
+public function paginationPrev()
+{
+$this->paginationCurrentPage = $this->paginationCurrentPage - 1;
+
+if ($this->paginationCurrentPage < 1) {
+$this->paginationCurrentPage = 1;
+return false;
+}
+}
+
+public function paginationGetTotal()
+{
+return $this->pagination ? $this->pagination->total : null;
+}
+public function paginationGetPage()
+{
+return $this->pagination ? $this->pagination->page : null;
+}
+public function paginationGetPages()
+{
+return $this->pagination ? $this->pagination->pages : null;
+}
+public function paginationHasMore()
+{
+return $this->pagination ? $this->pagination->pages > $this->pagination->page : null;
+}
+
+/**
+* @param ClientInterface $client
+* @param Configuration   $config
+* @param HeaderSelector  $selector
+*/
+public function __construct(
+ClientInterface $client = null,
+Configuration $config = null,
+HeaderSelector $selector = null
+) {
+parent::__construct();
+$this->client = $client ?: new Client();
+$this->config = $config ?: new Configuration();
+$this->headerSelector = $selector ?: new HeaderSelector();
+}
+
+/**
+* @return Configuration
+*/
+public function getConfig()
+{
+return $this->config;
+}
+
+        /**
+        * Operation locationsGet
+            *
+            * Returns list of locations available for new machines.
+        *
+        *
+        * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
+        * @throws \InvalidArgumentException
+        * @return \Fozzy\WinVPS\Api\Models\LocationDefinition[]
+        */
+        public function locationsGet()
+        {
         list($response) = $this->locationsGetWithHttpInfo();
-        return $response;
-    }
+            return $response;
+        }
 
-    /**
-     * Operation locationsGetWithHttpInfo
-     *
-     * Returns list of locations available for new machines.
-     *
-     *
-     * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
-     * @return array of \Fozzy\WinVPS\Api\Models\LocationDefinition[], HTTP status code, HTTP response headers (array of strings)
-     */
-    public function locationsGetWithHttpInfo()
-    {
+        /**
+        * Operation locationsGetWithHttpInfo
+            *
+            * Returns list of locations available for new machines.
+        *
+        *
+        * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
+        * @throws \InvalidArgumentException
+        * @return array of \Fozzy\WinVPS\Api\Models\LocationDefinition[], HTTP status code, HTTP response headers (array of strings)
+        */
+        public function locationsGetWithHttpInfo()
+        {
         $returnType = '\Fozzy\WinVPS\Api\Models\LocationDefinition[]';
         $request = $this->locationsGetRequest();
 
         try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $request,
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
+        $options = $this->createHttpClientOption();
+        try {
+        $response = $this->client->send($request, $options);
+        } catch (RequestException $e) {
+        throw new ApiException(
+        "[{$e->getCode()}] {$e->getMessage()}",
+        $e->getCode(),
+        $request,
+        $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+        $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
+        );
+        }
 
-            $statusCode = $response->getStatusCode();
+        $statusCode = $response->getStatusCode();
 
-            if ($statusCode < 200 || $statusCode > 299) {
-                $url = '';
+        if ($statusCode < 200 || $statusCode > 299) {
+        $url = '';
 
-                if (method_exists($request, 'getUri')) {
-                    $url = $request->getUri();
-                }
+        if (method_exists($request, 'getUri')) {
+        $url = $request->getUri();
+        }
 
-                if (method_exists($request, 'getUrl')) {
-                    $url = $request->getUrl();
-                }
+        if (method_exists($request, 'getUrl')) {
+        $url = $request->getUrl();
+        }
 
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $url
-                    ),
-                    $statusCode,
-                    $request,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
+        throw new ApiException(
+        sprintf(
+        '[%d] Error connecting to the API (%s)',
+        $statusCode,
+        $url
+        ),
+        $statusCode,
+        $request,
+        $response->getHeaders(),
+        $response->getBody()
+        );
+        }
 
             $responseBody = $response->getBody();
             if ($returnType === '\SplFileObject') {
-                $content = $responseBody; //stream goes to serializer
+            $content = $responseBody; //stream goes to serializer
             } else {
-                $content = $responseBody->getContents();
-                if (!in_array($returnType, ['string','integer','bool'])) {
-                    $content = json_decode($content);
-                }
+            $content = $responseBody->getContents();
+            if (!in_array($returnType, ['string','integer','bool'])) {
+            $content = json_decode($content);
+            }
+            }
+
+            if (!empty($content) && is_object($content) && property_exists($content, 'pagination')) {
+            $this->pagination = $content->pagination;
             }
 
             return [
-                ObjectSerializer::deserialize($content, $returnType, []),
-                $response->getStatusCode(),
-                $response->getHeaders()
+            ObjectSerializer::deserialize($content, $returnType, []),
+            $response->getStatusCode(),
+            $response->getHeaders()
             ];
 
         } catch (ApiException $e) {
 
-            $body = $e->getResponseBody();
-            $data = ObjectSerializer::deserialize(
-                $body,
-                '\Fozzy\WinVPS\Api\Models\ErrorResponse',
-                $e->getResponseHeaders()
-            );
-            try {
-                $content = $body->getContents();
-                if ($content) {
-                    $content = json_decode($content, true);
-                }
-                if (!empty($content) && is_array($content) && !empty($content['error'])) {
-                    $data->setError($content['error']);
-                }
-            } catch (\Exception $e) {
-            }
-            $e->setResponseObject($data);
-
-            throw $e;
+        $body = $e->getResponseBody();
+        $data = ObjectSerializer::deserialize(
+        $body,
+        '\Fozzy\WinVPS\Api\Models\ErrorResponse',
+        $e->getResponseHeaders()
+        );
+        try {
+        $content = $body->getContents();
+        if ($content) {
+        $content = json_decode($content, true);
         }
-    }
+        if (!empty($content) && is_array($content) && !empty($content['error'])) {
+        $data->setError($content['error']);
+        }
+        } catch (\Exception $e) {
+        }
+        $e->setResponseObject($data);
 
-    /**
-     * Operation locationsGetAsync
-     *
-     * Returns list of locations available for new machines.
-     *
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function locationsGetAsync()
-    {
+        throw $e;
+        }
+        }
+
+        /**
+        * Operation locationsGetAsync
+        *
+        * Returns list of locations available for new machines.
+        *
+        *
+        * @throws \InvalidArgumentException
+        * @return \GuzzleHttp\Promise\PromiseInterface
+        */
+        public function locationsGetAsync()
+        {
         return $this->locationsGetAsyncWithHttpInfo()
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
+        ->then(
+        function ($response) {
+        return $response[0];
+        }
+        );
+        }
 
-    /**
-     * Operation locationsGetAsyncWithHttpInfo
-     *
-     * Returns list of locations available for new machines.
-     *
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function locationsGetAsyncWithHttpInfo()
-    {
+        /**
+        * Operation locationsGetAsyncWithHttpInfo
+        *
+        * Returns list of locations available for new machines.
+        *
+        *
+        * @throws \InvalidArgumentException
+        * @return \GuzzleHttp\Promise\PromiseInterface
+        */
+        public function locationsGetAsyncWithHttpInfo()
+        {
         $returnType = '\Fozzy\WinVPS\Api\Models\LocationDefinition[]';
         $request = $this->locationsGetRequest();
 
         return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
+        ->sendAsync($request, $this->createHttpClientOption())
+        ->then(
+        function ($response) use ($returnType) {
+            $responseBody = $response->getBody();
+            if ($returnType === '\SplFileObject') {
+            $content = $responseBody; //stream goes to serializer
+            } else {
+            $content = $responseBody->getContents();
+            if ($returnType !== 'string') {
+            $content = json_decode($content);
+            }
+            }
 
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $request,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
+            return [
+            ObjectSerializer::deserialize($content, $returnType, []),
+            $response->getStatusCode(),
+            $response->getHeaders()
+            ];
+        },
+        function ($exception) {
+        $response = $exception->getResponse();
+        $statusCode = $response->getStatusCode();
+        throw new ApiException(
+        sprintf(
+        '[%d] Error connecting to the API (%s)',
+        $statusCode,
+        $exception->getRequest()->getUri()
+        ),
+        $statusCode,
+        $request,
+        $response->getHeaders(),
+        $response->getBody()
+        );
+        }
+        );
+        }
 
-    /**
-     * Create request for operation 'locationsGet'
-     *
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Psr7\Request
-     */
-    protected function locationsGetRequest()
-    {
+        /**
+        * Create request for operation 'locationsGet'
+        *
+        *
+        * @throws \InvalidArgumentException
+        * @return \GuzzleHttp\Psr7\Request
+        */
+        protected function locationsGetRequest()
+        {
 
         $resourcePath = '/locations';
         $formParams = [];
-        $queryParams = [];
+        $queryParams = [
+        'page' => $this->paginationCurrentPage,
+        'limit' => $this->paginationLimit,
+        ];
         $headerParams = [];
         $httpBody = '';
         $multipart = false;
@@ -277,87 +335,87 @@ class LocationsApi extends Resource
         $_tempBody = null;
 
         if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['application/json']
-            );
+        $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['application/json']
+        );
         } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['application/json'],
-                []
-            );
+        $headers = $this->headerSelector->selectHeaders(
+        ['application/json'],
+        []
+        );
         }
 
         // for model (json/xml)
         if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-            // \stdClass has no __toString(), so we should encode it manually
-            if ($httpBody instanceof \stdClass && $headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($httpBody);
-            }
+        // $_tempBody is the method argument, if present
+        $httpBody = $_tempBody;
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof \stdClass && $headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($httpBody);
+        }
         } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
+        if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+        $multipartContents[] = [
+        'name' => $formParamName,
+        'contents' => $formParamValue
+        ];
+        }
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+
+        } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+
+        } else {
+        // for HTTP post (form)
+        $httpBody = \GuzzleHttp\Psr7\build_query($formParams);
+        }
+        }
+
+                // this endpoint requires API key authentication
+                $apiKey = $this->config->getApiKeyWithPrefix('Api-Key');
+                if ($apiKey !== null) {
+                $headers['Api-Key'] = $apiKey;
                 }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = \GuzzleHttp\Psr7\build_query($formParams);
-            }
-        }
-
-        // this endpoint requires API key authentication
-        $apiKey = $this->config->getApiKeyWithPrefix('Api-Key');
-        if ($apiKey !== null) {
-            $headers['Api-Key'] = $apiKey;
-        }
 
         $defaultHeaders = [];
         if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
         }
 
         $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
+        $defaultHeaders,
+        $headerParams,
+        $headers
         );
 
         $query = \GuzzleHttp\Psr7\build_query($queryParams);
         return $this->createRequest(
-            'GET',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
+        'GET',
+        $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+        $headers,
+        $httpBody
         );
-    }
-
-    /**
-     * Create http client option
-     *
-     * @throws \RuntimeException on file opening failure
-     * @return array of http client options
-     */
-    protected function createHttpClientOption()
-    {
-        $options = [];
-        if ($this->config->getDebug()) {
-            $options[RequestOptions::DEBUG] = fopen($this->config->getDebugFile(), 'a');
-            if (!$options[RequestOptions::DEBUG]) {
-                throw new \RuntimeException('Failed to open the debug file: ' . $this->config->getDebugFile());
-            }
         }
 
-        return $options;
-    }
+/**
+* Create http client option
+*
+* @throws \RuntimeException on file opening failure
+* @return array of http client options
+*/
+protected function createHttpClientOption()
+{
+$options = [];
+if ($this->config->getDebug()) {
+$options[RequestOptions::DEBUG] = fopen($this->config->getDebugFile(), 'a');
+if (!$options[RequestOptions::DEBUG]) {
+throw new \RuntimeException('Failed to open the debug file: ' . $this->config->getDebugFile());
+}
+}
+
+return $options;
+}
 }

@@ -48,225 +48,283 @@ class MachinesApi extends Resource
      */
     protected $headerSelector;
 
-    /**
-     * @param ClientInterface $client
-     * @param Configuration   $config
-     * @param HeaderSelector  $selector
-     */
-    public function __construct(
-        ClientInterface $client = null,
-        Configuration $config = null,
-        HeaderSelector $selector = null
-    ) {
-        parent::__construct();
-        $this->client = $client ?: new Client();
-        $this->config = $config ?: new Configuration();
-        $this->headerSelector = $selector ?: new HeaderSelector();
-    }
+    private $pagination = null;
+    private $paginationCurrentPage = 1;
+    private $paginationLimit = 50;
 
-    /**
-     * @return Configuration
-     */
-    public function getConfig()
+    public function paginationSetLimit($limit)
     {
-        return $this->config;
-    }
+        $this->paginationLimit = $limit;
+}
 
-    /**
-     * Operation machinesGet
-     *
-     * Returns machines list in short form.
-     *
-     *
-     * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
-     * @return \Fozzy\WinVPS\Api\Models\InlineResponse200[]
-     */
-    public function machinesGet()
-    {
+public function paginationSetPage($num)
+{
+$this->paginationCurrentPage = $num;
+}
+
+public function paginationNext()
+{
+$this->paginationCurrentPage = $this->paginationCurrentPage + 1;
+
+if (!$this->pagination || $this->paginationCurrentPage > $this->pagination->pages) {
+$this->paginationCurrentPage = 1;
+return false;
+}
+}
+
+public function paginationPrev()
+{
+$this->paginationCurrentPage = $this->paginationCurrentPage - 1;
+
+if ($this->paginationCurrentPage < 1) {
+$this->paginationCurrentPage = 1;
+return false;
+}
+}
+
+public function paginationGetTotal()
+{
+return $this->pagination ? $this->pagination->total : null;
+}
+public function paginationGetPage()
+{
+return $this->pagination ? $this->pagination->page : null;
+}
+public function paginationGetPages()
+{
+return $this->pagination ? $this->pagination->pages : null;
+}
+public function paginationHasMore()
+{
+return $this->pagination ? $this->pagination->pages > $this->pagination->page : null;
+}
+
+/**
+* @param ClientInterface $client
+* @param Configuration   $config
+* @param HeaderSelector  $selector
+*/
+public function __construct(
+ClientInterface $client = null,
+Configuration $config = null,
+HeaderSelector $selector = null
+) {
+parent::__construct();
+$this->client = $client ?: new Client();
+$this->config = $config ?: new Configuration();
+$this->headerSelector = $selector ?: new HeaderSelector();
+}
+
+/**
+* @return Configuration
+*/
+public function getConfig()
+{
+return $this->config;
+}
+
+        /**
+        * Operation machinesGet
+            *
+            * Returns machines list in short form.
+        *
+        *
+        * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
+        * @throws \InvalidArgumentException
+        * @return \Fozzy\WinVPS\Api\Models\InlineResponse200[]
+        */
+        public function machinesGet()
+        {
         list($response) = $this->machinesGetWithHttpInfo();
-        return $response;
-    }
+            return $response;
+        }
 
-    /**
-     * Operation machinesGetWithHttpInfo
-     *
-     * Returns machines list in short form.
-     *
-     *
-     * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
-     * @return array of \Fozzy\WinVPS\Api\Models\InlineResponse200[], HTTP status code, HTTP response headers (array of strings)
-     */
-    public function machinesGetWithHttpInfo()
-    {
+        /**
+        * Operation machinesGetWithHttpInfo
+            *
+            * Returns machines list in short form.
+        *
+        *
+        * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
+        * @throws \InvalidArgumentException
+        * @return array of \Fozzy\WinVPS\Api\Models\InlineResponse200[], HTTP status code, HTTP response headers (array of strings)
+        */
+        public function machinesGetWithHttpInfo()
+        {
         $returnType = '\Fozzy\WinVPS\Api\Models\InlineResponse200[]';
         $request = $this->machinesGetRequest();
 
         try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $request,
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
+        $options = $this->createHttpClientOption();
+        try {
+        $response = $this->client->send($request, $options);
+        } catch (RequestException $e) {
+        throw new ApiException(
+        "[{$e->getCode()}] {$e->getMessage()}",
+        $e->getCode(),
+        $request,
+        $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+        $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
+        );
+        }
 
-            $statusCode = $response->getStatusCode();
+        $statusCode = $response->getStatusCode();
 
-            if ($statusCode < 200 || $statusCode > 299) {
-                $url = '';
+        if ($statusCode < 200 || $statusCode > 299) {
+        $url = '';
 
-                if (method_exists($request, 'getUri')) {
-                    $url = $request->getUri();
-                }
+        if (method_exists($request, 'getUri')) {
+        $url = $request->getUri();
+        }
 
-                if (method_exists($request, 'getUrl')) {
-                    $url = $request->getUrl();
-                }
+        if (method_exists($request, 'getUrl')) {
+        $url = $request->getUrl();
+        }
 
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $url
-                    ),
-                    $statusCode,
-                    $request,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
+        throw new ApiException(
+        sprintf(
+        '[%d] Error connecting to the API (%s)',
+        $statusCode,
+        $url
+        ),
+        $statusCode,
+        $request,
+        $response->getHeaders(),
+        $response->getBody()
+        );
+        }
 
             $responseBody = $response->getBody();
             if ($returnType === '\SplFileObject') {
-                $content = $responseBody; //stream goes to serializer
+            $content = $responseBody; //stream goes to serializer
             } else {
-                $content = $responseBody->getContents();
-                if (!in_array($returnType, ['string','integer','bool'])) {
-                    $content = json_decode($content);
-                }
+            $content = $responseBody->getContents();
+            if (!in_array($returnType, ['string','integer','bool'])) {
+            $content = json_decode($content);
+            }
+            }
+
+            if (!empty($content) && is_object($content) && property_exists($content, 'pagination')) {
+            $this->pagination = $content->pagination;
             }
 
             return [
-                ObjectSerializer::deserialize($content, $returnType, []),
-                $response->getStatusCode(),
-                $response->getHeaders()
+            ObjectSerializer::deserialize($content, $returnType, []),
+            $response->getStatusCode(),
+            $response->getHeaders()
             ];
 
         } catch (ApiException $e) {
 
-            $body = $e->getResponseBody();
-            $data = ObjectSerializer::deserialize(
-                $body,
-                '\Fozzy\WinVPS\Api\Models\ErrorResponse',
-                $e->getResponseHeaders()
-            );
-            try {
-                $content = $body->getContents();
-                if ($content) {
-                    $content = json_decode($content, true);
-                }
-                if (!empty($content) && is_array($content) && !empty($content['error'])) {
-                    $data->setError($content['error']);
-                }
-            } catch (\Exception $e) {
-            }
-            $e->setResponseObject($data);
-
-            throw $e;
+        $body = $e->getResponseBody();
+        $data = ObjectSerializer::deserialize(
+        $body,
+        '\Fozzy\WinVPS\Api\Models\ErrorResponse',
+        $e->getResponseHeaders()
+        );
+        try {
+        $content = $body->getContents();
+        if ($content) {
+        $content = json_decode($content, true);
         }
-    }
+        if (!empty($content) && is_array($content) && !empty($content['error'])) {
+        $data->setError($content['error']);
+        }
+        } catch (\Exception $e) {
+        }
+        $e->setResponseObject($data);
 
-    /**
-     * Operation machinesGetAsync
-     *
-     * Returns machines list in short form.
-     *
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function machinesGetAsync()
-    {
+        throw $e;
+        }
+        }
+
+        /**
+        * Operation machinesGetAsync
+        *
+        * Returns machines list in short form.
+        *
+        *
+        * @throws \InvalidArgumentException
+        * @return \GuzzleHttp\Promise\PromiseInterface
+        */
+        public function machinesGetAsync()
+        {
         return $this->machinesGetAsyncWithHttpInfo()
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
+        ->then(
+        function ($response) {
+        return $response[0];
+        }
+        );
+        }
 
-    /**
-     * Operation machinesGetAsyncWithHttpInfo
-     *
-     * Returns machines list in short form.
-     *
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function machinesGetAsyncWithHttpInfo()
-    {
+        /**
+        * Operation machinesGetAsyncWithHttpInfo
+        *
+        * Returns machines list in short form.
+        *
+        *
+        * @throws \InvalidArgumentException
+        * @return \GuzzleHttp\Promise\PromiseInterface
+        */
+        public function machinesGetAsyncWithHttpInfo()
+        {
         $returnType = '\Fozzy\WinVPS\Api\Models\InlineResponse200[]';
         $request = $this->machinesGetRequest();
 
         return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
+        ->sendAsync($request, $this->createHttpClientOption())
+        ->then(
+        function ($response) use ($returnType) {
+            $responseBody = $response->getBody();
+            if ($returnType === '\SplFileObject') {
+            $content = $responseBody; //stream goes to serializer
+            } else {
+            $content = $responseBody->getContents();
+            if ($returnType !== 'string') {
+            $content = json_decode($content);
+            }
+            }
 
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $request,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
+            return [
+            ObjectSerializer::deserialize($content, $returnType, []),
+            $response->getStatusCode(),
+            $response->getHeaders()
+            ];
+        },
+        function ($exception) {
+        $response = $exception->getResponse();
+        $statusCode = $response->getStatusCode();
+        throw new ApiException(
+        sprintf(
+        '[%d] Error connecting to the API (%s)',
+        $statusCode,
+        $exception->getRequest()->getUri()
+        ),
+        $statusCode,
+        $request,
+        $response->getHeaders(),
+        $response->getBody()
+        );
+        }
+        );
+        }
 
-    /**
-     * Create request for operation 'machinesGet'
-     *
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Psr7\Request
-     */
-    protected function machinesGetRequest()
-    {
+        /**
+        * Create request for operation 'machinesGet'
+        *
+        *
+        * @throws \InvalidArgumentException
+        * @return \GuzzleHttp\Psr7\Request
+        */
+        protected function machinesGetRequest()
+        {
 
         $resourcePath = '/machines';
         $formParams = [];
-        $queryParams = [];
+        $queryParams = [
+        'page' => $this->paginationCurrentPage,
+        'limit' => $this->paginationLimit,
+        ];
         $headerParams = [];
         $httpBody = '';
         $multipart = false;
@@ -277,2636 +335,2699 @@ class MachinesApi extends Resource
         $_tempBody = null;
 
         if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['application/json']
-            );
+        $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['application/json']
+        );
         } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['application/json'],
-                []
-            );
+        $headers = $this->headerSelector->selectHeaders(
+        ['application/json'],
+        []
+        );
         }
 
         // for model (json/xml)
         if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-            // \stdClass has no __toString(), so we should encode it manually
-            if ($httpBody instanceof \stdClass && $headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($httpBody);
-            }
+        // $_tempBody is the method argument, if present
+        $httpBody = $_tempBody;
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof \stdClass && $headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($httpBody);
+        }
         } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
+        if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+        $multipartContents[] = [
+        'name' => $formParamName,
+        'contents' => $formParamValue
+        ];
+        }
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+
+        } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+
+        } else {
+        // for HTTP post (form)
+        $httpBody = \GuzzleHttp\Psr7\build_query($formParams);
+        }
+        }
+
+                // this endpoint requires API key authentication
+                $apiKey = $this->config->getApiKeyWithPrefix('Api-Key');
+                if ($apiKey !== null) {
+                $headers['Api-Key'] = $apiKey;
                 }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = \GuzzleHttp\Psr7\build_query($formParams);
-            }
-        }
-
-        // this endpoint requires API key authentication
-        $apiKey = $this->config->getApiKeyWithPrefix('Api-Key');
-        if ($apiKey !== null) {
-            $headers['Api-Key'] = $apiKey;
-        }
 
         $defaultHeaders = [];
         if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
         }
 
         $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
+        $defaultHeaders,
+        $headerParams,
+        $headers
         );
 
         $query = \GuzzleHttp\Psr7\build_query($queryParams);
         return $this->createRequest(
-            'GET',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
+        'GET',
+        $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+        $headers,
+        $httpBody
         );
-    }
+        }
 
-    /**
-     * Operation machinesNameAddIpPost
-     *
-     * Send unary machine command
-     *
-     * @param  string $name name (required)
-     *
-     * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
-     * @return \Fozzy\WinVPS\Api\Models\InlineResponse2003
-     */
-    public function machinesNameAddIpPost($name)
-    {
+        /**
+        * Operation machinesNameAddIpPost
+            *
+            * Send unary machine command
+        *
+            * @param  string $name name (required)
+        *
+        * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
+        * @throws \InvalidArgumentException
+        * @return \Fozzy\WinVPS\Api\Models\InlineResponse2003
+        */
+        public function machinesNameAddIpPost($name)
+        {
         list($response) = $this->machinesNameAddIpPostWithHttpInfo($name);
-        return $response;
-    }
+            return $response;
+        }
 
-    /**
-     * Operation machinesNameAddIpPostWithHttpInfo
-     *
-     * Send unary machine command
-     *
-     * @param  string $name (required)
-     *
-     * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
-     * @return array of \Fozzy\WinVPS\Api\Models\InlineResponse2003, HTTP status code, HTTP response headers (array of strings)
-     */
-    public function machinesNameAddIpPostWithHttpInfo($name)
-    {
+        /**
+        * Operation machinesNameAddIpPostWithHttpInfo
+            *
+            * Send unary machine command
+        *
+            * @param  string $name (required)
+        *
+        * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
+        * @throws \InvalidArgumentException
+        * @return array of \Fozzy\WinVPS\Api\Models\InlineResponse2003, HTTP status code, HTTP response headers (array of strings)
+        */
+        public function machinesNameAddIpPostWithHttpInfo($name)
+        {
         $returnType = '\Fozzy\WinVPS\Api\Models\InlineResponse2003';
         $request = $this->machinesNameAddIpPostRequest($name);
 
         try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $request,
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
+        $options = $this->createHttpClientOption();
+        try {
+        $response = $this->client->send($request, $options);
+        } catch (RequestException $e) {
+        throw new ApiException(
+        "[{$e->getCode()}] {$e->getMessage()}",
+        $e->getCode(),
+        $request,
+        $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+        $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
+        );
+        }
 
-            $statusCode = $response->getStatusCode();
+        $statusCode = $response->getStatusCode();
 
-            if ($statusCode < 200 || $statusCode > 299) {
-                $url = '';
+        if ($statusCode < 200 || $statusCode > 299) {
+        $url = '';
 
-                if (method_exists($request, 'getUri')) {
-                    $url = $request->getUri();
-                }
+        if (method_exists($request, 'getUri')) {
+        $url = $request->getUri();
+        }
 
-                if (method_exists($request, 'getUrl')) {
-                    $url = $request->getUrl();
-                }
+        if (method_exists($request, 'getUrl')) {
+        $url = $request->getUrl();
+        }
 
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $url
-                    ),
-                    $statusCode,
-                    $request,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
+        throw new ApiException(
+        sprintf(
+        '[%d] Error connecting to the API (%s)',
+        $statusCode,
+        $url
+        ),
+        $statusCode,
+        $request,
+        $response->getHeaders(),
+        $response->getBody()
+        );
+        }
 
             $responseBody = $response->getBody();
             if ($returnType === '\SplFileObject') {
-                $content = $responseBody; //stream goes to serializer
+            $content = $responseBody; //stream goes to serializer
             } else {
-                $content = $responseBody->getContents();
-                if (!in_array($returnType, ['string','integer','bool'])) {
-                    $content = json_decode($content);
-                }
+            $content = $responseBody->getContents();
+            if (!in_array($returnType, ['string','integer','bool'])) {
+            $content = json_decode($content);
+            }
+            }
+
+            if (!empty($content) && is_object($content) && property_exists($content, 'pagination')) {
+            $this->pagination = $content->pagination;
             }
 
             return [
-                ObjectSerializer::deserialize($content, $returnType, []),
-                $response->getStatusCode(),
-                $response->getHeaders()
+            ObjectSerializer::deserialize($content, $returnType, []),
+            $response->getStatusCode(),
+            $response->getHeaders()
             ];
 
         } catch (ApiException $e) {
 
-            $body = $e->getResponseBody();
-            $data = ObjectSerializer::deserialize(
-                $body,
-                '\Fozzy\WinVPS\Api\Models\ErrorResponse',
-                $e->getResponseHeaders()
-            );
-            try {
-                $content = $body->getContents();
-                if ($content) {
-                    $content = json_decode($content, true);
-                }
-                if (!empty($content) && is_array($content) && !empty($content['error'])) {
-                    $data->setError($content['error']);
-                }
-            } catch (\Exception $e) {
-            }
-            $e->setResponseObject($data);
-
-            throw $e;
+        $body = $e->getResponseBody();
+        $data = ObjectSerializer::deserialize(
+        $body,
+        '\Fozzy\WinVPS\Api\Models\ErrorResponse',
+        $e->getResponseHeaders()
+        );
+        try {
+        $content = $body->getContents();
+        if ($content) {
+        $content = json_decode($content, true);
         }
-    }
+        if (!empty($content) && is_array($content) && !empty($content['error'])) {
+        $data->setError($content['error']);
+        }
+        } catch (\Exception $e) {
+        }
+        $e->setResponseObject($data);
 
-    /**
-     * Operation machinesNameAddIpPostAsync
-     *
-     * Send unary machine command
-     *
-     * @param  string $name (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function machinesNameAddIpPostAsync($name)
-    {
+        throw $e;
+        }
+        }
+
+        /**
+        * Operation machinesNameAddIpPostAsync
+        *
+        * Send unary machine command
+        *
+            * @param  string $name (required)
+        *
+        * @throws \InvalidArgumentException
+        * @return \GuzzleHttp\Promise\PromiseInterface
+        */
+        public function machinesNameAddIpPostAsync($name)
+        {
         return $this->machinesNameAddIpPostAsyncWithHttpInfo($name)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
+        ->then(
+        function ($response) {
+        return $response[0];
+        }
+        );
+        }
 
-    /**
-     * Operation machinesNameAddIpPostAsyncWithHttpInfo
-     *
-     * Send unary machine command
-     *
-     * @param  string $name (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function machinesNameAddIpPostAsyncWithHttpInfo($name)
-    {
+        /**
+        * Operation machinesNameAddIpPostAsyncWithHttpInfo
+        *
+        * Send unary machine command
+        *
+            * @param  string $name (required)
+        *
+        * @throws \InvalidArgumentException
+        * @return \GuzzleHttp\Promise\PromiseInterface
+        */
+        public function machinesNameAddIpPostAsyncWithHttpInfo($name)
+        {
         $returnType = '\Fozzy\WinVPS\Api\Models\InlineResponse2003';
         $request = $this->machinesNameAddIpPostRequest($name);
 
         return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
+        ->sendAsync($request, $this->createHttpClientOption())
+        ->then(
+        function ($response) use ($returnType) {
+            $responseBody = $response->getBody();
+            if ($returnType === '\SplFileObject') {
+            $content = $responseBody; //stream goes to serializer
+            } else {
+            $content = $responseBody->getContents();
+            if ($returnType !== 'string') {
+            $content = json_decode($content);
+            }
+            }
 
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $request,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
-     * Create request for operation 'machinesNameAddIpPost'
-     *
-     * @param  string $name (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Psr7\Request
-     */
-    protected function machinesNameAddIpPostRequest($name)
-    {
-        // verify the required parameter 'name' is set
-        if ($name === null || (is_array($name) && count($name) === 0)) {
-            throw new \InvalidArgumentException(
-                'Missing the required parameter $name when calling machinesNameAddIpPost'
-            );
+            return [
+            ObjectSerializer::deserialize($content, $returnType, []),
+            $response->getStatusCode(),
+            $response->getHeaders()
+            ];
+        },
+        function ($exception) {
+        $response = $exception->getResponse();
+        $statusCode = $response->getStatusCode();
+        throw new ApiException(
+        sprintf(
+        '[%d] Error connecting to the API (%s)',
+        $statusCode,
+        $exception->getRequest()->getUri()
+        ),
+        $statusCode,
+        $request,
+        $response->getHeaders(),
+        $response->getBody()
+        );
         }
+        );
+        }
+
+        /**
+        * Create request for operation 'machinesNameAddIpPost'
+        *
+            * @param  string $name (required)
+        *
+        * @throws \InvalidArgumentException
+        * @return \GuzzleHttp\Psr7\Request
+        */
+        protected function machinesNameAddIpPostRequest($name)
+        {
+                // verify the required parameter 'name' is set
+                if ($name === null || (is_array($name) && count($name) === 0)) {
+                throw new \InvalidArgumentException(
+                'Missing the required parameter $name when calling machinesNameAddIpPost'
+                );
+                }
 
         $resourcePath = '/machines/{name}/add_ip';
         $formParams = [];
-        $queryParams = [];
+        $queryParams = [
+        'page' => $this->paginationCurrentPage,
+        'limit' => $this->paginationLimit,
+        ];
         $headerParams = [];
         $httpBody = '';
         $multipart = false;
 
 
-        // path params
-        if ($name !== null) {
+            // path params
+            if ($name !== null) {
             $resourcePath = str_replace(
-                '{' . 'name' . '}',
-                ObjectSerializer::toPathValue($name),
-                $resourcePath
+            '{' . 'name' . '}',
+            ObjectSerializer::toPathValue($name),
+            $resourcePath
             );
-        }
+            }
 
         // body params
         $_tempBody = null;
 
         if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['application/json']
-            );
+        $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['application/json']
+        );
         } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['application/json'],
-                []
-            );
+        $headers = $this->headerSelector->selectHeaders(
+        ['application/json'],
+        []
+        );
         }
 
         // for model (json/xml)
         if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-            // \stdClass has no __toString(), so we should encode it manually
-            if ($httpBody instanceof \stdClass && $headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($httpBody);
-            }
+        // $_tempBody is the method argument, if present
+        $httpBody = $_tempBody;
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof \stdClass && $headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($httpBody);
+        }
         } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
+        if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+        $multipartContents[] = [
+        'name' => $formParamName,
+        'contents' => $formParamValue
+        ];
+        }
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+
+        } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+
+        } else {
+        // for HTTP post (form)
+        $httpBody = \GuzzleHttp\Psr7\build_query($formParams);
+        }
+        }
+
+                // this endpoint requires API key authentication
+                $apiKey = $this->config->getApiKeyWithPrefix('Api-Key');
+                if ($apiKey !== null) {
+                $headers['Api-Key'] = $apiKey;
                 }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = \GuzzleHttp\Psr7\build_query($formParams);
-            }
-        }
-
-        // this endpoint requires API key authentication
-        $apiKey = $this->config->getApiKeyWithPrefix('Api-Key');
-        if ($apiKey !== null) {
-            $headers['Api-Key'] = $apiKey;
-        }
 
         $defaultHeaders = [];
         if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
         }
 
         $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
+        $defaultHeaders,
+        $headerParams,
+        $headers
         );
 
         $query = \GuzzleHttp\Psr7\build_query($queryParams);
         return $this->createRequest(
-            'POST',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
+        'POST',
+        $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+        $headers,
+        $httpBody
         );
-    }
+        }
 
-    /**
-     * Operation machinesNameCommandPost
-     *
-     * Send single command which does not needs additional options.
-     *
-     * @param  string $name Machine name. (required)
-     * @param  string $command Command key. (required)
-     *
-     * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
-     * @return \Fozzy\WinVPS\Api\Models\InlineResponse2021
-     */
-    public function machinesNameCommandPost($name, $command)
-    {
+        /**
+        * Operation machinesNameCommandPost
+            *
+            * Send single command which does not needs additional options.
+        *
+            * @param  string $name Machine name. (required)
+            * @param  string $command Command key. (required)
+        *
+        * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
+        * @throws \InvalidArgumentException
+        * @return \Fozzy\WinVPS\Api\Models\InlineResponse2021
+        */
+        public function machinesNameCommandPost($name, $command)
+        {
         list($response) = $this->machinesNameCommandPostWithHttpInfo($name, $command);
-        return $response;
-    }
+            return $response;
+        }
 
-    /**
-     * Operation machinesNameCommandPostWithHttpInfo
-     *
-     * Send single command which does not needs additional options.
-     *
-     * @param  string $name Machine name. (required)
-     * @param  string $command Command key. (required)
-     *
-     * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
-     * @return array of \Fozzy\WinVPS\Api\Models\InlineResponse2021, HTTP status code, HTTP response headers (array of strings)
-     */
-    public function machinesNameCommandPostWithHttpInfo($name, $command)
-    {
+        /**
+        * Operation machinesNameCommandPostWithHttpInfo
+            *
+            * Send single command which does not needs additional options.
+        *
+            * @param  string $name Machine name. (required)
+            * @param  string $command Command key. (required)
+        *
+        * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
+        * @throws \InvalidArgumentException
+        * @return array of \Fozzy\WinVPS\Api\Models\InlineResponse2021, HTTP status code, HTTP response headers (array of strings)
+        */
+        public function machinesNameCommandPostWithHttpInfo($name, $command)
+        {
         $returnType = '\Fozzy\WinVPS\Api\Models\InlineResponse2021';
         $request = $this->machinesNameCommandPostRequest($name, $command);
 
         try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $request,
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
+        $options = $this->createHttpClientOption();
+        try {
+        $response = $this->client->send($request, $options);
+        } catch (RequestException $e) {
+        throw new ApiException(
+        "[{$e->getCode()}] {$e->getMessage()}",
+        $e->getCode(),
+        $request,
+        $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+        $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
+        );
+        }
 
-            $statusCode = $response->getStatusCode();
+        $statusCode = $response->getStatusCode();
 
-            if ($statusCode < 200 || $statusCode > 299) {
-                $url = '';
+        if ($statusCode < 200 || $statusCode > 299) {
+        $url = '';
 
-                if (method_exists($request, 'getUri')) {
-                    $url = $request->getUri();
-                }
+        if (method_exists($request, 'getUri')) {
+        $url = $request->getUri();
+        }
 
-                if (method_exists($request, 'getUrl')) {
-                    $url = $request->getUrl();
-                }
+        if (method_exists($request, 'getUrl')) {
+        $url = $request->getUrl();
+        }
 
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $url
-                    ),
-                    $statusCode,
-                    $request,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
+        throw new ApiException(
+        sprintf(
+        '[%d] Error connecting to the API (%s)',
+        $statusCode,
+        $url
+        ),
+        $statusCode,
+        $request,
+        $response->getHeaders(),
+        $response->getBody()
+        );
+        }
 
             $responseBody = $response->getBody();
             if ($returnType === '\SplFileObject') {
-                $content = $responseBody; //stream goes to serializer
+            $content = $responseBody; //stream goes to serializer
             } else {
-                $content = $responseBody->getContents();
-                if (!in_array($returnType, ['string','integer','bool'])) {
-                    $content = json_decode($content);
-                }
+            $content = $responseBody->getContents();
+            if (!in_array($returnType, ['string','integer','bool'])) {
+            $content = json_decode($content);
+            }
+            }
+
+            if (!empty($content) && is_object($content) && property_exists($content, 'pagination')) {
+            $this->pagination = $content->pagination;
             }
 
             return [
-                ObjectSerializer::deserialize($content, $returnType, []),
-                $response->getStatusCode(),
-                $response->getHeaders()
+            ObjectSerializer::deserialize($content, $returnType, []),
+            $response->getStatusCode(),
+            $response->getHeaders()
             ];
 
         } catch (ApiException $e) {
 
-            $body = $e->getResponseBody();
-            $data = ObjectSerializer::deserialize(
-                $body,
-                '\Fozzy\WinVPS\Api\Models\ErrorResponse',
-                $e->getResponseHeaders()
-            );
-            try {
-                $content = $body->getContents();
-                if ($content) {
-                    $content = json_decode($content, true);
-                }
-                if (!empty($content) && is_array($content) && !empty($content['error'])) {
-                    $data->setError($content['error']);
-                }
-            } catch (\Exception $e) {
-            }
-            $e->setResponseObject($data);
-
-            throw $e;
+        $body = $e->getResponseBody();
+        $data = ObjectSerializer::deserialize(
+        $body,
+        '\Fozzy\WinVPS\Api\Models\ErrorResponse',
+        $e->getResponseHeaders()
+        );
+        try {
+        $content = $body->getContents();
+        if ($content) {
+        $content = json_decode($content, true);
         }
-    }
+        if (!empty($content) && is_array($content) && !empty($content['error'])) {
+        $data->setError($content['error']);
+        }
+        } catch (\Exception $e) {
+        }
+        $e->setResponseObject($data);
 
-    /**
-     * Operation machinesNameCommandPostAsync
-     *
-     * Send single command which does not needs additional options.
-     *
-     * @param  string $name Machine name. (required)
-     * @param  string $command Command key. (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function machinesNameCommandPostAsync($name, $command)
-    {
+        throw $e;
+        }
+        }
+
+        /**
+        * Operation machinesNameCommandPostAsync
+        *
+        * Send single command which does not needs additional options.
+        *
+            * @param  string $name Machine name. (required)
+            * @param  string $command Command key. (required)
+        *
+        * @throws \InvalidArgumentException
+        * @return \GuzzleHttp\Promise\PromiseInterface
+        */
+        public function machinesNameCommandPostAsync($name, $command)
+        {
         return $this->machinesNameCommandPostAsyncWithHttpInfo($name, $command)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
+        ->then(
+        function ($response) {
+        return $response[0];
+        }
+        );
+        }
 
-    /**
-     * Operation machinesNameCommandPostAsyncWithHttpInfo
-     *
-     * Send single command which does not needs additional options.
-     *
-     * @param  string $name Machine name. (required)
-     * @param  string $command Command key. (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function machinesNameCommandPostAsyncWithHttpInfo($name, $command)
-    {
+        /**
+        * Operation machinesNameCommandPostAsyncWithHttpInfo
+        *
+        * Send single command which does not needs additional options.
+        *
+            * @param  string $name Machine name. (required)
+            * @param  string $command Command key. (required)
+        *
+        * @throws \InvalidArgumentException
+        * @return \GuzzleHttp\Promise\PromiseInterface
+        */
+        public function machinesNameCommandPostAsyncWithHttpInfo($name, $command)
+        {
         $returnType = '\Fozzy\WinVPS\Api\Models\InlineResponse2021';
         $request = $this->machinesNameCommandPostRequest($name, $command);
 
         return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
+        ->sendAsync($request, $this->createHttpClientOption())
+        ->then(
+        function ($response) use ($returnType) {
+            $responseBody = $response->getBody();
+            if ($returnType === '\SplFileObject') {
+            $content = $responseBody; //stream goes to serializer
+            } else {
+            $content = $responseBody->getContents();
+            if ($returnType !== 'string') {
+            $content = json_decode($content);
+            }
+            }
 
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $request,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
+            return [
+            ObjectSerializer::deserialize($content, $returnType, []),
+            $response->getStatusCode(),
+            $response->getHeaders()
+            ];
+        },
+        function ($exception) {
+        $response = $exception->getResponse();
+        $statusCode = $response->getStatusCode();
+        throw new ApiException(
+        sprintf(
+        '[%d] Error connecting to the API (%s)',
+        $statusCode,
+        $exception->getRequest()->getUri()
+        ),
+        $statusCode,
+        $request,
+        $response->getHeaders(),
+        $response->getBody()
+        );
+        }
+        );
+        }
 
-    /**
-     * Create request for operation 'machinesNameCommandPost'
-     *
-     * @param  string $name Machine name. (required)
-     * @param  string $command Command key. (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Psr7\Request
-     */
-    protected function machinesNameCommandPostRequest($name, $command)
-    {
-        // verify the required parameter 'name' is set
-        if ($name === null || (is_array($name) && count($name) === 0)) {
-            throw new \InvalidArgumentException(
+        /**
+        * Create request for operation 'machinesNameCommandPost'
+        *
+            * @param  string $name Machine name. (required)
+            * @param  string $command Command key. (required)
+        *
+        * @throws \InvalidArgumentException
+        * @return \GuzzleHttp\Psr7\Request
+        */
+        protected function machinesNameCommandPostRequest($name, $command)
+        {
+                // verify the required parameter 'name' is set
+                if ($name === null || (is_array($name) && count($name) === 0)) {
+                throw new \InvalidArgumentException(
                 'Missing the required parameter $name when calling machinesNameCommandPost'
-            );
-        }
-        // verify the required parameter 'command' is set
-        if ($command === null || (is_array($command) && count($command) === 0)) {
-            throw new \InvalidArgumentException(
+                );
+                }
+                // verify the required parameter 'command' is set
+                if ($command === null || (is_array($command) && count($command) === 0)) {
+                throw new \InvalidArgumentException(
                 'Missing the required parameter $command when calling machinesNameCommandPost'
-            );
-        }
+                );
+                }
 
         $resourcePath = '/machines/{name}/{command}';
         $formParams = [];
-        $queryParams = [];
+        $queryParams = [
+        'page' => $this->paginationCurrentPage,
+        'limit' => $this->paginationLimit,
+        ];
         $headerParams = [];
         $httpBody = '';
         $multipart = false;
 
 
-        // path params
-        if ($name !== null) {
+            // path params
+            if ($name !== null) {
             $resourcePath = str_replace(
-                '{' . 'name' . '}',
-                ObjectSerializer::toPathValue($name),
-                $resourcePath
+            '{' . 'name' . '}',
+            ObjectSerializer::toPathValue($name),
+            $resourcePath
             );
-        }
-        // path params
-        if ($command !== null) {
+            }
+            // path params
+            if ($command !== null) {
             $resourcePath = str_replace(
-                '{' . 'command' . '}',
-                ObjectSerializer::toPathValue($command),
-                $resourcePath
+            '{' . 'command' . '}',
+            ObjectSerializer::toPathValue($command),
+            $resourcePath
             );
-        }
+            }
 
         // body params
         $_tempBody = null;
 
         if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['application/json']
-            );
+        $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['application/json']
+        );
         } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['application/json'],
-                []
-            );
+        $headers = $this->headerSelector->selectHeaders(
+        ['application/json'],
+        []
+        );
         }
 
         // for model (json/xml)
         if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-            // \stdClass has no __toString(), so we should encode it manually
-            if ($httpBody instanceof \stdClass && $headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($httpBody);
-            }
+        // $_tempBody is the method argument, if present
+        $httpBody = $_tempBody;
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof \stdClass && $headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($httpBody);
+        }
         } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
+        if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+        $multipartContents[] = [
+        'name' => $formParamName,
+        'contents' => $formParamValue
+        ];
+        }
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+
+        } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+
+        } else {
+        // for HTTP post (form)
+        $httpBody = \GuzzleHttp\Psr7\build_query($formParams);
+        }
+        }
+
+                // this endpoint requires API key authentication
+                $apiKey = $this->config->getApiKeyWithPrefix('Api-Key');
+                if ($apiKey !== null) {
+                $headers['Api-Key'] = $apiKey;
                 }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = \GuzzleHttp\Psr7\build_query($formParams);
-            }
-        }
-
-        // this endpoint requires API key authentication
-        $apiKey = $this->config->getApiKeyWithPrefix('Api-Key');
-        if ($apiKey !== null) {
-            $headers['Api-Key'] = $apiKey;
-        }
 
         $defaultHeaders = [];
         if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
         }
 
         $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
+        $defaultHeaders,
+        $headerParams,
+        $headers
         );
 
         $query = \GuzzleHttp\Psr7\build_query($queryParams);
         return $this->createRequest(
-            'POST',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
+        'POST',
+        $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+        $headers,
+        $httpBody
         );
-    }
+        }
 
-    /**
-     * Operation machinesNameDelete
-     *
-     * Terminate machine
-     *
-     * @param  string $name name (required)
-     *
-     * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
-     * @return \Fozzy\WinVPS\Api\Models\InlineResponse2021
-     */
-    public function machinesNameDelete($name)
-    {
+        /**
+        * Operation machinesNameDelete
+            *
+            * Terminate machine
+        *
+            * @param  string $name name (required)
+        *
+        * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
+        * @throws \InvalidArgumentException
+        * @return \Fozzy\WinVPS\Api\Models\InlineResponse2021
+        */
+        public function machinesNameDelete($name)
+        {
         list($response) = $this->machinesNameDeleteWithHttpInfo($name);
-        return $response;
-    }
+            return $response;
+        }
 
-    /**
-     * Operation machinesNameDeleteWithHttpInfo
-     *
-     * Terminate machine
-     *
-     * @param  string $name (required)
-     *
-     * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
-     * @return array of \Fozzy\WinVPS\Api\Models\InlineResponse2021, HTTP status code, HTTP response headers (array of strings)
-     */
-    public function machinesNameDeleteWithHttpInfo($name)
-    {
+        /**
+        * Operation machinesNameDeleteWithHttpInfo
+            *
+            * Terminate machine
+        *
+            * @param  string $name (required)
+        *
+        * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
+        * @throws \InvalidArgumentException
+        * @return array of \Fozzy\WinVPS\Api\Models\InlineResponse2021, HTTP status code, HTTP response headers (array of strings)
+        */
+        public function machinesNameDeleteWithHttpInfo($name)
+        {
         $returnType = '\Fozzy\WinVPS\Api\Models\InlineResponse2021';
         $request = $this->machinesNameDeleteRequest($name);
 
         try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $request,
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
+        $options = $this->createHttpClientOption();
+        try {
+        $response = $this->client->send($request, $options);
+        } catch (RequestException $e) {
+        throw new ApiException(
+        "[{$e->getCode()}] {$e->getMessage()}",
+        $e->getCode(),
+        $request,
+        $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+        $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
+        );
+        }
 
-            $statusCode = $response->getStatusCode();
+        $statusCode = $response->getStatusCode();
 
-            if ($statusCode < 200 || $statusCode > 299) {
-                $url = '';
+        if ($statusCode < 200 || $statusCode > 299) {
+        $url = '';
 
-                if (method_exists($request, 'getUri')) {
-                    $url = $request->getUri();
-                }
+        if (method_exists($request, 'getUri')) {
+        $url = $request->getUri();
+        }
 
-                if (method_exists($request, 'getUrl')) {
-                    $url = $request->getUrl();
-                }
+        if (method_exists($request, 'getUrl')) {
+        $url = $request->getUrl();
+        }
 
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $url
-                    ),
-                    $statusCode,
-                    $request,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
+        throw new ApiException(
+        sprintf(
+        '[%d] Error connecting to the API (%s)',
+        $statusCode,
+        $url
+        ),
+        $statusCode,
+        $request,
+        $response->getHeaders(),
+        $response->getBody()
+        );
+        }
 
             $responseBody = $response->getBody();
             if ($returnType === '\SplFileObject') {
-                $content = $responseBody; //stream goes to serializer
+            $content = $responseBody; //stream goes to serializer
             } else {
-                $content = $responseBody->getContents();
-                if (!in_array($returnType, ['string','integer','bool'])) {
-                    $content = json_decode($content);
-                }
+            $content = $responseBody->getContents();
+            if (!in_array($returnType, ['string','integer','bool'])) {
+            $content = json_decode($content);
+            }
+            }
+
+            if (!empty($content) && is_object($content) && property_exists($content, 'pagination')) {
+            $this->pagination = $content->pagination;
             }
 
             return [
-                ObjectSerializer::deserialize($content, $returnType, []),
-                $response->getStatusCode(),
-                $response->getHeaders()
+            ObjectSerializer::deserialize($content, $returnType, []),
+            $response->getStatusCode(),
+            $response->getHeaders()
             ];
 
         } catch (ApiException $e) {
 
-            $body = $e->getResponseBody();
-            $data = ObjectSerializer::deserialize(
-                $body,
-                '\Fozzy\WinVPS\Api\Models\ErrorResponse',
-                $e->getResponseHeaders()
-            );
-            try {
-                $content = $body->getContents();
-                if ($content) {
-                    $content = json_decode($content, true);
-                }
-                if (!empty($content) && is_array($content) && !empty($content['error'])) {
-                    $data->setError($content['error']);
-                }
-            } catch (\Exception $e) {
-            }
-            $e->setResponseObject($data);
-
-            throw $e;
+        $body = $e->getResponseBody();
+        $data = ObjectSerializer::deserialize(
+        $body,
+        '\Fozzy\WinVPS\Api\Models\ErrorResponse',
+        $e->getResponseHeaders()
+        );
+        try {
+        $content = $body->getContents();
+        if ($content) {
+        $content = json_decode($content, true);
         }
-    }
+        if (!empty($content) && is_array($content) && !empty($content['error'])) {
+        $data->setError($content['error']);
+        }
+        } catch (\Exception $e) {
+        }
+        $e->setResponseObject($data);
 
-    /**
-     * Operation machinesNameDeleteAsync
-     *
-     * Terminate machine
-     *
-     * @param  string $name (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function machinesNameDeleteAsync($name)
-    {
+        throw $e;
+        }
+        }
+
+        /**
+        * Operation machinesNameDeleteAsync
+        *
+        * Terminate machine
+        *
+            * @param  string $name (required)
+        *
+        * @throws \InvalidArgumentException
+        * @return \GuzzleHttp\Promise\PromiseInterface
+        */
+        public function machinesNameDeleteAsync($name)
+        {
         return $this->machinesNameDeleteAsyncWithHttpInfo($name)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
+        ->then(
+        function ($response) {
+        return $response[0];
+        }
+        );
+        }
 
-    /**
-     * Operation machinesNameDeleteAsyncWithHttpInfo
-     *
-     * Terminate machine
-     *
-     * @param  string $name (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function machinesNameDeleteAsyncWithHttpInfo($name)
-    {
+        /**
+        * Operation machinesNameDeleteAsyncWithHttpInfo
+        *
+        * Terminate machine
+        *
+            * @param  string $name (required)
+        *
+        * @throws \InvalidArgumentException
+        * @return \GuzzleHttp\Promise\PromiseInterface
+        */
+        public function machinesNameDeleteAsyncWithHttpInfo($name)
+        {
         $returnType = '\Fozzy\WinVPS\Api\Models\InlineResponse2021';
         $request = $this->machinesNameDeleteRequest($name);
 
         return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
+        ->sendAsync($request, $this->createHttpClientOption())
+        ->then(
+        function ($response) use ($returnType) {
+            $responseBody = $response->getBody();
+            if ($returnType === '\SplFileObject') {
+            $content = $responseBody; //stream goes to serializer
+            } else {
+            $content = $responseBody->getContents();
+            if ($returnType !== 'string') {
+            $content = json_decode($content);
+            }
+            }
 
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $request,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
+            return [
+            ObjectSerializer::deserialize($content, $returnType, []),
+            $response->getStatusCode(),
+            $response->getHeaders()
+            ];
+        },
+        function ($exception) {
+        $response = $exception->getResponse();
+        $statusCode = $response->getStatusCode();
+        throw new ApiException(
+        sprintf(
+        '[%d] Error connecting to the API (%s)',
+        $statusCode,
+        $exception->getRequest()->getUri()
+        ),
+        $statusCode,
+        $request,
+        $response->getHeaders(),
+        $response->getBody()
+        );
+        }
+        );
+        }
 
-    /**
-     * Create request for operation 'machinesNameDelete'
-     *
-     * @param  string $name (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Psr7\Request
-     */
-    protected function machinesNameDeleteRequest($name)
-    {
-        // verify the required parameter 'name' is set
-        if ($name === null || (is_array($name) && count($name) === 0)) {
-            throw new \InvalidArgumentException(
+        /**
+        * Create request for operation 'machinesNameDelete'
+        *
+            * @param  string $name (required)
+        *
+        * @throws \InvalidArgumentException
+        * @return \GuzzleHttp\Psr7\Request
+        */
+        protected function machinesNameDeleteRequest($name)
+        {
+                // verify the required parameter 'name' is set
+                if ($name === null || (is_array($name) && count($name) === 0)) {
+                throw new \InvalidArgumentException(
                 'Missing the required parameter $name when calling machinesNameDelete'
-            );
-        }
+                );
+                }
 
         $resourcePath = '/machines/{name}';
         $formParams = [];
-        $queryParams = [];
+        $queryParams = [
+        'page' => $this->paginationCurrentPage,
+        'limit' => $this->paginationLimit,
+        ];
         $headerParams = [];
         $httpBody = '';
         $multipart = false;
 
 
-        // path params
-        if ($name !== null) {
+            // path params
+            if ($name !== null) {
             $resourcePath = str_replace(
-                '{' . 'name' . '}',
-                ObjectSerializer::toPathValue($name),
-                $resourcePath
+            '{' . 'name' . '}',
+            ObjectSerializer::toPathValue($name),
+            $resourcePath
             );
-        }
+            }
 
         // body params
         $_tempBody = null;
 
         if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['application/json']
-            );
+        $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['application/json']
+        );
         } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['application/json'],
-                []
-            );
+        $headers = $this->headerSelector->selectHeaders(
+        ['application/json'],
+        []
+        );
         }
 
         // for model (json/xml)
         if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-            // \stdClass has no __toString(), so we should encode it manually
-            if ($httpBody instanceof \stdClass && $headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($httpBody);
-            }
+        // $_tempBody is the method argument, if present
+        $httpBody = $_tempBody;
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof \stdClass && $headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($httpBody);
+        }
         } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
+        if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+        $multipartContents[] = [
+        'name' => $formParamName,
+        'contents' => $formParamValue
+        ];
+        }
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+
+        } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+
+        } else {
+        // for HTTP post (form)
+        $httpBody = \GuzzleHttp\Psr7\build_query($formParams);
+        }
+        }
+
+                // this endpoint requires API key authentication
+                $apiKey = $this->config->getApiKeyWithPrefix('Api-Key');
+                if ($apiKey !== null) {
+                $headers['Api-Key'] = $apiKey;
                 }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = \GuzzleHttp\Psr7\build_query($formParams);
-            }
-        }
-
-        // this endpoint requires API key authentication
-        $apiKey = $this->config->getApiKeyWithPrefix('Api-Key');
-        if ($apiKey !== null) {
-            $headers['Api-Key'] = $apiKey;
-        }
 
         $defaultHeaders = [];
         if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
         }
 
         $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
+        $defaultHeaders,
+        $headerParams,
+        $headers
         );
 
         $query = \GuzzleHttp\Psr7\build_query($queryParams);
         return $this->createRequest(
-            'DELETE',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
+        'DELETE',
+        $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+        $headers,
+        $httpBody
         );
-    }
+        }
 
-    /**
-     * Operation machinesNameGet
-     *
-     * Returns machine details
-     *
-     * @param  string $name name (required)
-     *
-     * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
-     * @return \Fozzy\WinVPS\Api\Models\MachineDefinition
-     */
-    public function machinesNameGet($name)
-    {
+        /**
+        * Operation machinesNameGet
+            *
+            * Returns machine details
+        *
+            * @param  string $name name (required)
+        *
+        * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
+        * @throws \InvalidArgumentException
+        * @return \Fozzy\WinVPS\Api\Models\MachineDefinition
+        */
+        public function machinesNameGet($name)
+        {
         list($response) = $this->machinesNameGetWithHttpInfo($name);
-        return $response;
-    }
+            return $response;
+        }
 
-    /**
-     * Operation machinesNameGetWithHttpInfo
-     *
-     * Returns machine details
-     *
-     * @param  string $name (required)
-     *
-     * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
-     * @return array of \Fozzy\WinVPS\Api\Models\MachineDefinition, HTTP status code, HTTP response headers (array of strings)
-     */
-    public function machinesNameGetWithHttpInfo($name)
-    {
+        /**
+        * Operation machinesNameGetWithHttpInfo
+            *
+            * Returns machine details
+        *
+            * @param  string $name (required)
+        *
+        * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
+        * @throws \InvalidArgumentException
+        * @return array of \Fozzy\WinVPS\Api\Models\MachineDefinition, HTTP status code, HTTP response headers (array of strings)
+        */
+        public function machinesNameGetWithHttpInfo($name)
+        {
         $returnType = '\Fozzy\WinVPS\Api\Models\MachineDefinition';
         $request = $this->machinesNameGetRequest($name);
 
         try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $request,
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
+        $options = $this->createHttpClientOption();
+        try {
+        $response = $this->client->send($request, $options);
+        } catch (RequestException $e) {
+        throw new ApiException(
+        "[{$e->getCode()}] {$e->getMessage()}",
+        $e->getCode(),
+        $request,
+        $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+        $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
+        );
+        }
 
-            $statusCode = $response->getStatusCode();
+        $statusCode = $response->getStatusCode();
 
-            if ($statusCode < 200 || $statusCode > 299) {
-                $url = '';
+        if ($statusCode < 200 || $statusCode > 299) {
+        $url = '';
 
-                if (method_exists($request, 'getUri')) {
-                    $url = $request->getUri();
-                }
+        if (method_exists($request, 'getUri')) {
+        $url = $request->getUri();
+        }
 
-                if (method_exists($request, 'getUrl')) {
-                    $url = $request->getUrl();
-                }
+        if (method_exists($request, 'getUrl')) {
+        $url = $request->getUrl();
+        }
 
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $url
-                    ),
-                    $statusCode,
-                    $request,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
+        throw new ApiException(
+        sprintf(
+        '[%d] Error connecting to the API (%s)',
+        $statusCode,
+        $url
+        ),
+        $statusCode,
+        $request,
+        $response->getHeaders(),
+        $response->getBody()
+        );
+        }
 
             $responseBody = $response->getBody();
             if ($returnType === '\SplFileObject') {
-                $content = $responseBody; //stream goes to serializer
+            $content = $responseBody; //stream goes to serializer
             } else {
-                $content = $responseBody->getContents();
-                if (!in_array($returnType, ['string','integer','bool'])) {
-                    $content = json_decode($content);
-                }
+            $content = $responseBody->getContents();
+            if (!in_array($returnType, ['string','integer','bool'])) {
+            $content = json_decode($content);
+            }
+            }
+
+            if (!empty($content) && is_object($content) && property_exists($content, 'pagination')) {
+            $this->pagination = $content->pagination;
             }
 
             return [
-                ObjectSerializer::deserialize($content, $returnType, []),
-                $response->getStatusCode(),
-                $response->getHeaders()
+            ObjectSerializer::deserialize($content, $returnType, []),
+            $response->getStatusCode(),
+            $response->getHeaders()
             ];
 
         } catch (ApiException $e) {
 
-            $body = $e->getResponseBody();
-            $data = ObjectSerializer::deserialize(
-                $body,
-                '\Fozzy\WinVPS\Api\Models\ErrorResponse',
-                $e->getResponseHeaders()
-            );
-            try {
-                $content = $body->getContents();
-                if ($content) {
-                    $content = json_decode($content, true);
-                }
-                if (!empty($content) && is_array($content) && !empty($content['error'])) {
-                    $data->setError($content['error']);
-                }
-            } catch (\Exception $e) {
-            }
-            $e->setResponseObject($data);
-
-            throw $e;
+        $body = $e->getResponseBody();
+        $data = ObjectSerializer::deserialize(
+        $body,
+        '\Fozzy\WinVPS\Api\Models\ErrorResponse',
+        $e->getResponseHeaders()
+        );
+        try {
+        $content = $body->getContents();
+        if ($content) {
+        $content = json_decode($content, true);
         }
-    }
+        if (!empty($content) && is_array($content) && !empty($content['error'])) {
+        $data->setError($content['error']);
+        }
+        } catch (\Exception $e) {
+        }
+        $e->setResponseObject($data);
 
-    /**
-     * Operation machinesNameGetAsync
-     *
-     * Returns machine details
-     *
-     * @param  string $name (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function machinesNameGetAsync($name)
-    {
+        throw $e;
+        }
+        }
+
+        /**
+        * Operation machinesNameGetAsync
+        *
+        * Returns machine details
+        *
+            * @param  string $name (required)
+        *
+        * @throws \InvalidArgumentException
+        * @return \GuzzleHttp\Promise\PromiseInterface
+        */
+        public function machinesNameGetAsync($name)
+        {
         return $this->machinesNameGetAsyncWithHttpInfo($name)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
+        ->then(
+        function ($response) {
+        return $response[0];
+        }
+        );
+        }
 
-    /**
-     * Operation machinesNameGetAsyncWithHttpInfo
-     *
-     * Returns machine details
-     *
-     * @param  string $name (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function machinesNameGetAsyncWithHttpInfo($name)
-    {
+        /**
+        * Operation machinesNameGetAsyncWithHttpInfo
+        *
+        * Returns machine details
+        *
+            * @param  string $name (required)
+        *
+        * @throws \InvalidArgumentException
+        * @return \GuzzleHttp\Promise\PromiseInterface
+        */
+        public function machinesNameGetAsyncWithHttpInfo($name)
+        {
         $returnType = '\Fozzy\WinVPS\Api\Models\MachineDefinition';
         $request = $this->machinesNameGetRequest($name);
 
         return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
+        ->sendAsync($request, $this->createHttpClientOption())
+        ->then(
+        function ($response) use ($returnType) {
+            $responseBody = $response->getBody();
+            if ($returnType === '\SplFileObject') {
+            $content = $responseBody; //stream goes to serializer
+            } else {
+            $content = $responseBody->getContents();
+            if ($returnType !== 'string') {
+            $content = json_decode($content);
+            }
+            }
 
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $request,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
-     * Create request for operation 'machinesNameGet'
-     *
-     * @param  string $name (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Psr7\Request
-     */
-    protected function machinesNameGetRequest($name)
-    {
-        // verify the required parameter 'name' is set
-        if ($name === null || (is_array($name) && count($name) === 0)) {
-            throw new \InvalidArgumentException(
-                'Missing the required parameter $name when calling machinesNameGet'
-            );
+            return [
+            ObjectSerializer::deserialize($content, $returnType, []),
+            $response->getStatusCode(),
+            $response->getHeaders()
+            ];
+        },
+        function ($exception) {
+        $response = $exception->getResponse();
+        $statusCode = $response->getStatusCode();
+        throw new ApiException(
+        sprintf(
+        '[%d] Error connecting to the API (%s)',
+        $statusCode,
+        $exception->getRequest()->getUri()
+        ),
+        $statusCode,
+        $request,
+        $response->getHeaders(),
+        $response->getBody()
+        );
         }
+        );
+        }
+
+        /**
+        * Create request for operation 'machinesNameGet'
+        *
+            * @param  string $name (required)
+        *
+        * @throws \InvalidArgumentException
+        * @return \GuzzleHttp\Psr7\Request
+        */
+        protected function machinesNameGetRequest($name)
+        {
+                // verify the required parameter 'name' is set
+                if ($name === null || (is_array($name) && count($name) === 0)) {
+                throw new \InvalidArgumentException(
+                'Missing the required parameter $name when calling machinesNameGet'
+                );
+                }
 
         $resourcePath = '/machines/{name}';
         $formParams = [];
-        $queryParams = [];
+        $queryParams = [
+        'page' => $this->paginationCurrentPage,
+        'limit' => $this->paginationLimit,
+        ];
         $headerParams = [];
         $httpBody = '';
         $multipart = false;
 
 
-        // path params
-        if ($name !== null) {
+            // path params
+            if ($name !== null) {
             $resourcePath = str_replace(
-                '{' . 'name' . '}',
-                ObjectSerializer::toPathValue($name),
-                $resourcePath
+            '{' . 'name' . '}',
+            ObjectSerializer::toPathValue($name),
+            $resourcePath
             );
-        }
+            }
 
         // body params
         $_tempBody = null;
 
         if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['application/json']
-            );
+        $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['application/json']
+        );
         } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['application/json'],
-                []
-            );
+        $headers = $this->headerSelector->selectHeaders(
+        ['application/json'],
+        []
+        );
         }
 
         // for model (json/xml)
         if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-            // \stdClass has no __toString(), so we should encode it manually
-            if ($httpBody instanceof \stdClass && $headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($httpBody);
-            }
+        // $_tempBody is the method argument, if present
+        $httpBody = $_tempBody;
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof \stdClass && $headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($httpBody);
+        }
         } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
+        if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+        $multipartContents[] = [
+        'name' => $formParamName,
+        'contents' => $formParamValue
+        ];
+        }
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+
+        } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+
+        } else {
+        // for HTTP post (form)
+        $httpBody = \GuzzleHttp\Psr7\build_query($formParams);
+        }
+        }
+
+                // this endpoint requires API key authentication
+                $apiKey = $this->config->getApiKeyWithPrefix('Api-Key');
+                if ($apiKey !== null) {
+                $headers['Api-Key'] = $apiKey;
                 }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = \GuzzleHttp\Psr7\build_query($formParams);
-            }
-        }
-
-        // this endpoint requires API key authentication
-        $apiKey = $this->config->getApiKeyWithPrefix('Api-Key');
-        if ($apiKey !== null) {
-            $headers['Api-Key'] = $apiKey;
-        }
 
         $defaultHeaders = [];
         if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
         }
 
         $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
+        $defaultHeaders,
+        $headerParams,
+        $headers
         );
 
         $query = \GuzzleHttp\Psr7\build_query($queryParams);
         return $this->createRequest(
-            'GET',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
+        'GET',
+        $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+        $headers,
+        $httpBody
         );
-    }
+        }
 
-    /**
-     * Operation machinesNameJobsGet
-     *
-     * Returns list of jobs assigned to machine.
-     *
-     * @param  string $name name (required)
-     *
-     * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
-     * @return \Fozzy\WinVPS\Api\Models\JobDefinition[]
-     */
-    public function machinesNameJobsGet($name)
-    {
+        /**
+        * Operation machinesNameJobsGet
+            *
+            * Returns list of jobs assigned to machine.
+        *
+            * @param  string $name name (required)
+        *
+        * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
+        * @throws \InvalidArgumentException
+        * @return \Fozzy\WinVPS\Api\Models\JobDefinition[]
+        */
+        public function machinesNameJobsGet($name)
+        {
         list($response) = $this->machinesNameJobsGetWithHttpInfo($name);
-        return $response;
-    }
+            return $response;
+        }
 
-    /**
-     * Operation machinesNameJobsGetWithHttpInfo
-     *
-     * Returns list of jobs assigned to machine.
-     *
-     * @param  string $name (required)
-     *
-     * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
-     * @return array of \Fozzy\WinVPS\Api\Models\JobDefinition[], HTTP status code, HTTP response headers (array of strings)
-     */
-    public function machinesNameJobsGetWithHttpInfo($name)
-    {
+        /**
+        * Operation machinesNameJobsGetWithHttpInfo
+            *
+            * Returns list of jobs assigned to machine.
+        *
+            * @param  string $name (required)
+        *
+        * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
+        * @throws \InvalidArgumentException
+        * @return array of \Fozzy\WinVPS\Api\Models\JobDefinition[], HTTP status code, HTTP response headers (array of strings)
+        */
+        public function machinesNameJobsGetWithHttpInfo($name)
+        {
         $returnType = '\Fozzy\WinVPS\Api\Models\JobDefinition[]';
         $request = $this->machinesNameJobsGetRequest($name);
 
         try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $request,
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
+        $options = $this->createHttpClientOption();
+        try {
+        $response = $this->client->send($request, $options);
+        } catch (RequestException $e) {
+        throw new ApiException(
+        "[{$e->getCode()}] {$e->getMessage()}",
+        $e->getCode(),
+        $request,
+        $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+        $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
+        );
+        }
 
-            $statusCode = $response->getStatusCode();
+        $statusCode = $response->getStatusCode();
 
-            if ($statusCode < 200 || $statusCode > 299) {
-                $url = '';
+        if ($statusCode < 200 || $statusCode > 299) {
+        $url = '';
 
-                if (method_exists($request, 'getUri')) {
-                    $url = $request->getUri();
-                }
+        if (method_exists($request, 'getUri')) {
+        $url = $request->getUri();
+        }
 
-                if (method_exists($request, 'getUrl')) {
-                    $url = $request->getUrl();
-                }
+        if (method_exists($request, 'getUrl')) {
+        $url = $request->getUrl();
+        }
 
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $url
-                    ),
-                    $statusCode,
-                    $request,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
+        throw new ApiException(
+        sprintf(
+        '[%d] Error connecting to the API (%s)',
+        $statusCode,
+        $url
+        ),
+        $statusCode,
+        $request,
+        $response->getHeaders(),
+        $response->getBody()
+        );
+        }
 
             $responseBody = $response->getBody();
             if ($returnType === '\SplFileObject') {
-                $content = $responseBody; //stream goes to serializer
+            $content = $responseBody; //stream goes to serializer
             } else {
-                $content = $responseBody->getContents();
-                if (!in_array($returnType, ['string','integer','bool'])) {
-                    $content = json_decode($content);
-                }
+            $content = $responseBody->getContents();
+            if (!in_array($returnType, ['string','integer','bool'])) {
+            $content = json_decode($content);
+            }
+            }
+
+            if (!empty($content) && is_object($content) && property_exists($content, 'pagination')) {
+            $this->pagination = $content->pagination;
             }
 
             return [
-                ObjectSerializer::deserialize($content, $returnType, []),
-                $response->getStatusCode(),
-                $response->getHeaders()
+            ObjectSerializer::deserialize($content, $returnType, []),
+            $response->getStatusCode(),
+            $response->getHeaders()
             ];
 
         } catch (ApiException $e) {
 
-            $body = $e->getResponseBody();
-            $data = ObjectSerializer::deserialize(
-                $body,
-                '\Fozzy\WinVPS\Api\Models\ErrorResponse',
-                $e->getResponseHeaders()
-            );
-            try {
-                $content = $body->getContents();
-                if ($content) {
-                    $content = json_decode($content, true);
-                }
-                if (!empty($content) && is_array($content) && !empty($content['error'])) {
-                    $data->setError($content['error']);
-                }
-            } catch (\Exception $e) {
-            }
-            $e->setResponseObject($data);
-
-            throw $e;
+        $body = $e->getResponseBody();
+        $data = ObjectSerializer::deserialize(
+        $body,
+        '\Fozzy\WinVPS\Api\Models\ErrorResponse',
+        $e->getResponseHeaders()
+        );
+        try {
+        $content = $body->getContents();
+        if ($content) {
+        $content = json_decode($content, true);
         }
-    }
+        if (!empty($content) && is_array($content) && !empty($content['error'])) {
+        $data->setError($content['error']);
+        }
+        } catch (\Exception $e) {
+        }
+        $e->setResponseObject($data);
 
-    /**
-     * Operation machinesNameJobsGetAsync
-     *
-     * Returns list of jobs assigned to machine.
-     *
-     * @param  string $name (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function machinesNameJobsGetAsync($name)
-    {
+        throw $e;
+        }
+        }
+
+        /**
+        * Operation machinesNameJobsGetAsync
+        *
+        * Returns list of jobs assigned to machine.
+        *
+            * @param  string $name (required)
+        *
+        * @throws \InvalidArgumentException
+        * @return \GuzzleHttp\Promise\PromiseInterface
+        */
+        public function machinesNameJobsGetAsync($name)
+        {
         return $this->machinesNameJobsGetAsyncWithHttpInfo($name)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
+        ->then(
+        function ($response) {
+        return $response[0];
+        }
+        );
+        }
 
-    /**
-     * Operation machinesNameJobsGetAsyncWithHttpInfo
-     *
-     * Returns list of jobs assigned to machine.
-     *
-     * @param  string $name (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function machinesNameJobsGetAsyncWithHttpInfo($name)
-    {
+        /**
+        * Operation machinesNameJobsGetAsyncWithHttpInfo
+        *
+        * Returns list of jobs assigned to machine.
+        *
+            * @param  string $name (required)
+        *
+        * @throws \InvalidArgumentException
+        * @return \GuzzleHttp\Promise\PromiseInterface
+        */
+        public function machinesNameJobsGetAsyncWithHttpInfo($name)
+        {
         $returnType = '\Fozzy\WinVPS\Api\Models\JobDefinition[]';
         $request = $this->machinesNameJobsGetRequest($name);
 
         return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
+        ->sendAsync($request, $this->createHttpClientOption())
+        ->then(
+        function ($response) use ($returnType) {
+            $responseBody = $response->getBody();
+            if ($returnType === '\SplFileObject') {
+            $content = $responseBody; //stream goes to serializer
+            } else {
+            $content = $responseBody->getContents();
+            if ($returnType !== 'string') {
+            $content = json_decode($content);
+            }
+            }
 
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $request,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
-     * Create request for operation 'machinesNameJobsGet'
-     *
-     * @param  string $name (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Psr7\Request
-     */
-    protected function machinesNameJobsGetRequest($name)
-    {
-        // verify the required parameter 'name' is set
-        if ($name === null || (is_array($name) && count($name) === 0)) {
-            throw new \InvalidArgumentException(
-                'Missing the required parameter $name when calling machinesNameJobsGet'
-            );
+            return [
+            ObjectSerializer::deserialize($content, $returnType, []),
+            $response->getStatusCode(),
+            $response->getHeaders()
+            ];
+        },
+        function ($exception) {
+        $response = $exception->getResponse();
+        $statusCode = $response->getStatusCode();
+        throw new ApiException(
+        sprintf(
+        '[%d] Error connecting to the API (%s)',
+        $statusCode,
+        $exception->getRequest()->getUri()
+        ),
+        $statusCode,
+        $request,
+        $response->getHeaders(),
+        $response->getBody()
+        );
         }
+        );
+        }
+
+        /**
+        * Create request for operation 'machinesNameJobsGet'
+        *
+            * @param  string $name (required)
+        *
+        * @throws \InvalidArgumentException
+        * @return \GuzzleHttp\Psr7\Request
+        */
+        protected function machinesNameJobsGetRequest($name)
+        {
+                // verify the required parameter 'name' is set
+                if ($name === null || (is_array($name) && count($name) === 0)) {
+                throw new \InvalidArgumentException(
+                'Missing the required parameter $name when calling machinesNameJobsGet'
+                );
+                }
 
         $resourcePath = '/machines/{name}/jobs';
         $formParams = [];
-        $queryParams = [];
+        $queryParams = [
+        'page' => $this->paginationCurrentPage,
+        'limit' => $this->paginationLimit,
+        ];
         $headerParams = [];
         $httpBody = '';
         $multipart = false;
 
 
-        // path params
-        if ($name !== null) {
+            // path params
+            if ($name !== null) {
             $resourcePath = str_replace(
-                '{' . 'name' . '}',
-                ObjectSerializer::toPathValue($name),
-                $resourcePath
+            '{' . 'name' . '}',
+            ObjectSerializer::toPathValue($name),
+            $resourcePath
             );
-        }
+            }
 
         // body params
         $_tempBody = null;
 
         if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['application/json']
-            );
+        $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['application/json']
+        );
         } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['application/json'],
-                []
-            );
+        $headers = $this->headerSelector->selectHeaders(
+        ['application/json'],
+        []
+        );
         }
 
         // for model (json/xml)
         if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-            // \stdClass has no __toString(), so we should encode it manually
-            if ($httpBody instanceof \stdClass && $headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($httpBody);
-            }
+        // $_tempBody is the method argument, if present
+        $httpBody = $_tempBody;
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof \stdClass && $headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($httpBody);
+        }
         } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
+        if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+        $multipartContents[] = [
+        'name' => $formParamName,
+        'contents' => $formParamValue
+        ];
+        }
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+
+        } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+
+        } else {
+        // for HTTP post (form)
+        $httpBody = \GuzzleHttp\Psr7\build_query($formParams);
+        }
+        }
+
+                // this endpoint requires API key authentication
+                $apiKey = $this->config->getApiKeyWithPrefix('Api-Key');
+                if ($apiKey !== null) {
+                $headers['Api-Key'] = $apiKey;
                 }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = \GuzzleHttp\Psr7\build_query($formParams);
-            }
-        }
-
-        // this endpoint requires API key authentication
-        $apiKey = $this->config->getApiKeyWithPrefix('Api-Key');
-        if ($apiKey !== null) {
-            $headers['Api-Key'] = $apiKey;
-        }
 
         $defaultHeaders = [];
         if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
         }
 
         $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
+        $defaultHeaders,
+        $headerParams,
+        $headers
         );
 
         $query = \GuzzleHttp\Psr7\build_query($queryParams);
         return $this->createRequest(
-            'GET',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
+        'GET',
+        $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+        $headers,
+        $httpBody
         );
-    }
+        }
 
-    /**
-     * Operation machinesNamePost
-     *
-     * Reinstall machine
-     *
-     * @param   $body body (required)
-     * @param  string $name name (required)
-     *
-     * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
-     * @return \Fozzy\WinVPS\Api\Models\InlineResponse2001
-     */
-    public function machinesNamePost($body, $name)
-    {
+        /**
+        * Operation machinesNamePost
+            *
+            * Reinstall machine
+        *
+            * @param   $body body (required)
+            * @param  string $name name (required)
+        *
+        * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
+        * @throws \InvalidArgumentException
+        * @return \Fozzy\WinVPS\Api\Models\InlineResponse2001
+        */
+        public function machinesNamePost($body, $name)
+        {
         list($response) = $this->machinesNamePostWithHttpInfo($body, $name);
-        return $response;
-    }
+            return $response;
+        }
 
-    /**
-     * Operation machinesNamePostWithHttpInfo
-     *
-     * Reinstall machine
-     *
-     * @param   $body (required)
-     * @param  string $name (required)
-     *
-     * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
-     * @return array of \Fozzy\WinVPS\Api\Models\InlineResponse2001, HTTP status code, HTTP response headers (array of strings)
-     */
-    public function machinesNamePostWithHttpInfo($body, $name)
-    {
+        /**
+        * Operation machinesNamePostWithHttpInfo
+            *
+            * Reinstall machine
+        *
+            * @param   $body (required)
+            * @param  string $name (required)
+        *
+        * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
+        * @throws \InvalidArgumentException
+        * @return array of \Fozzy\WinVPS\Api\Models\InlineResponse2001, HTTP status code, HTTP response headers (array of strings)
+        */
+        public function machinesNamePostWithHttpInfo($body, $name)
+        {
         $returnType = '\Fozzy\WinVPS\Api\Models\InlineResponse2001';
         $request = $this->machinesNamePostRequest($body, $name);
 
         try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $request,
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
+        $options = $this->createHttpClientOption();
+        try {
+        $response = $this->client->send($request, $options);
+        } catch (RequestException $e) {
+        throw new ApiException(
+        "[{$e->getCode()}] {$e->getMessage()}",
+        $e->getCode(),
+        $request,
+        $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+        $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
+        );
+        }
 
-            $statusCode = $response->getStatusCode();
+        $statusCode = $response->getStatusCode();
 
-            if ($statusCode < 200 || $statusCode > 299) {
-                $url = '';
+        if ($statusCode < 200 || $statusCode > 299) {
+        $url = '';
 
-                if (method_exists($request, 'getUri')) {
-                    $url = $request->getUri();
-                }
+        if (method_exists($request, 'getUri')) {
+        $url = $request->getUri();
+        }
 
-                if (method_exists($request, 'getUrl')) {
-                    $url = $request->getUrl();
-                }
+        if (method_exists($request, 'getUrl')) {
+        $url = $request->getUrl();
+        }
 
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $url
-                    ),
-                    $statusCode,
-                    $request,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
+        throw new ApiException(
+        sprintf(
+        '[%d] Error connecting to the API (%s)',
+        $statusCode,
+        $url
+        ),
+        $statusCode,
+        $request,
+        $response->getHeaders(),
+        $response->getBody()
+        );
+        }
 
             $responseBody = $response->getBody();
             if ($returnType === '\SplFileObject') {
-                $content = $responseBody; //stream goes to serializer
+            $content = $responseBody; //stream goes to serializer
             } else {
-                $content = $responseBody->getContents();
-                if (!in_array($returnType, ['string','integer','bool'])) {
-                    $content = json_decode($content);
-                }
+            $content = $responseBody->getContents();
+            if (!in_array($returnType, ['string','integer','bool'])) {
+            $content = json_decode($content);
+            }
+            }
+
+            if (!empty($content) && is_object($content) && property_exists($content, 'pagination')) {
+            $this->pagination = $content->pagination;
             }
 
             return [
-                ObjectSerializer::deserialize($content, $returnType, []),
-                $response->getStatusCode(),
-                $response->getHeaders()
+            ObjectSerializer::deserialize($content, $returnType, []),
+            $response->getStatusCode(),
+            $response->getHeaders()
             ];
 
         } catch (ApiException $e) {
 
-            $body = $e->getResponseBody();
-            $data = ObjectSerializer::deserialize(
-                $body,
-                '\Fozzy\WinVPS\Api\Models\ErrorResponse',
-                $e->getResponseHeaders()
-            );
-            try {
-                $content = $body->getContents();
-                if ($content) {
-                    $content = json_decode($content, true);
-                }
-                if (!empty($content) && is_array($content) && !empty($content['error'])) {
-                    $data->setError($content['error']);
-                }
-            } catch (\Exception $e) {
-            }
-            $e->setResponseObject($data);
-
-            throw $e;
+        $body = $e->getResponseBody();
+        $data = ObjectSerializer::deserialize(
+        $body,
+        '\Fozzy\WinVPS\Api\Models\ErrorResponse',
+        $e->getResponseHeaders()
+        );
+        try {
+        $content = $body->getContents();
+        if ($content) {
+        $content = json_decode($content, true);
         }
-    }
+        if (!empty($content) && is_array($content) && !empty($content['error'])) {
+        $data->setError($content['error']);
+        }
+        } catch (\Exception $e) {
+        }
+        $e->setResponseObject($data);
 
-    /**
-     * Operation machinesNamePostAsync
-     *
-     * Reinstall machine
-     *
-     * @param   $body (required)
-     * @param  string $name (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function machinesNamePostAsync($body, $name)
-    {
+        throw $e;
+        }
+        }
+
+        /**
+        * Operation machinesNamePostAsync
+        *
+        * Reinstall machine
+        *
+            * @param   $body (required)
+            * @param  string $name (required)
+        *
+        * @throws \InvalidArgumentException
+        * @return \GuzzleHttp\Promise\PromiseInterface
+        */
+        public function machinesNamePostAsync($body, $name)
+        {
         return $this->machinesNamePostAsyncWithHttpInfo($body, $name)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
+        ->then(
+        function ($response) {
+        return $response[0];
+        }
+        );
+        }
 
-    /**
-     * Operation machinesNamePostAsyncWithHttpInfo
-     *
-     * Reinstall machine
-     *
-     * @param   $body (required)
-     * @param  string $name (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function machinesNamePostAsyncWithHttpInfo($body, $name)
-    {
+        /**
+        * Operation machinesNamePostAsyncWithHttpInfo
+        *
+        * Reinstall machine
+        *
+            * @param   $body (required)
+            * @param  string $name (required)
+        *
+        * @throws \InvalidArgumentException
+        * @return \GuzzleHttp\Promise\PromiseInterface
+        */
+        public function machinesNamePostAsyncWithHttpInfo($body, $name)
+        {
         $returnType = '\Fozzy\WinVPS\Api\Models\InlineResponse2001';
         $request = $this->machinesNamePostRequest($body, $name);
 
         return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
+        ->sendAsync($request, $this->createHttpClientOption())
+        ->then(
+        function ($response) use ($returnType) {
+            $responseBody = $response->getBody();
+            if ($returnType === '\SplFileObject') {
+            $content = $responseBody; //stream goes to serializer
+            } else {
+            $content = $responseBody->getContents();
+            if ($returnType !== 'string') {
+            $content = json_decode($content);
+            }
+            }
 
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $request,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
+            return [
+            ObjectSerializer::deserialize($content, $returnType, []),
+            $response->getStatusCode(),
+            $response->getHeaders()
+            ];
+        },
+        function ($exception) {
+        $response = $exception->getResponse();
+        $statusCode = $response->getStatusCode();
+        throw new ApiException(
+        sprintf(
+        '[%d] Error connecting to the API (%s)',
+        $statusCode,
+        $exception->getRequest()->getUri()
+        ),
+        $statusCode,
+        $request,
+        $response->getHeaders(),
+        $response->getBody()
+        );
+        }
+        );
+        }
 
-    /**
-     * Create request for operation 'machinesNamePost'
-     *
-     * @param   $body (required)
-     * @param  string $name (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Psr7\Request
-     */
-    protected function machinesNamePostRequest($body, $name)
-    {
-        // verify the required parameter 'body' is set
-        if ($body === null || (is_array($body) && count($body) === 0)) {
-            throw new \InvalidArgumentException(
+        /**
+        * Create request for operation 'machinesNamePost'
+        *
+            * @param   $body (required)
+            * @param  string $name (required)
+        *
+        * @throws \InvalidArgumentException
+        * @return \GuzzleHttp\Psr7\Request
+        */
+        protected function machinesNamePostRequest($body, $name)
+        {
+                // verify the required parameter 'body' is set
+                if ($body === null || (is_array($body) && count($body) === 0)) {
+                throw new \InvalidArgumentException(
                 'Missing the required parameter $body when calling machinesNamePost'
-            );
-        }
-        // verify the required parameter 'name' is set
-        if ($name === null || (is_array($name) && count($name) === 0)) {
-            throw new \InvalidArgumentException(
+                );
+                }
+                // verify the required parameter 'name' is set
+                if ($name === null || (is_array($name) && count($name) === 0)) {
+                throw new \InvalidArgumentException(
                 'Missing the required parameter $name when calling machinesNamePost'
-            );
-        }
+                );
+                }
 
         $resourcePath = '/machines/{name}';
         $formParams = [];
-        $queryParams = [];
+        $queryParams = [
+        'page' => $this->paginationCurrentPage,
+        'limit' => $this->paginationLimit,
+        ];
         $headerParams = [];
         $httpBody = '';
         $multipart = false;
 
 
-        // path params
-        if ($name !== null) {
+            // path params
+            if ($name !== null) {
             $resourcePath = str_replace(
-                '{' . 'name' . '}',
-                ObjectSerializer::toPathValue($name),
-                $resourcePath
+            '{' . 'name' . '}',
+            ObjectSerializer::toPathValue($name),
+            $resourcePath
             );
-        }
+            }
 
         // body params
         $_tempBody = null;
-        if (isset($body)) {
+            if (isset($body)) {
             $_tempBody = $body;
-        }
+            }
 
         if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['application/json']
-            );
+        $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['application/json']
+        );
         } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['application/json'],
-                ['application/json', 'application/x-www-form-urlencoded']
-            );
+        $headers = $this->headerSelector->selectHeaders(
+        ['application/json'],
+        ['application/json', 'application/x-www-form-urlencoded']
+        );
         }
 
         // for model (json/xml)
         if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-            // \stdClass has no __toString(), so we should encode it manually
-            if ($httpBody instanceof \stdClass && $headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($httpBody);
-            }
+        // $_tempBody is the method argument, if present
+        $httpBody = $_tempBody;
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof \stdClass && $headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($httpBody);
+        }
         } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
+        if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+        $multipartContents[] = [
+        'name' => $formParamName,
+        'contents' => $formParamValue
+        ];
+        }
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+
+        } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+
+        } else {
+        // for HTTP post (form)
+        $httpBody = \GuzzleHttp\Psr7\build_query($formParams);
+        }
+        }
+
+                // this endpoint requires API key authentication
+                $apiKey = $this->config->getApiKeyWithPrefix('Api-Key');
+                if ($apiKey !== null) {
+                $headers['Api-Key'] = $apiKey;
                 }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = \GuzzleHttp\Psr7\build_query($formParams);
-            }
-        }
-
-        // this endpoint requires API key authentication
-        $apiKey = $this->config->getApiKeyWithPrefix('Api-Key');
-        if ($apiKey !== null) {
-            $headers['Api-Key'] = $apiKey;
-        }
 
         $defaultHeaders = [];
         if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
         }
 
         $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
+        $defaultHeaders,
+        $headerParams,
+        $headers
         );
 
         $query = \GuzzleHttp\Psr7\build_query($queryParams);
         return $this->createRequest(
-            'POST',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
+        'POST',
+        $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+        $headers,
+        $httpBody
         );
-    }
+        }
 
-    /**
-     * Operation machinesNamePut
-     *
-     * Update machine details
-     *
-     * @param   $body body (required)
-     * @param  string $name name (required)
-     *
-     * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
-     * @return \Fozzy\WinVPS\Api\Models\MachineDefinition
-     */
-    public function machinesNamePut($body, $name)
-    {
+        /**
+        * Operation machinesNamePut
+            *
+            * Update machine details
+        *
+            * @param   $body body (required)
+            * @param  string $name name (required)
+        *
+        * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
+        * @throws \InvalidArgumentException
+        * @return \Fozzy\WinVPS\Api\Models\MachineDefinition
+        */
+        public function machinesNamePut($body, $name)
+        {
         list($response) = $this->machinesNamePutWithHttpInfo($body, $name);
-        return $response;
-    }
+            return $response;
+        }
 
-    /**
-     * Operation machinesNamePutWithHttpInfo
-     *
-     * Update machine details
-     *
-     * @param   $body (required)
-     * @param  string $name (required)
-     *
-     * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
-     * @return array of \Fozzy\WinVPS\Api\Models\MachineDefinition, HTTP status code, HTTP response headers (array of strings)
-     */
-    public function machinesNamePutWithHttpInfo($body, $name)
-    {
+        /**
+        * Operation machinesNamePutWithHttpInfo
+            *
+            * Update machine details
+        *
+            * @param   $body (required)
+            * @param  string $name (required)
+        *
+        * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
+        * @throws \InvalidArgumentException
+        * @return array of \Fozzy\WinVPS\Api\Models\MachineDefinition, HTTP status code, HTTP response headers (array of strings)
+        */
+        public function machinesNamePutWithHttpInfo($body, $name)
+        {
         $returnType = '\Fozzy\WinVPS\Api\Models\MachineDefinition';
         $request = $this->machinesNamePutRequest($body, $name);
 
         try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $request,
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
+        $options = $this->createHttpClientOption();
+        try {
+        $response = $this->client->send($request, $options);
+        } catch (RequestException $e) {
+        throw new ApiException(
+        "[{$e->getCode()}] {$e->getMessage()}",
+        $e->getCode(),
+        $request,
+        $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+        $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
+        );
+        }
 
-            $statusCode = $response->getStatusCode();
+        $statusCode = $response->getStatusCode();
 
-            if ($statusCode < 200 || $statusCode > 299) {
-                $url = '';
+        if ($statusCode < 200 || $statusCode > 299) {
+        $url = '';
 
-                if (method_exists($request, 'getUri')) {
-                    $url = $request->getUri();
-                }
+        if (method_exists($request, 'getUri')) {
+        $url = $request->getUri();
+        }
 
-                if (method_exists($request, 'getUrl')) {
-                    $url = $request->getUrl();
-                }
+        if (method_exists($request, 'getUrl')) {
+        $url = $request->getUrl();
+        }
 
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $url
-                    ),
-                    $statusCode,
-                    $request,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
+        throw new ApiException(
+        sprintf(
+        '[%d] Error connecting to the API (%s)',
+        $statusCode,
+        $url
+        ),
+        $statusCode,
+        $request,
+        $response->getHeaders(),
+        $response->getBody()
+        );
+        }
 
             $responseBody = $response->getBody();
             if ($returnType === '\SplFileObject') {
-                $content = $responseBody; //stream goes to serializer
+            $content = $responseBody; //stream goes to serializer
             } else {
-                $content = $responseBody->getContents();
-                if (!in_array($returnType, ['string','integer','bool'])) {
-                    $content = json_decode($content);
-                }
+            $content = $responseBody->getContents();
+            if (!in_array($returnType, ['string','integer','bool'])) {
+            $content = json_decode($content);
+            }
+            }
+
+            if (!empty($content) && is_object($content) && property_exists($content, 'pagination')) {
+            $this->pagination = $content->pagination;
             }
 
             return [
-                ObjectSerializer::deserialize($content, $returnType, []),
-                $response->getStatusCode(),
-                $response->getHeaders()
+            ObjectSerializer::deserialize($content, $returnType, []),
+            $response->getStatusCode(),
+            $response->getHeaders()
             ];
 
         } catch (ApiException $e) {
 
-            $body = $e->getResponseBody();
-            $data = ObjectSerializer::deserialize(
-                $body,
-                '\Fozzy\WinVPS\Api\Models\ErrorResponse',
-                $e->getResponseHeaders()
-            );
-            try {
-                $content = $body->getContents();
-                if ($content) {
-                    $content = json_decode($content, true);
-                }
-                if (!empty($content) && is_array($content) && !empty($content['error'])) {
-                    $data->setError($content['error']);
-                }
-            } catch (\Exception $e) {
-            }
-            $e->setResponseObject($data);
-
-            throw $e;
+        $body = $e->getResponseBody();
+        $data = ObjectSerializer::deserialize(
+        $body,
+        '\Fozzy\WinVPS\Api\Models\ErrorResponse',
+        $e->getResponseHeaders()
+        );
+        try {
+        $content = $body->getContents();
+        if ($content) {
+        $content = json_decode($content, true);
         }
-    }
+        if (!empty($content) && is_array($content) && !empty($content['error'])) {
+        $data->setError($content['error']);
+        }
+        } catch (\Exception $e) {
+        }
+        $e->setResponseObject($data);
 
-    /**
-     * Operation machinesNamePutAsync
-     *
-     * Update machine details
-     *
-     * @param   $body (required)
-     * @param  string $name (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function machinesNamePutAsync($body, $name)
-    {
+        throw $e;
+        }
+        }
+
+        /**
+        * Operation machinesNamePutAsync
+        *
+        * Update machine details
+        *
+            * @param   $body (required)
+            * @param  string $name (required)
+        *
+        * @throws \InvalidArgumentException
+        * @return \GuzzleHttp\Promise\PromiseInterface
+        */
+        public function machinesNamePutAsync($body, $name)
+        {
         return $this->machinesNamePutAsyncWithHttpInfo($body, $name)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
+        ->then(
+        function ($response) {
+        return $response[0];
+        }
+        );
+        }
 
-    /**
-     * Operation machinesNamePutAsyncWithHttpInfo
-     *
-     * Update machine details
-     *
-     * @param   $body (required)
-     * @param  string $name (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function machinesNamePutAsyncWithHttpInfo($body, $name)
-    {
+        /**
+        * Operation machinesNamePutAsyncWithHttpInfo
+        *
+        * Update machine details
+        *
+            * @param   $body (required)
+            * @param  string $name (required)
+        *
+        * @throws \InvalidArgumentException
+        * @return \GuzzleHttp\Promise\PromiseInterface
+        */
+        public function machinesNamePutAsyncWithHttpInfo($body, $name)
+        {
         $returnType = '\Fozzy\WinVPS\Api\Models\MachineDefinition';
         $request = $this->machinesNamePutRequest($body, $name);
 
         return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
+        ->sendAsync($request, $this->createHttpClientOption())
+        ->then(
+        function ($response) use ($returnType) {
+            $responseBody = $response->getBody();
+            if ($returnType === '\SplFileObject') {
+            $content = $responseBody; //stream goes to serializer
+            } else {
+            $content = $responseBody->getContents();
+            if ($returnType !== 'string') {
+            $content = json_decode($content);
+            }
+            }
 
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $request,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
+            return [
+            ObjectSerializer::deserialize($content, $returnType, []),
+            $response->getStatusCode(),
+            $response->getHeaders()
+            ];
+        },
+        function ($exception) {
+        $response = $exception->getResponse();
+        $statusCode = $response->getStatusCode();
+        throw new ApiException(
+        sprintf(
+        '[%d] Error connecting to the API (%s)',
+        $statusCode,
+        $exception->getRequest()->getUri()
+        ),
+        $statusCode,
+        $request,
+        $response->getHeaders(),
+        $response->getBody()
+        );
+        }
+        );
+        }
 
-    /**
-     * Create request for operation 'machinesNamePut'
-     *
-     * @param   $body (required)
-     * @param  string $name (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Psr7\Request
-     */
-    protected function machinesNamePutRequest($body, $name)
-    {
-        // verify the required parameter 'body' is set
-        if ($body === null || (is_array($body) && count($body) === 0)) {
-            throw new \InvalidArgumentException(
+        /**
+        * Create request for operation 'machinesNamePut'
+        *
+            * @param   $body (required)
+            * @param  string $name (required)
+        *
+        * @throws \InvalidArgumentException
+        * @return \GuzzleHttp\Psr7\Request
+        */
+        protected function machinesNamePutRequest($body, $name)
+        {
+                // verify the required parameter 'body' is set
+                if ($body === null || (is_array($body) && count($body) === 0)) {
+                throw new \InvalidArgumentException(
                 'Missing the required parameter $body when calling machinesNamePut'
-            );
-        }
-        // verify the required parameter 'name' is set
-        if ($name === null || (is_array($name) && count($name) === 0)) {
-            throw new \InvalidArgumentException(
+                );
+                }
+                // verify the required parameter 'name' is set
+                if ($name === null || (is_array($name) && count($name) === 0)) {
+                throw new \InvalidArgumentException(
                 'Missing the required parameter $name when calling machinesNamePut'
-            );
-        }
+                );
+                }
 
         $resourcePath = '/machines/{name}';
         $formParams = [];
-        $queryParams = [];
+        $queryParams = [
+        'page' => $this->paginationCurrentPage,
+        'limit' => $this->paginationLimit,
+        ];
         $headerParams = [];
         $httpBody = '';
         $multipart = false;
 
 
-        // path params
-        if ($name !== null) {
+            // path params
+            if ($name !== null) {
             $resourcePath = str_replace(
-                '{' . 'name' . '}',
-                ObjectSerializer::toPathValue($name),
-                $resourcePath
+            '{' . 'name' . '}',
+            ObjectSerializer::toPathValue($name),
+            $resourcePath
             );
-        }
+            }
 
         // body params
         $_tempBody = null;
-        if (isset($body)) {
+            if (isset($body)) {
             $_tempBody = $body;
-        }
+            }
 
         if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['application/json']
-            );
+        $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['application/json']
+        );
         } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['application/json'],
-                ['application/json', 'application/x-www-form-urlencoded']
-            );
+        $headers = $this->headerSelector->selectHeaders(
+        ['application/json'],
+        ['application/json', 'application/x-www-form-urlencoded']
+        );
         }
 
         // for model (json/xml)
         if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-            // \stdClass has no __toString(), so we should encode it manually
-            if ($httpBody instanceof \stdClass && $headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($httpBody);
-            }
+        // $_tempBody is the method argument, if present
+        $httpBody = $_tempBody;
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof \stdClass && $headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($httpBody);
+        }
         } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
+        if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+        $multipartContents[] = [
+        'name' => $formParamName,
+        'contents' => $formParamValue
+        ];
+        }
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+
+        } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+
+        } else {
+        // for HTTP post (form)
+        $httpBody = \GuzzleHttp\Psr7\build_query($formParams);
+        }
+        }
+
+                // this endpoint requires API key authentication
+                $apiKey = $this->config->getApiKeyWithPrefix('Api-Key');
+                if ($apiKey !== null) {
+                $headers['Api-Key'] = $apiKey;
                 }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = \GuzzleHttp\Psr7\build_query($formParams);
-            }
-        }
-
-        // this endpoint requires API key authentication
-        $apiKey = $this->config->getApiKeyWithPrefix('Api-Key');
-        if ($apiKey !== null) {
-            $headers['Api-Key'] = $apiKey;
-        }
 
         $defaultHeaders = [];
         if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
         }
 
         $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
+        $defaultHeaders,
+        $headerParams,
+        $headers
         );
 
         $query = \GuzzleHttp\Psr7\build_query($queryParams);
         return $this->createRequest(
-            'PUT',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
+        'PUT',
+        $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+        $headers,
+        $httpBody
         );
-    }
+        }
 
-    /**
-     * Operation machinesNameUsersGet
-     *
-     * Returns list of additional system users.
-     *
-     * @param  string $name name (required)
-     *
-     * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
-     * @return \Fozzy\WinVPS\Api\Models\InlineResponse2002[]
-     */
-    public function machinesNameUsersGet($name)
-    {
+        /**
+        * Operation machinesNameUsersGet
+            *
+            * Returns list of additional system users.
+        *
+            * @param  string $name name (required)
+        *
+        * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
+        * @throws \InvalidArgumentException
+        * @return \Fozzy\WinVPS\Api\Models\InlineResponse2002[]
+        */
+        public function machinesNameUsersGet($name)
+        {
         list($response) = $this->machinesNameUsersGetWithHttpInfo($name);
-        return $response;
-    }
+            return $response;
+        }
 
-    /**
-     * Operation machinesNameUsersGetWithHttpInfo
-     *
-     * Returns list of additional system users.
-     *
-     * @param  string $name (required)
-     *
-     * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
-     * @return array of \Fozzy\WinVPS\Api\Models\InlineResponse2002[], HTTP status code, HTTP response headers (array of strings)
-     */
-    public function machinesNameUsersGetWithHttpInfo($name)
-    {
+        /**
+        * Operation machinesNameUsersGetWithHttpInfo
+            *
+            * Returns list of additional system users.
+        *
+            * @param  string $name (required)
+        *
+        * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
+        * @throws \InvalidArgumentException
+        * @return array of \Fozzy\WinVPS\Api\Models\InlineResponse2002[], HTTP status code, HTTP response headers (array of strings)
+        */
+        public function machinesNameUsersGetWithHttpInfo($name)
+        {
         $returnType = '\Fozzy\WinVPS\Api\Models\InlineResponse2002[]';
         $request = $this->machinesNameUsersGetRequest($name);
 
         try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $request,
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
+        $options = $this->createHttpClientOption();
+        try {
+        $response = $this->client->send($request, $options);
+        } catch (RequestException $e) {
+        throw new ApiException(
+        "[{$e->getCode()}] {$e->getMessage()}",
+        $e->getCode(),
+        $request,
+        $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+        $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
+        );
+        }
 
-            $statusCode = $response->getStatusCode();
+        $statusCode = $response->getStatusCode();
 
-            if ($statusCode < 200 || $statusCode > 299) {
-                $url = '';
+        if ($statusCode < 200 || $statusCode > 299) {
+        $url = '';
 
-                if (method_exists($request, 'getUri')) {
-                    $url = $request->getUri();
-                }
+        if (method_exists($request, 'getUri')) {
+        $url = $request->getUri();
+        }
 
-                if (method_exists($request, 'getUrl')) {
-                    $url = $request->getUrl();
-                }
+        if (method_exists($request, 'getUrl')) {
+        $url = $request->getUrl();
+        }
 
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $url
-                    ),
-                    $statusCode,
-                    $request,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
+        throw new ApiException(
+        sprintf(
+        '[%d] Error connecting to the API (%s)',
+        $statusCode,
+        $url
+        ),
+        $statusCode,
+        $request,
+        $response->getHeaders(),
+        $response->getBody()
+        );
+        }
 
             $responseBody = $response->getBody();
             if ($returnType === '\SplFileObject') {
-                $content = $responseBody; //stream goes to serializer
+            $content = $responseBody; //stream goes to serializer
             } else {
-                $content = $responseBody->getContents();
-                if (!in_array($returnType, ['string','integer','bool'])) {
-                    $content = json_decode($content);
-                }
+            $content = $responseBody->getContents();
+            if (!in_array($returnType, ['string','integer','bool'])) {
+            $content = json_decode($content);
+            }
+            }
+
+            if (!empty($content) && is_object($content) && property_exists($content, 'pagination')) {
+            $this->pagination = $content->pagination;
             }
 
             return [
-                ObjectSerializer::deserialize($content, $returnType, []),
-                $response->getStatusCode(),
-                $response->getHeaders()
+            ObjectSerializer::deserialize($content, $returnType, []),
+            $response->getStatusCode(),
+            $response->getHeaders()
             ];
 
         } catch (ApiException $e) {
 
-            $body = $e->getResponseBody();
-            $data = ObjectSerializer::deserialize(
-                $body,
-                '\Fozzy\WinVPS\Api\Models\ErrorResponse',
-                $e->getResponseHeaders()
-            );
-            try {
-                $content = $body->getContents();
-                if ($content) {
-                    $content = json_decode($content, true);
-                }
-                if (!empty($content) && is_array($content) && !empty($content['error'])) {
-                    $data->setError($content['error']);
-                }
-            } catch (\Exception $e) {
-            }
-            $e->setResponseObject($data);
-
-            throw $e;
+        $body = $e->getResponseBody();
+        $data = ObjectSerializer::deserialize(
+        $body,
+        '\Fozzy\WinVPS\Api\Models\ErrorResponse',
+        $e->getResponseHeaders()
+        );
+        try {
+        $content = $body->getContents();
+        if ($content) {
+        $content = json_decode($content, true);
         }
-    }
+        if (!empty($content) && is_array($content) && !empty($content['error'])) {
+        $data->setError($content['error']);
+        }
+        } catch (\Exception $e) {
+        }
+        $e->setResponseObject($data);
 
-    /**
-     * Operation machinesNameUsersGetAsync
-     *
-     * Returns list of additional system users.
-     *
-     * @param  string $name (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function machinesNameUsersGetAsync($name)
-    {
+        throw $e;
+        }
+        }
+
+        /**
+        * Operation machinesNameUsersGetAsync
+        *
+        * Returns list of additional system users.
+        *
+            * @param  string $name (required)
+        *
+        * @throws \InvalidArgumentException
+        * @return \GuzzleHttp\Promise\PromiseInterface
+        */
+        public function machinesNameUsersGetAsync($name)
+        {
         return $this->machinesNameUsersGetAsyncWithHttpInfo($name)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
+        ->then(
+        function ($response) {
+        return $response[0];
+        }
+        );
+        }
 
-    /**
-     * Operation machinesNameUsersGetAsyncWithHttpInfo
-     *
-     * Returns list of additional system users.
-     *
-     * @param  string $name (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function machinesNameUsersGetAsyncWithHttpInfo($name)
-    {
+        /**
+        * Operation machinesNameUsersGetAsyncWithHttpInfo
+        *
+        * Returns list of additional system users.
+        *
+            * @param  string $name (required)
+        *
+        * @throws \InvalidArgumentException
+        * @return \GuzzleHttp\Promise\PromiseInterface
+        */
+        public function machinesNameUsersGetAsyncWithHttpInfo($name)
+        {
         $returnType = '\Fozzy\WinVPS\Api\Models\InlineResponse2002[]';
         $request = $this->machinesNameUsersGetRequest($name);
 
         return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
+        ->sendAsync($request, $this->createHttpClientOption())
+        ->then(
+        function ($response) use ($returnType) {
+            $responseBody = $response->getBody();
+            if ($returnType === '\SplFileObject') {
+            $content = $responseBody; //stream goes to serializer
+            } else {
+            $content = $responseBody->getContents();
+            if ($returnType !== 'string') {
+            $content = json_decode($content);
+            }
+            }
 
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $request,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
-     * Create request for operation 'machinesNameUsersGet'
-     *
-     * @param  string $name (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Psr7\Request
-     */
-    protected function machinesNameUsersGetRequest($name)
-    {
-        // verify the required parameter 'name' is set
-        if ($name === null || (is_array($name) && count($name) === 0)) {
-            throw new \InvalidArgumentException(
-                'Missing the required parameter $name when calling machinesNameUsersGet'
-            );
+            return [
+            ObjectSerializer::deserialize($content, $returnType, []),
+            $response->getStatusCode(),
+            $response->getHeaders()
+            ];
+        },
+        function ($exception) {
+        $response = $exception->getResponse();
+        $statusCode = $response->getStatusCode();
+        throw new ApiException(
+        sprintf(
+        '[%d] Error connecting to the API (%s)',
+        $statusCode,
+        $exception->getRequest()->getUri()
+        ),
+        $statusCode,
+        $request,
+        $response->getHeaders(),
+        $response->getBody()
+        );
         }
+        );
+        }
+
+        /**
+        * Create request for operation 'machinesNameUsersGet'
+        *
+            * @param  string $name (required)
+        *
+        * @throws \InvalidArgumentException
+        * @return \GuzzleHttp\Psr7\Request
+        */
+        protected function machinesNameUsersGetRequest($name)
+        {
+                // verify the required parameter 'name' is set
+                if ($name === null || (is_array($name) && count($name) === 0)) {
+                throw new \InvalidArgumentException(
+                'Missing the required parameter $name when calling machinesNameUsersGet'
+                );
+                }
 
         $resourcePath = '/machines/{name}/users';
         $formParams = [];
-        $queryParams = [];
+        $queryParams = [
+        'page' => $this->paginationCurrentPage,
+        'limit' => $this->paginationLimit,
+        ];
         $headerParams = [];
         $httpBody = '';
         $multipart = false;
 
 
-        // path params
-        if ($name !== null) {
+            // path params
+            if ($name !== null) {
             $resourcePath = str_replace(
-                '{' . 'name' . '}',
-                ObjectSerializer::toPathValue($name),
-                $resourcePath
+            '{' . 'name' . '}',
+            ObjectSerializer::toPathValue($name),
+            $resourcePath
             );
-        }
+            }
 
         // body params
         $_tempBody = null;
 
         if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['application/json']
-            );
+        $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['application/json']
+        );
         } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['application/json'],
-                []
-            );
+        $headers = $this->headerSelector->selectHeaders(
+        ['application/json'],
+        []
+        );
         }
 
         // for model (json/xml)
         if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-            // \stdClass has no __toString(), so we should encode it manually
-            if ($httpBody instanceof \stdClass && $headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($httpBody);
-            }
+        // $_tempBody is the method argument, if present
+        $httpBody = $_tempBody;
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof \stdClass && $headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($httpBody);
+        }
         } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
+        if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+        $multipartContents[] = [
+        'name' => $formParamName,
+        'contents' => $formParamValue
+        ];
+        }
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+
+        } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+
+        } else {
+        // for HTTP post (form)
+        $httpBody = \GuzzleHttp\Psr7\build_query($formParams);
+        }
+        }
+
+                // this endpoint requires API key authentication
+                $apiKey = $this->config->getApiKeyWithPrefix('Api-Key');
+                if ($apiKey !== null) {
+                $headers['Api-Key'] = $apiKey;
                 }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = \GuzzleHttp\Psr7\build_query($formParams);
-            }
-        }
-
-        // this endpoint requires API key authentication
-        $apiKey = $this->config->getApiKeyWithPrefix('Api-Key');
-        if ($apiKey !== null) {
-            $headers['Api-Key'] = $apiKey;
-        }
 
         $defaultHeaders = [];
         if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
         }
 
         $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
+        $defaultHeaders,
+        $headerParams,
+        $headers
         );
 
         $query = \GuzzleHttp\Psr7\build_query($queryParams);
         return $this->createRequest(
-            'GET',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
+        'GET',
+        $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+        $headers,
+        $httpBody
         );
-    }
+        }
 
-    /**
-     * Operation machinesPost
-     *
-     * Create new machine.
-     *
-     * @param   $body Optional description in *Markdown* (required)
-     *
-     * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
-     * @return \Fozzy\WinVPS\Api\Models\InlineResponse202
-     */
-    public function machinesPost($body)
-    {
+        /**
+        * Operation machinesPost
+            *
+            * Create new machine.
+        *
+            * @param   $body Optional description in *Markdown* (required)
+        *
+        * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
+        * @throws \InvalidArgumentException
+        * @return \Fozzy\WinVPS\Api\Models\InlineResponse202
+        */
+        public function machinesPost($body)
+        {
         list($response) = $this->machinesPostWithHttpInfo($body);
-        return $response;
-    }
+            return $response;
+        }
 
-    /**
-     * Operation machinesPostWithHttpInfo
-     *
-     * Create new machine.
-     *
-     * @param   $body Optional description in *Markdown* (required)
-     *
-     * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
-     * @return array of \Fozzy\WinVPS\Api\Models\InlineResponse202, HTTP status code, HTTP response headers (array of strings)
-     */
-    public function machinesPostWithHttpInfo($body)
-    {
+        /**
+        * Operation machinesPostWithHttpInfo
+            *
+            * Create new machine.
+        *
+            * @param   $body Optional description in *Markdown* (required)
+        *
+        * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
+        * @throws \InvalidArgumentException
+        * @return array of \Fozzy\WinVPS\Api\Models\InlineResponse202, HTTP status code, HTTP response headers (array of strings)
+        */
+        public function machinesPostWithHttpInfo($body)
+        {
         $returnType = '\Fozzy\WinVPS\Api\Models\InlineResponse202';
         $request = $this->machinesPostRequest($body);
 
         try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $request,
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
+        $options = $this->createHttpClientOption();
+        try {
+        $response = $this->client->send($request, $options);
+        } catch (RequestException $e) {
+        throw new ApiException(
+        "[{$e->getCode()}] {$e->getMessage()}",
+        $e->getCode(),
+        $request,
+        $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+        $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
+        );
+        }
 
-            $statusCode = $response->getStatusCode();
+        $statusCode = $response->getStatusCode();
 
-            if ($statusCode < 200 || $statusCode > 299) {
-                $url = '';
+        if ($statusCode < 200 || $statusCode > 299) {
+        $url = '';
 
-                if (method_exists($request, 'getUri')) {
-                    $url = $request->getUri();
-                }
+        if (method_exists($request, 'getUri')) {
+        $url = $request->getUri();
+        }
 
-                if (method_exists($request, 'getUrl')) {
-                    $url = $request->getUrl();
-                }
+        if (method_exists($request, 'getUrl')) {
+        $url = $request->getUrl();
+        }
 
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $url
-                    ),
-                    $statusCode,
-                    $request,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
+        throw new ApiException(
+        sprintf(
+        '[%d] Error connecting to the API (%s)',
+        $statusCode,
+        $url
+        ),
+        $statusCode,
+        $request,
+        $response->getHeaders(),
+        $response->getBody()
+        );
+        }
 
             $responseBody = $response->getBody();
             if ($returnType === '\SplFileObject') {
-                $content = $responseBody; //stream goes to serializer
+            $content = $responseBody; //stream goes to serializer
             } else {
-                $content = $responseBody->getContents();
-                if (!in_array($returnType, ['string','integer','bool'])) {
-                    $content = json_decode($content);
-                }
+            $content = $responseBody->getContents();
+            if (!in_array($returnType, ['string','integer','bool'])) {
+            $content = json_decode($content);
+            }
+            }
+
+            if (!empty($content) && is_object($content) && property_exists($content, 'pagination')) {
+            $this->pagination = $content->pagination;
             }
 
             return [
-                ObjectSerializer::deserialize($content, $returnType, []),
-                $response->getStatusCode(),
-                $response->getHeaders()
+            ObjectSerializer::deserialize($content, $returnType, []),
+            $response->getStatusCode(),
+            $response->getHeaders()
             ];
 
         } catch (ApiException $e) {
 
-            $body = $e->getResponseBody();
-            $data = ObjectSerializer::deserialize(
-                $body,
-                '\Fozzy\WinVPS\Api\Models\ErrorResponse',
-                $e->getResponseHeaders()
-            );
-            try {
-                $content = $body->getContents();
-                if ($content) {
-                    $content = json_decode($content, true);
-                }
-                if (!empty($content) && is_array($content) && !empty($content['error'])) {
-                    $data->setError($content['error']);
-                }
-            } catch (\Exception $e) {
-            }
-            $e->setResponseObject($data);
-
-            throw $e;
+        $body = $e->getResponseBody();
+        $data = ObjectSerializer::deserialize(
+        $body,
+        '\Fozzy\WinVPS\Api\Models\ErrorResponse',
+        $e->getResponseHeaders()
+        );
+        try {
+        $content = $body->getContents();
+        if ($content) {
+        $content = json_decode($content, true);
         }
-    }
+        if (!empty($content) && is_array($content) && !empty($content['error'])) {
+        $data->setError($content['error']);
+        }
+        } catch (\Exception $e) {
+        }
+        $e->setResponseObject($data);
 
-    /**
-     * Operation machinesPostAsync
-     *
-     * Create new machine.
-     *
-     * @param   $body Optional description in *Markdown* (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function machinesPostAsync($body)
-    {
+        throw $e;
+        }
+        }
+
+        /**
+        * Operation machinesPostAsync
+        *
+        * Create new machine.
+        *
+            * @param   $body Optional description in *Markdown* (required)
+        *
+        * @throws \InvalidArgumentException
+        * @return \GuzzleHttp\Promise\PromiseInterface
+        */
+        public function machinesPostAsync($body)
+        {
         return $this->machinesPostAsyncWithHttpInfo($body)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
+        ->then(
+        function ($response) {
+        return $response[0];
+        }
+        );
+        }
 
-    /**
-     * Operation machinesPostAsyncWithHttpInfo
-     *
-     * Create new machine.
-     *
-     * @param   $body Optional description in *Markdown* (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function machinesPostAsyncWithHttpInfo($body)
-    {
+        /**
+        * Operation machinesPostAsyncWithHttpInfo
+        *
+        * Create new machine.
+        *
+            * @param   $body Optional description in *Markdown* (required)
+        *
+        * @throws \InvalidArgumentException
+        * @return \GuzzleHttp\Promise\PromiseInterface
+        */
+        public function machinesPostAsyncWithHttpInfo($body)
+        {
         $returnType = '\Fozzy\WinVPS\Api\Models\InlineResponse202';
         $request = $this->machinesPostRequest($body);
 
         return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
+        ->sendAsync($request, $this->createHttpClientOption())
+        ->then(
+        function ($response) use ($returnType) {
+            $responseBody = $response->getBody();
+            if ($returnType === '\SplFileObject') {
+            $content = $responseBody; //stream goes to serializer
+            } else {
+            $content = $responseBody->getContents();
+            if ($returnType !== 'string') {
+            $content = json_decode($content);
+            }
+            }
 
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $request,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
-     * Create request for operation 'machinesPost'
-     *
-     * @param   $body Optional description in *Markdown* (required)
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Psr7\Request
-     */
-    protected function machinesPostRequest($body)
-    {
-        // verify the required parameter 'body' is set
-        if ($body === null || (is_array($body) && count($body) === 0)) {
-            throw new \InvalidArgumentException(
-                'Missing the required parameter $body when calling machinesPost'
-            );
+            return [
+            ObjectSerializer::deserialize($content, $returnType, []),
+            $response->getStatusCode(),
+            $response->getHeaders()
+            ];
+        },
+        function ($exception) {
+        $response = $exception->getResponse();
+        $statusCode = $response->getStatusCode();
+        throw new ApiException(
+        sprintf(
+        '[%d] Error connecting to the API (%s)',
+        $statusCode,
+        $exception->getRequest()->getUri()
+        ),
+        $statusCode,
+        $request,
+        $response->getHeaders(),
+        $response->getBody()
+        );
         }
+        );
+        }
+
+        /**
+        * Create request for operation 'machinesPost'
+        *
+            * @param   $body Optional description in *Markdown* (required)
+        *
+        * @throws \InvalidArgumentException
+        * @return \GuzzleHttp\Psr7\Request
+        */
+        protected function machinesPostRequest($body)
+        {
+                // verify the required parameter 'body' is set
+                if ($body === null || (is_array($body) && count($body) === 0)) {
+                throw new \InvalidArgumentException(
+                'Missing the required parameter $body when calling machinesPost'
+                );
+                }
 
         $resourcePath = '/machines';
         $formParams = [];
-        $queryParams = [];
+        $queryParams = [
+        'page' => $this->paginationCurrentPage,
+        'limit' => $this->paginationLimit,
+        ];
         $headerParams = [];
         $httpBody = '';
         $multipart = false;
@@ -2915,271 +3036,278 @@ class MachinesApi extends Resource
 
         // body params
         $_tempBody = null;
-        if (isset($body)) {
+            if (isset($body)) {
             $_tempBody = $body;
-        }
+            }
 
         if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['application/json']
-            );
+        $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['application/json']
+        );
         } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['application/json'],
-                ['application/json', 'application/x-www-form-urlencoded']
-            );
+        $headers = $this->headerSelector->selectHeaders(
+        ['application/json'],
+        ['application/json', 'application/x-www-form-urlencoded']
+        );
         }
 
         // for model (json/xml)
         if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-            // \stdClass has no __toString(), so we should encode it manually
-            if ($httpBody instanceof \stdClass && $headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($httpBody);
-            }
+        // $_tempBody is the method argument, if present
+        $httpBody = $_tempBody;
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof \stdClass && $headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($httpBody);
+        }
         } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
+        if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+        $multipartContents[] = [
+        'name' => $formParamName,
+        'contents' => $formParamValue
+        ];
+        }
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+
+        } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+
+        } else {
+        // for HTTP post (form)
+        $httpBody = \GuzzleHttp\Psr7\build_query($formParams);
+        }
+        }
+
+                // this endpoint requires API key authentication
+                $apiKey = $this->config->getApiKeyWithPrefix('Api-Key');
+                if ($apiKey !== null) {
+                $headers['Api-Key'] = $apiKey;
                 }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = \GuzzleHttp\Psr7\build_query($formParams);
-            }
-        }
-
-        // this endpoint requires API key authentication
-        $apiKey = $this->config->getApiKeyWithPrefix('Api-Key');
-        if ($apiKey !== null) {
-            $headers['Api-Key'] = $apiKey;
-        }
 
         $defaultHeaders = [];
         if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
         }
 
         $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
+        $defaultHeaders,
+        $headerParams,
+        $headers
         );
 
         $query = \GuzzleHttp\Psr7\build_query($queryParams);
         return $this->createRequest(
-            'POST',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
+        'POST',
+        $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+        $headers,
+        $httpBody
         );
-    }
+        }
 
-    /**
-     * Operation machinesRunningGet
-     *
-     * Returns list of currently running machines.
-     *
-     *
-     * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
-     * @return \Fozzy\WinVPS\Api\Models\InlineResponse200[]
-     */
-    public function machinesRunningGet()
-    {
+        /**
+        * Operation machinesRunningGet
+            *
+            * Returns list of currently running machines.
+        *
+        *
+        * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
+        * @throws \InvalidArgumentException
+        * @return \Fozzy\WinVPS\Api\Models\InlineResponse200[]
+        */
+        public function machinesRunningGet()
+        {
         list($response) = $this->machinesRunningGetWithHttpInfo();
-        return $response;
-    }
+            return $response;
+        }
 
-    /**
-     * Operation machinesRunningGetWithHttpInfo
-     *
-     * Returns list of currently running machines.
-     *
-     *
-     * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
-     * @return array of \Fozzy\WinVPS\Api\Models\InlineResponse200[], HTTP status code, HTTP response headers (array of strings)
-     */
-    public function machinesRunningGetWithHttpInfo()
-    {
+        /**
+        * Operation machinesRunningGetWithHttpInfo
+            *
+            * Returns list of currently running machines.
+        *
+        *
+        * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
+        * @throws \InvalidArgumentException
+        * @return array of \Fozzy\WinVPS\Api\Models\InlineResponse200[], HTTP status code, HTTP response headers (array of strings)
+        */
+        public function machinesRunningGetWithHttpInfo()
+        {
         $returnType = '\Fozzy\WinVPS\Api\Models\InlineResponse200[]';
         $request = $this->machinesRunningGetRequest();
 
         try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $request,
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
+        $options = $this->createHttpClientOption();
+        try {
+        $response = $this->client->send($request, $options);
+        } catch (RequestException $e) {
+        throw new ApiException(
+        "[{$e->getCode()}] {$e->getMessage()}",
+        $e->getCode(),
+        $request,
+        $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+        $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
+        );
+        }
 
-            $statusCode = $response->getStatusCode();
+        $statusCode = $response->getStatusCode();
 
-            if ($statusCode < 200 || $statusCode > 299) {
-                $url = '';
+        if ($statusCode < 200 || $statusCode > 299) {
+        $url = '';
 
-                if (method_exists($request, 'getUri')) {
-                    $url = $request->getUri();
-                }
+        if (method_exists($request, 'getUri')) {
+        $url = $request->getUri();
+        }
 
-                if (method_exists($request, 'getUrl')) {
-                    $url = $request->getUrl();
-                }
+        if (method_exists($request, 'getUrl')) {
+        $url = $request->getUrl();
+        }
 
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $url
-                    ),
-                    $statusCode,
-                    $request,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
+        throw new ApiException(
+        sprintf(
+        '[%d] Error connecting to the API (%s)',
+        $statusCode,
+        $url
+        ),
+        $statusCode,
+        $request,
+        $response->getHeaders(),
+        $response->getBody()
+        );
+        }
 
             $responseBody = $response->getBody();
             if ($returnType === '\SplFileObject') {
-                $content = $responseBody; //stream goes to serializer
+            $content = $responseBody; //stream goes to serializer
             } else {
-                $content = $responseBody->getContents();
-                if (!in_array($returnType, ['string','integer','bool'])) {
-                    $content = json_decode($content);
-                }
+            $content = $responseBody->getContents();
+            if (!in_array($returnType, ['string','integer','bool'])) {
+            $content = json_decode($content);
+            }
+            }
+
+            if (!empty($content) && is_object($content) && property_exists($content, 'pagination')) {
+            $this->pagination = $content->pagination;
             }
 
             return [
-                ObjectSerializer::deserialize($content, $returnType, []),
-                $response->getStatusCode(),
-                $response->getHeaders()
+            ObjectSerializer::deserialize($content, $returnType, []),
+            $response->getStatusCode(),
+            $response->getHeaders()
             ];
 
         } catch (ApiException $e) {
 
-            $body = $e->getResponseBody();
-            $data = ObjectSerializer::deserialize(
-                $body,
-                '\Fozzy\WinVPS\Api\Models\ErrorResponse',
-                $e->getResponseHeaders()
-            );
-            try {
-                $content = $body->getContents();
-                if ($content) {
-                    $content = json_decode($content, true);
-                }
-                if (!empty($content) && is_array($content) && !empty($content['error'])) {
-                    $data->setError($content['error']);
-                }
-            } catch (\Exception $e) {
-            }
-            $e->setResponseObject($data);
-
-            throw $e;
+        $body = $e->getResponseBody();
+        $data = ObjectSerializer::deserialize(
+        $body,
+        '\Fozzy\WinVPS\Api\Models\ErrorResponse',
+        $e->getResponseHeaders()
+        );
+        try {
+        $content = $body->getContents();
+        if ($content) {
+        $content = json_decode($content, true);
         }
-    }
+        if (!empty($content) && is_array($content) && !empty($content['error'])) {
+        $data->setError($content['error']);
+        }
+        } catch (\Exception $e) {
+        }
+        $e->setResponseObject($data);
 
-    /**
-     * Operation machinesRunningGetAsync
-     *
-     * Returns list of currently running machines.
-     *
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function machinesRunningGetAsync()
-    {
+        throw $e;
+        }
+        }
+
+        /**
+        * Operation machinesRunningGetAsync
+        *
+        * Returns list of currently running machines.
+        *
+        *
+        * @throws \InvalidArgumentException
+        * @return \GuzzleHttp\Promise\PromiseInterface
+        */
+        public function machinesRunningGetAsync()
+        {
         return $this->machinesRunningGetAsyncWithHttpInfo()
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
+        ->then(
+        function ($response) {
+        return $response[0];
+        }
+        );
+        }
 
-    /**
-     * Operation machinesRunningGetAsyncWithHttpInfo
-     *
-     * Returns list of currently running machines.
-     *
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function machinesRunningGetAsyncWithHttpInfo()
-    {
+        /**
+        * Operation machinesRunningGetAsyncWithHttpInfo
+        *
+        * Returns list of currently running machines.
+        *
+        *
+        * @throws \InvalidArgumentException
+        * @return \GuzzleHttp\Promise\PromiseInterface
+        */
+        public function machinesRunningGetAsyncWithHttpInfo()
+        {
         $returnType = '\Fozzy\WinVPS\Api\Models\InlineResponse200[]';
         $request = $this->machinesRunningGetRequest();
 
         return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
+        ->sendAsync($request, $this->createHttpClientOption())
+        ->then(
+        function ($response) use ($returnType) {
+            $responseBody = $response->getBody();
+            if ($returnType === '\SplFileObject') {
+            $content = $responseBody; //stream goes to serializer
+            } else {
+            $content = $responseBody->getContents();
+            if ($returnType !== 'string') {
+            $content = json_decode($content);
+            }
+            }
 
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $request,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
+            return [
+            ObjectSerializer::deserialize($content, $returnType, []),
+            $response->getStatusCode(),
+            $response->getHeaders()
+            ];
+        },
+        function ($exception) {
+        $response = $exception->getResponse();
+        $statusCode = $response->getStatusCode();
+        throw new ApiException(
+        sprintf(
+        '[%d] Error connecting to the API (%s)',
+        $statusCode,
+        $exception->getRequest()->getUri()
+        ),
+        $statusCode,
+        $request,
+        $response->getHeaders(),
+        $response->getBody()
+        );
+        }
+        );
+        }
 
-    /**
-     * Create request for operation 'machinesRunningGet'
-     *
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Psr7\Request
-     */
-    protected function machinesRunningGetRequest()
-    {
+        /**
+        * Create request for operation 'machinesRunningGet'
+        *
+        *
+        * @throws \InvalidArgumentException
+        * @return \GuzzleHttp\Psr7\Request
+        */
+        protected function machinesRunningGetRequest()
+        {
 
         $resourcePath = '/machines/running';
         $formParams = [];
-        $queryParams = [];
+        $queryParams = [
+        'page' => $this->paginationCurrentPage,
+        'limit' => $this->paginationLimit,
+        ];
         $headerParams = [];
         $httpBody = '';
         $multipart = false;
@@ -3190,266 +3318,273 @@ class MachinesApi extends Resource
         $_tempBody = null;
 
         if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['application/json']
-            );
+        $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['application/json']
+        );
         } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['application/json'],
-                []
-            );
+        $headers = $this->headerSelector->selectHeaders(
+        ['application/json'],
+        []
+        );
         }
 
         // for model (json/xml)
         if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-            // \stdClass has no __toString(), so we should encode it manually
-            if ($httpBody instanceof \stdClass && $headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($httpBody);
-            }
+        // $_tempBody is the method argument, if present
+        $httpBody = $_tempBody;
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof \stdClass && $headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($httpBody);
+        }
         } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
+        if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+        $multipartContents[] = [
+        'name' => $formParamName,
+        'contents' => $formParamValue
+        ];
+        }
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+
+        } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+
+        } else {
+        // for HTTP post (form)
+        $httpBody = \GuzzleHttp\Psr7\build_query($formParams);
+        }
+        }
+
+                // this endpoint requires API key authentication
+                $apiKey = $this->config->getApiKeyWithPrefix('Api-Key');
+                if ($apiKey !== null) {
+                $headers['Api-Key'] = $apiKey;
                 }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = \GuzzleHttp\Psr7\build_query($formParams);
-            }
-        }
-
-        // this endpoint requires API key authentication
-        $apiKey = $this->config->getApiKeyWithPrefix('Api-Key');
-        if ($apiKey !== null) {
-            $headers['Api-Key'] = $apiKey;
-        }
 
         $defaultHeaders = [];
         if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
         }
 
         $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
+        $defaultHeaders,
+        $headerParams,
+        $headers
         );
 
         $query = \GuzzleHttp\Psr7\build_query($queryParams);
         return $this->createRequest(
-            'GET',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
+        'GET',
+        $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+        $headers,
+        $httpBody
         );
-    }
+        }
 
-    /**
-     * Operation machinesStoppedGet
-     *
-     * Returns list of currently stopped or suspended machines.
-     *
-     *
-     * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
-     * @return \Fozzy\WinVPS\Api\Models\InlineResponse200[]
-     */
-    public function machinesStoppedGet()
-    {
+        /**
+        * Operation machinesStoppedGet
+            *
+            * Returns list of currently stopped or suspended machines.
+        *
+        *
+        * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
+        * @throws \InvalidArgumentException
+        * @return \Fozzy\WinVPS\Api\Models\InlineResponse200[]
+        */
+        public function machinesStoppedGet()
+        {
         list($response) = $this->machinesStoppedGetWithHttpInfo();
-        return $response;
-    }
+            return $response;
+        }
 
-    /**
-     * Operation machinesStoppedGetWithHttpInfo
-     *
-     * Returns list of currently stopped or suspended machines.
-     *
-     *
-     * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
-     * @throws \InvalidArgumentException
-     * @return array of \Fozzy\WinVPS\Api\Models\InlineResponse200[], HTTP status code, HTTP response headers (array of strings)
-     */
-    public function machinesStoppedGetWithHttpInfo()
-    {
+        /**
+        * Operation machinesStoppedGetWithHttpInfo
+            *
+            * Returns list of currently stopped or suspended machines.
+        *
+        *
+        * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
+        * @throws \InvalidArgumentException
+        * @return array of \Fozzy\WinVPS\Api\Models\InlineResponse200[], HTTP status code, HTTP response headers (array of strings)
+        */
+        public function machinesStoppedGetWithHttpInfo()
+        {
         $returnType = '\Fozzy\WinVPS\Api\Models\InlineResponse200[]';
         $request = $this->machinesStoppedGetRequest();
 
         try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    $e->getCode(),
-                    $request,
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
-                );
-            }
+        $options = $this->createHttpClientOption();
+        try {
+        $response = $this->client->send($request, $options);
+        } catch (RequestException $e) {
+        throw new ApiException(
+        "[{$e->getCode()}] {$e->getMessage()}",
+        $e->getCode(),
+        $request,
+        $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+        $e->getResponse() ? $e->getResponse()->getBody()->getContents() : null
+        );
+        }
 
-            $statusCode = $response->getStatusCode();
+        $statusCode = $response->getStatusCode();
 
-            if ($statusCode < 200 || $statusCode > 299) {
-                $url = '';
+        if ($statusCode < 200 || $statusCode > 299) {
+        $url = '';
 
-                if (method_exists($request, 'getUri')) {
-                    $url = $request->getUri();
-                }
+        if (method_exists($request, 'getUri')) {
+        $url = $request->getUri();
+        }
 
-                if (method_exists($request, 'getUrl')) {
-                    $url = $request->getUrl();
-                }
+        if (method_exists($request, 'getUrl')) {
+        $url = $request->getUrl();
+        }
 
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        $url
-                    ),
-                    $statusCode,
-                    $request,
-                    $response->getHeaders(),
-                    $response->getBody()
-                );
-            }
+        throw new ApiException(
+        sprintf(
+        '[%d] Error connecting to the API (%s)',
+        $statusCode,
+        $url
+        ),
+        $statusCode,
+        $request,
+        $response->getHeaders(),
+        $response->getBody()
+        );
+        }
 
             $responseBody = $response->getBody();
             if ($returnType === '\SplFileObject') {
-                $content = $responseBody; //stream goes to serializer
+            $content = $responseBody; //stream goes to serializer
             } else {
-                $content = $responseBody->getContents();
-                if (!in_array($returnType, ['string','integer','bool'])) {
-                    $content = json_decode($content);
-                }
+            $content = $responseBody->getContents();
+            if (!in_array($returnType, ['string','integer','bool'])) {
+            $content = json_decode($content);
+            }
+            }
+
+            if (!empty($content) && is_object($content) && property_exists($content, 'pagination')) {
+            $this->pagination = $content->pagination;
             }
 
             return [
-                ObjectSerializer::deserialize($content, $returnType, []),
-                $response->getStatusCode(),
-                $response->getHeaders()
+            ObjectSerializer::deserialize($content, $returnType, []),
+            $response->getStatusCode(),
+            $response->getHeaders()
             ];
 
         } catch (ApiException $e) {
 
-            $body = $e->getResponseBody();
-            $data = ObjectSerializer::deserialize(
-                $body,
-                '\Fozzy\WinVPS\Api\Models\ErrorResponse',
-                $e->getResponseHeaders()
-            );
-            try {
-                $content = $body->getContents();
-                if ($content) {
-                    $content = json_decode($content, true);
-                }
-                if (!empty($content) && is_array($content) && !empty($content['error'])) {
-                    $data->setError($content['error']);
-                }
-            } catch (\Exception $e) {
-            }
-            $e->setResponseObject($data);
-
-            throw $e;
+        $body = $e->getResponseBody();
+        $data = ObjectSerializer::deserialize(
+        $body,
+        '\Fozzy\WinVPS\Api\Models\ErrorResponse',
+        $e->getResponseHeaders()
+        );
+        try {
+        $content = $body->getContents();
+        if ($content) {
+        $content = json_decode($content, true);
         }
-    }
+        if (!empty($content) && is_array($content) && !empty($content['error'])) {
+        $data->setError($content['error']);
+        }
+        } catch (\Exception $e) {
+        }
+        $e->setResponseObject($data);
 
-    /**
-     * Operation machinesStoppedGetAsync
-     *
-     * Returns list of currently stopped or suspended machines.
-     *
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function machinesStoppedGetAsync()
-    {
+        throw $e;
+        }
+        }
+
+        /**
+        * Operation machinesStoppedGetAsync
+        *
+        * Returns list of currently stopped or suspended machines.
+        *
+        *
+        * @throws \InvalidArgumentException
+        * @return \GuzzleHttp\Promise\PromiseInterface
+        */
+        public function machinesStoppedGetAsync()
+        {
         return $this->machinesStoppedGetAsyncWithHttpInfo()
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
+        ->then(
+        function ($response) {
+        return $response[0];
+        }
+        );
+        }
 
-    /**
-     * Operation machinesStoppedGetAsyncWithHttpInfo
-     *
-     * Returns list of currently stopped or suspended machines.
-     *
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function machinesStoppedGetAsyncWithHttpInfo()
-    {
+        /**
+        * Operation machinesStoppedGetAsyncWithHttpInfo
+        *
+        * Returns list of currently stopped or suspended machines.
+        *
+        *
+        * @throws \InvalidArgumentException
+        * @return \GuzzleHttp\Promise\PromiseInterface
+        */
+        public function machinesStoppedGetAsyncWithHttpInfo()
+        {
         $returnType = '\Fozzy\WinVPS\Api\Models\InlineResponse200[]';
         $request = $this->machinesStoppedGetRequest();
 
         return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    $responseBody = $response->getBody();
-                    if ($returnType === '\SplFileObject') {
-                        $content = $responseBody; //stream goes to serializer
-                    } else {
-                        $content = $responseBody->getContents();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
+        ->sendAsync($request, $this->createHttpClientOption())
+        ->then(
+        function ($response) use ($returnType) {
+            $responseBody = $response->getBody();
+            if ($returnType === '\SplFileObject') {
+            $content = $responseBody; //stream goes to serializer
+            } else {
+            $content = $responseBody->getContents();
+            if ($returnType !== 'string') {
+            $content = json_decode($content);
+            }
+            }
 
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $request,
-                        $response->getHeaders(),
-                        $response->getBody()
-                    );
-                }
-            );
-    }
+            return [
+            ObjectSerializer::deserialize($content, $returnType, []),
+            $response->getStatusCode(),
+            $response->getHeaders()
+            ];
+        },
+        function ($exception) {
+        $response = $exception->getResponse();
+        $statusCode = $response->getStatusCode();
+        throw new ApiException(
+        sprintf(
+        '[%d] Error connecting to the API (%s)',
+        $statusCode,
+        $exception->getRequest()->getUri()
+        ),
+        $statusCode,
+        $request,
+        $response->getHeaders(),
+        $response->getBody()
+        );
+        }
+        );
+        }
 
-    /**
-     * Create request for operation 'machinesStoppedGet'
-     *
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Psr7\Request
-     */
-    protected function machinesStoppedGetRequest()
-    {
+        /**
+        * Create request for operation 'machinesStoppedGet'
+        *
+        *
+        * @throws \InvalidArgumentException
+        * @return \GuzzleHttp\Psr7\Request
+        */
+        protected function machinesStoppedGetRequest()
+        {
 
         $resourcePath = '/machines/stopped';
         $formParams = [];
-        $queryParams = [];
+        $queryParams = [
+        'page' => $this->paginationCurrentPage,
+        'limit' => $this->paginationLimit,
+        ];
         $headerParams = [];
         $httpBody = '';
         $multipart = false;
@@ -3460,87 +3595,87 @@ class MachinesApi extends Resource
         $_tempBody = null;
 
         if ($multipart) {
-            $headers = $this->headerSelector->selectHeadersForMultipart(
-                ['application/json']
-            );
+        $headers = $this->headerSelector->selectHeadersForMultipart(
+        ['application/json']
+        );
         } else {
-            $headers = $this->headerSelector->selectHeaders(
-                ['application/json'],
-                []
-            );
+        $headers = $this->headerSelector->selectHeaders(
+        ['application/json'],
+        []
+        );
         }
 
         // for model (json/xml)
         if (isset($_tempBody)) {
-            // $_tempBody is the method argument, if present
-            $httpBody = $_tempBody;
-            // \stdClass has no __toString(), so we should encode it manually
-            if ($httpBody instanceof \stdClass && $headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($httpBody);
-            }
+        // $_tempBody is the method argument, if present
+        $httpBody = $_tempBody;
+        // \stdClass has no __toString(), so we should encode it manually
+        if ($httpBody instanceof \stdClass && $headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($httpBody);
+        }
         } elseif (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $multipartContents[] = [
-                        'name' => $formParamName,
-                        'contents' => $formParamValue
-                    ];
+        if ($multipart) {
+        $multipartContents = [];
+        foreach ($formParams as $formParamName => $formParamValue) {
+        $multipartContents[] = [
+        'name' => $formParamName,
+        'contents' => $formParamValue
+        ];
+        }
+        // for HTTP post (form)
+        $httpBody = new MultipartStream($multipartContents);
+
+        } elseif ($headers['Content-Type'] === 'application/json') {
+        $httpBody = \GuzzleHttp\json_encode($formParams);
+
+        } else {
+        // for HTTP post (form)
+        $httpBody = \GuzzleHttp\Psr7\build_query($formParams);
+        }
+        }
+
+                // this endpoint requires API key authentication
+                $apiKey = $this->config->getApiKeyWithPrefix('Api-Key');
+                if ($apiKey !== null) {
+                $headers['Api-Key'] = $apiKey;
                 }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif ($headers['Content-Type'] === 'application/json') {
-                $httpBody = \GuzzleHttp\json_encode($formParams);
-
-            } else {
-                // for HTTP post (form)
-                $httpBody = \GuzzleHttp\Psr7\build_query($formParams);
-            }
-        }
-
-        // this endpoint requires API key authentication
-        $apiKey = $this->config->getApiKeyWithPrefix('Api-Key');
-        if ($apiKey !== null) {
-            $headers['Api-Key'] = $apiKey;
-        }
 
         $defaultHeaders = [];
         if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
         }
 
         $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
+        $defaultHeaders,
+        $headerParams,
+        $headers
         );
 
         $query = \GuzzleHttp\Psr7\build_query($queryParams);
         return $this->createRequest(
-            'GET',
-            $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
+        'GET',
+        $this->config->getHost() . $resourcePath . ($query ? "?{$query}" : ''),
+        $headers,
+        $httpBody
         );
-    }
-
-    /**
-     * Create http client option
-     *
-     * @throws \RuntimeException on file opening failure
-     * @return array of http client options
-     */
-    protected function createHttpClientOption()
-    {
-        $options = [];
-        if ($this->config->getDebug()) {
-            $options[RequestOptions::DEBUG] = fopen($this->config->getDebugFile(), 'a');
-            if (!$options[RequestOptions::DEBUG]) {
-                throw new \RuntimeException('Failed to open the debug file: ' . $this->config->getDebugFile());
-            }
         }
 
-        return $options;
-    }
+/**
+* Create http client option
+*
+* @throws \RuntimeException on file opening failure
+* @return array of http client options
+*/
+protected function createHttpClientOption()
+{
+$options = [];
+if ($this->config->getDebug()) {
+$options[RequestOptions::DEBUG] = fopen($this->config->getDebugFile(), 'a');
+if (!$options[RequestOptions::DEBUG]) {
+throw new \RuntimeException('Failed to open the debug file: ' . $this->config->getDebugFile());
+}
+}
+
+return $options;
+}
 }
