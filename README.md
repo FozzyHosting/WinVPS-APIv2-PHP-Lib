@@ -1,1 +1,1 @@
-# WinVPS-APIv2-PHP-Lib
+# Windows VPS APIv2 PHP Lib
