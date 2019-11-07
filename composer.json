@@ -1,16 +1,13 @@
 {
-    "name": "GIT_USER_ID/GIT_REPO_ID",
-    "description": "",
-    "keywords": [
-        "swagger",
-        "php",
-        "sdk",
-        "api"
-    ],
-    "homepage": "http://swagger.io",
-    "license": "proprietary",
+    "name": "fozzy-hosting/fozzy-winvps-api-php",
+    "description": "Fozzy Windows VPS APIv2 client library for PHP",
+    "homepage": "https://fozzy.com",
+    "license": "MIT",
     "authors": [
         {
+            "name": "Fozzy Inc.",
+            "homepage": "https://fozzy.com"
+        }, {
             "name": "Swagger and contributors",
             "homepage": "https://github.com/swagger-api/swagger-codegen"
         }
