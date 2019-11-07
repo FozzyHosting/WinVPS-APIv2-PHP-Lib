@@ -1,5 +1,5 @@
 {
-    "name": "fozzy-hosting/fozzy-winvps-api-php",
+    "name": "fozzy-hosting/winvps-api-php",
     "description": "Fozzy Windows VPS APIv2 client library for PHP",
     "homepage": "https://fozzy.com",
     "license": "MIT",
@@ -7,9 +7,6 @@
         {
             "name": "Fozzy Inc.",
             "homepage": "https://fozzy.com"
-        }, {
-            "name": "Swagger and contributors",
-            "homepage": "https://github.com/swagger-api/swagger-codegen"
         }
     ],
     "require": {
