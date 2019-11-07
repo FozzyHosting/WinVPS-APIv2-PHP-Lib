@@ -71,12 +71,19 @@ try {
     $repository = new Repository($config);
     
     // Get API Instance object to make requests. 
-    $brandsInstance = $repository->get('brands');
-    
-    // Load all brands from the endpoint.
-    $allBrandsPage = $brandsInstance->brandsGet();
+    $machinesInstance = $repository->get('machines');
 
-    print_r($allBrandsPage);
+    /*
+    Load all machines from the endpoint.
+    Only the part of records will be returned because API uses pagination
+    */  
+    $allMachinesPage = $machinesInstance->machinesGet();
+
+    print_r($allMachinesPage);
+        
+    
+
+
     
 } catch (Exception $e) {
     echo 'Exception when calling BrandsApi->brandsGet: ', $e->getMessage(), PHP_EOL;
@@ -85,4 +92,27 @@ try {
 ?>
 ```
 
+### Pagination
+
+```
+/**
+ * Each of the API Instances supports the next methods:
+ *
+ * paginationSetLimit($limit) - setup new per-page amount
+ * paginationNext() - go to the next page
+ * paginationPrev() - go to the previous page
+ * paginationGetTotal() - total recourds amount
+ * paginationGetPage() - get current page number
+ * paginationGetPages() - get total pages count
+ * paginationHasMore() - does the next page exists
+ */
+
+// Example based on the previous code
+do {
+    $allMachinesPage = $machinesInstance->machinesGet();
+    $machinesInstance->paginationNext();
+
+} while ($machinesInstance->paginationHasMore());
+
+```
 
