@@ -90,7 +90,7 @@ try {
 
 ### Pagination
 
-```
+```php
 <?php
 /**
  * Each of the API Instances supports the next methods:
