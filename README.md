@@ -80,10 +80,6 @@ try {
     $allMachinesPage = $machinesInstance->machinesGet();
 
     print_r($allMachinesPage);
-        
-    
-
-
     
 } catch (Exception $e) {
     echo 'Exception when calling BrandsApi->brandsGet: ', $e->getMessage(), PHP_EOL;
