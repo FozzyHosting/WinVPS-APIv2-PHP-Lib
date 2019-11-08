@@ -17,13 +17,13 @@ use \ArrayAccess;
 use \Fozzy\WinVPS\Api\ObjectSerializer;
 
 /**
- * InlineResponse200 Model
+ * InlineResponse202Data Model
  *
  * @category Class
  * @package  Fozzy\WinVPS\Api
  * @author   Fozzy Inc.
  */
-class InlineResponse200 implements ModelInterface, ArrayAccess
+class InlineResponse202Data implements ModelInterface, ArrayAccess
 {
     const DISCRIMINATOR = null;
 
@@ -32,7 +32,7 @@ class InlineResponse200 implements ModelInterface, ArrayAccess
       *
       * @var string
       */
-    protected static $swaggerModelName = 'inline_response_200';
+    protected static $swaggerModelName = 'inline_response_202_data';
 
     /**
       * Array of property to type mappings. Used for (de)serialization
@@ -40,7 +40,8 @@ class InlineResponse200 implements ModelInterface, ArrayAccess
       * @var string[]
       */
     protected static $swaggerTypes = [
-        'data' => '\Fozzy\WinVPS\Api\Models\MachineDefinition'    ];
+        'name' => 'string',
+'jobs' => '\Fozzy\WinVPS\Api\Models\CommandResult[]'    ];
 
     /**
       * Array of property to format mappings. Used for (de)serialization
@@ -48,7 +49,8 @@ class InlineResponse200 implements ModelInterface, ArrayAccess
       * @var string[]
       */
     protected static $swaggerFormats = [
-        'data' => null    ];
+        'name' => null,
+'jobs' => null    ];
 
     /**
      * Array of property to type mappings. Used for (de)serialization
@@ -77,7 +79,8 @@ class InlineResponse200 implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $attributeMap = [
-        'data' => 'data'    ];
+        'name' => 'name',
+'jobs' => 'jobs'    ];
 
     /**
      * Array of attributes to setter functions (for deserialization of responses)
@@ -85,7 +88,8 @@ class InlineResponse200 implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $setters = [
-        'data' => 'setData'    ];
+        'name' => 'setName',
+'jobs' => 'setJobs'    ];
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -93,7 +97,8 @@ class InlineResponse200 implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $getters = [
-        'data' => 'getData'    ];
+        'name' => 'getName',
+'jobs' => 'getJobs'    ];
 
     /**
      * Array of attributes where the key is the local name,
@@ -153,7 +158,8 @@ class InlineResponse200 implements ModelInterface, ArrayAccess
      */
     public function __construct(array $data = null)
     {
-        $this->container['data'] = isset($data['data']) ? $data['data'] : null;
+        $this->container['name'] = isset($data['name']) ? $data['name'] : null;
+        $this->container['jobs'] = isset($data['jobs']) ? $data['jobs'] : null;
     }
 
     /**
@@ -181,25 +187,49 @@ class InlineResponse200 implements ModelInterface, ArrayAccess
 
 
     /**
-     * Gets data
+     * Gets name
      *
-     * @return \Fozzy\WinVPS\Api\Models\MachineDefinition
+     * @return string
      */
-    public function getData()
+    public function getName()
     {
-        return $this->container['data'];
+        return $this->container['name'];
     }
 
     /**
-     * Sets data
+     * Sets name
      *
-     * @param \Fozzy\WinVPS\Api\Models\MachineDefinition $data data
+     * @param string $name name
      *
      * @return $this
      */
-    public function setData($data)
+    public function setName($name)
     {
-        $this->container['data'] = $data;
+        $this->container['name'] = $name;
+
+        return $this;
+    }
+
+    /**
+     * Gets jobs
+     *
+     * @return \Fozzy\WinVPS\Api\Models\CommandResult[]
+     */
+    public function getJobs()
+    {
+        return $this->container['jobs'];
+    }
+
+    /**
+     * Sets jobs
+     *
+     * @param \Fozzy\WinVPS\Api\Models\CommandResult[] $jobs jobs
+     *
+     * @return $this
+     */
+    public function setJobs($jobs)
+    {
+        $this->container['jobs'] = $jobs;
 
         return $this;
     }

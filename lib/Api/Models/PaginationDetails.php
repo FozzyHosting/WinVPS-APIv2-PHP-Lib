@@ -17,13 +17,13 @@ use \ArrayAccess;
 use \Fozzy\WinVPS\Api\ObjectSerializer;
 
 /**
- * InlineResponse200 Model
+ * PaginationDetails Model
  *
  * @category Class
  * @package  Fozzy\WinVPS\Api
  * @author   Fozzy Inc.
  */
-class InlineResponse200 implements ModelInterface, ArrayAccess
+class PaginationDetails implements ModelInterface, ArrayAccess
 {
     const DISCRIMINATOR = null;
 
@@ -32,7 +32,7 @@ class InlineResponse200 implements ModelInterface, ArrayAccess
       *
       * @var string
       */
-    protected static $swaggerModelName = 'inline_response_200';
+    protected static $swaggerModelName = 'PaginationDetails';
 
     /**
       * Array of property to type mappings. Used for (de)serialization
@@ -40,7 +40,10 @@ class InlineResponse200 implements ModelInterface, ArrayAccess
       * @var string[]
       */
     protected static $swaggerTypes = [
-        'data' => '\Fozzy\WinVPS\Api\Models\MachineDefinition'    ];
+        'total' => 'int',
+'limit' => 'int',
+'page' => 'int',
+'pages' => 'int'    ];
 
     /**
       * Array of property to format mappings. Used for (de)serialization
@@ -48,7 +51,10 @@ class InlineResponse200 implements ModelInterface, ArrayAccess
       * @var string[]
       */
     protected static $swaggerFormats = [
-        'data' => null    ];
+        'total' => null,
+'limit' => null,
+'page' => null,
+'pages' => null    ];
 
     /**
      * Array of property to type mappings. Used for (de)serialization
@@ -77,7 +83,10 @@ class InlineResponse200 implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $attributeMap = [
-        'data' => 'data'    ];
+        'total' => 'total',
+'limit' => 'limit',
+'page' => 'page',
+'pages' => 'pages'    ];
 
     /**
      * Array of attributes to setter functions (for deserialization of responses)
@@ -85,7 +94,10 @@ class InlineResponse200 implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $setters = [
-        'data' => 'setData'    ];
+        'total' => 'setTotal',
+'limit' => 'setLimit',
+'page' => 'setPage',
+'pages' => 'setPages'    ];
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -93,7 +105,10 @@ class InlineResponse200 implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $getters = [
-        'data' => 'getData'    ];
+        'total' => 'getTotal',
+'limit' => 'getLimit',
+'page' => 'getPage',
+'pages' => 'getPages'    ];
 
     /**
      * Array of attributes where the key is the local name,
@@ -153,7 +168,10 @@ class InlineResponse200 implements ModelInterface, ArrayAccess
      */
     public function __construct(array $data = null)
     {
-        $this->container['data'] = isset($data['data']) ? $data['data'] : null;
+        $this->container['total'] = isset($data['total']) ? $data['total'] : null;
+        $this->container['limit'] = isset($data['limit']) ? $data['limit'] : null;
+        $this->container['page'] = isset($data['page']) ? $data['page'] : null;
+        $this->container['pages'] = isset($data['pages']) ? $data['pages'] : null;
     }
 
     /**
@@ -181,25 +199,97 @@ class InlineResponse200 implements ModelInterface, ArrayAccess
 
 
     /**
-     * Gets data
+     * Gets total
      *
-     * @return \Fozzy\WinVPS\Api\Models\MachineDefinition
+     * @return int
      */
-    public function getData()
+    public function getTotal()
     {
-        return $this->container['data'];
+        return $this->container['total'];
     }
 
     /**
-     * Sets data
+     * Sets total
      *
-     * @param \Fozzy\WinVPS\Api\Models\MachineDefinition $data data
+     * @param int $total The total number of entries available in the entire collection
      *
      * @return $this
      */
-    public function setData($data)
+    public function setTotal($total)
     {
-        $this->container['data'] = $data;
+        $this->container['total'] = $total;
+
+        return $this;
+    }
+
+    /**
+     * Gets limit
+     *
+     * @return int
+     */
+    public function getLimit()
+    {
+        return $this->container['limit'];
+    }
+
+    /**
+     * Sets limit
+     *
+     * @param int $limit The number of entries returned per page (default: 50)
+     *
+     * @return $this
+     */
+    public function setLimit($limit)
+    {
+        $this->container['limit'] = $limit;
+
+        return $this;
+    }
+
+    /**
+     * Gets page
+     *
+     * @return int
+     */
+    public function getPage()
+    {
+        return $this->container['page'];
+    }
+
+    /**
+     * Sets page
+     *
+     * @param int $page The page currently returned (default: 1)
+     *
+     * @return $this
+     */
+    public function setPage($page)
+    {
+        $this->container['page'] = $page;
+
+        return $this;
+    }
+
+    /**
+     * Gets pages
+     *
+     * @return int
+     */
+    public function getPages()
+    {
+        return $this->container['pages'];
+    }
+
+    /**
+     * Sets pages
+     *
+     * @param int $pages The total number of pages
+     *
+     * @return $this
+     */
+    public function setPages($pages)
+    {
+        $this->container['pages'] = $pages;
 
         return $this;
     }

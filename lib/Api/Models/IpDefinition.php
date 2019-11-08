@@ -17,13 +17,13 @@ use \ArrayAccess;
 use \Fozzy\WinVPS\Api\ObjectSerializer;
 
 /**
- * InlineResponse200 Model
+ * IpDefinition Model
  *
  * @category Class
  * @package  Fozzy\WinVPS\Api
  * @author   Fozzy Inc.
  */
-class InlineResponse200 implements ModelInterface, ArrayAccess
+class IpDefinition implements ModelInterface, ArrayAccess
 {
     const DISCRIMINATOR = null;
 
@@ -32,7 +32,7 @@ class InlineResponse200 implements ModelInterface, ArrayAccess
       *
       * @var string
       */
-    protected static $swaggerModelName = 'inline_response_200';
+    protected static $swaggerModelName = 'IpDefinition';
 
     /**
       * Array of property to type mappings. Used for (de)serialization
@@ -40,7 +40,8 @@ class InlineResponse200 implements ModelInterface, ArrayAccess
       * @var string[]
       */
     protected static $swaggerTypes = [
-        'data' => '\Fozzy\WinVPS\Api\Models\MachineDefinition'    ];
+        'version' => 'int',
+'address' => 'string'    ];
 
     /**
       * Array of property to format mappings. Used for (de)serialization
@@ -48,7 +49,8 @@ class InlineResponse200 implements ModelInterface, ArrayAccess
       * @var string[]
       */
     protected static $swaggerFormats = [
-        'data' => null    ];
+        'version' => null,
+'address' => null    ];
 
     /**
      * Array of property to type mappings. Used for (de)serialization
@@ -77,7 +79,8 @@ class InlineResponse200 implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $attributeMap = [
-        'data' => 'data'    ];
+        'version' => 'version',
+'address' => 'address'    ];
 
     /**
      * Array of attributes to setter functions (for deserialization of responses)
@@ -85,7 +88,8 @@ class InlineResponse200 implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $setters = [
-        'data' => 'setData'    ];
+        'version' => 'setVersion',
+'address' => 'setAddress'    ];
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -93,7 +97,8 @@ class InlineResponse200 implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $getters = [
-        'data' => 'getData'    ];
+        'version' => 'getVersion',
+'address' => 'getAddress'    ];
 
     /**
      * Array of attributes where the key is the local name,
@@ -153,7 +158,8 @@ class InlineResponse200 implements ModelInterface, ArrayAccess
      */
     public function __construct(array $data = null)
     {
-        $this->container['data'] = isset($data['data']) ? $data['data'] : null;
+        $this->container['version'] = isset($data['version']) ? $data['version'] : null;
+        $this->container['address'] = isset($data['address']) ? $data['address'] : null;
     }
 
     /**
@@ -181,25 +187,49 @@ class InlineResponse200 implements ModelInterface, ArrayAccess
 
 
     /**
-     * Gets data
+     * Gets version
      *
-     * @return \Fozzy\WinVPS\Api\Models\MachineDefinition
+     * @return int
      */
-    public function getData()
+    public function getVersion()
     {
-        return $this->container['data'];
+        return $this->container['version'];
     }
 
     /**
-     * Sets data
+     * Sets version
      *
-     * @param \Fozzy\WinVPS\Api\Models\MachineDefinition $data data
+     * @param int $version IP version. 4 or 5
      *
      * @return $this
      */
-    public function setData($data)
+    public function setVersion($version)
     {
-        $this->container['data'] = $data;
+        $this->container['version'] = $version;
+
+        return $this;
+    }
+
+    /**
+     * Gets address
+     *
+     * @return string
+     */
+    public function getAddress()
+    {
+        return $this->container['address'];
+    }
+
+    /**
+     * Sets address
+     *
+     * @param string $address IP address
+     *
+     * @return $this
+     */
+    public function setAddress($address)
+    {
+        $this->container['address'] = $address;
 
         return $this;
     }
