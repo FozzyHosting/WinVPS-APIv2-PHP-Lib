@@ -3,7 +3,7 @@
     "description": "Fozzy Windows VPS APIv2 client library for PHP",
     "homepage": "https://fozzy.com",
     "license": "MIT",
-    "version": "2.0.0",
+    "version": "2.0.1",
     "authors": [
         {
             "name": "Fozzy Inc.",
