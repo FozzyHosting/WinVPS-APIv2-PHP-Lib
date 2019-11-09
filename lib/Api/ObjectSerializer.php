@@ -284,7 +284,7 @@ $class = $subclass;
 }
 $instance = new $class();
 
-if (empty($instance::swaggerTypes()) && is_array($data)) {
+if (empty($instance::swaggerTypes()) && !empty($data)) {
 $instance->setContainer($data);
 }
 

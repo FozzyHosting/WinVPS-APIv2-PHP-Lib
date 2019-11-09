@@ -229,7 +229,8 @@ return $this->config;
         $e->getResponseHeaders()
         );
         try {
-        $content = $body->getContents();
+        //$content = $body->getContents();
+        $content = $body;
         if ($content) {
         $content = json_decode($content, true);
         }
@@ -495,7 +496,8 @@ return $this->config;
         $e->getResponseHeaders()
         );
         try {
-        $content = $body->getContents();
+        //$content = $body->getContents();
+        $content = $body;
         if ($content) {
         $content = json_decode($content, true);
         }
@@ -783,7 +785,8 @@ return $this->config;
         $e->getResponseHeaders()
         );
         try {
-        $content = $body->getContents();
+        //$content = $body->getContents();
+        $content = $body;
         if ($content) {
         $content = json_decode($content, true);
         }
@@ -1089,7 +1092,8 @@ return $this->config;
         $e->getResponseHeaders()
         );
         try {
-        $content = $body->getContents();
+        //$content = $body->getContents();
+        $content = $body;
         if ($content) {
         $content = json_decode($content, true);
         }
