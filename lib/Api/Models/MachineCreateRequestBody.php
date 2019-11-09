@@ -1,16 +1,5 @@
 <?php
 
-/**
- * Fozzy Windows VPS resellers API
- *
- * Application Programming Interface (API) allows clients to manage the Windows VPS machines lifecycle.  ## Endpoint  `https://winvps.fozzy.com/api/v2/`  ## Authentication  To access the API, an existing client of Fozzy Inc. should be registered as Windows VPS Reseller by the company tech support through the ticket or using Sales Email. After that, the client will have an access to the winvps.fozzy.com and will be able to get an API Token (Signature) in `Settings -> API` section of main menu.  If you have already used the previous API version, then the token is known to you.  Note that the Token grants full access to your account and should be protected the same way you would protect your password. Also you can reset the Token on the receipt page.  To use the Token you should pass it to `Api-Key` header of each request like this:  ` curl -H 'API-KEY: TOKEN' https://winvps.fozzy.com/api/v2/products `  ## Content-Type  API v2 supports `application/json`, `application/x-www-form-urlencoded` and `multipart/form-data` content types.  In the first case HTTP request must be JSON-encoded with the body as a valid JSON string. The othres are default POST types with content in key=value format.  The response always has `application/json` type and contains JSON-encoded payload.  ## Response  A successful response will be returned as a JSON object with at least one of the following top-level members: - `data` - the document’s “primary data” - `error` - error message - `pagination` - pagination details  The members data and error cannot coexist in the same document.  ### Codes   - `200 OK` - Everything worked as expected.  - `201 Created` - The request was successful and a resource was created. This is typically a response from a POST request to create a resource which runs immediately.  - `202 Accepted` - The request has been accepted for processing. This is typically a response from a POST request that is handled async in our system, such as a request for some machine command.  - `204 No Content` - The request was successful but the response body is empty. This is typically a response from a DELETE request to delete a resource or cancel the command.  - `400 Bad Request` - A required parameter or the request is invalid.  - `403 Unauthorized` - The authentication credentials are invalid.  - `404 Not Found` - The requested resource doesn’t exist.  - `500 Server error` - something went wrong. Please contact our support team.  ### Examples  #### Error:  ```json {   \"error\": \"Error message\" } ```  #### Success - retrieve single record:  ```json {   \"data\": {     \"id\": 1,     \"name\": \"String\"   } } ```   #### Success - retrieve multiple records:  ```json {   \"data\": [     {       \"id\": 1,       \"name\": \"String\"     }, {       \"id\": 2,       \"name\": \"String\"     }   ],   \"pagination\": {     \"total\": 10,   } } ```  #### Success - response for some delayed action:  ```json {   \"data\": {     \"name\": \"String\",     \"jobs\": [       {         \"id\": 0,         \"parent_id\": 0,         \"machine_id\": 0,         \"type\": \"string\",         \"status\": \"string\",         \"start_time\": \"string\"       }     ]   } } ```  ## Pagination  Any API endpoint that returns a list of items requires pagination. By default we will return `50` records from any listing endpoint.  If an API endpoint returns a list of items, then it will include an additional object with pagination information.  The pagination information contains the following details:   - `total` - The total number of entries available in the entire collection  - `limit` - The number of entries returned per page (default: 50)  - `page` - The page currently returned (default: 1)  - `pages` - The total number of pages  To go through the pages you need to pass additional GET parameter `page` with the number of page wanted.  ## Entities meaning  ### Product  A product is a resources set with which a VPS will be created by default. This is a resources such ads CPU cores count, CPU power in percents of the maximum available limit, RAM minimum and maximum values, Disk Size etc.  ### Template  Template is an operating system version for VPS.  ### Brand  Brand is a set of custom software which installs on the machine automatically. Currently this set can be created only through the request to our administrators.  ### Location  Location is a list of regions in which the new VPS creation is available.  ### Job  Job is a command to perform specific actions on the machine such as creation, starting, changing, terminating, etc. Since most actions cannot be performed instantly, they are all queued and executed one after another. You will receive an additional property `jobs` in your response if any request generates new queue positions.  ### Machine  Machine is a virtual private server (VPS) which used to your own needs. Each Mahine has Operating System defined by **Template** installed on the server in a data center in a country specified by **Location** option. The machine has some specified by **Product** resources which can be used by your software installed automatically by the **Brand** option or manually from the RDP interface.
- *
- * OpenAPI spec version: 2.0
- * 
- * Generated by: https://github.com/swagger-api/swagger-codegen.git
- * Swagger Codegen version: 3.0.12-SNAPSHOT
- */
-
 namespace Fozzy\WinVPS\Api\Models;
 use \Fozzy\WinVPS\Api\ObjectSerializer;
 
@@ -23,22 +12,22 @@ use \Fozzy\WinVPS\Api\ObjectSerializer;
  */
 class MachineCreateRequestBody extends MachineEditableFields 
 {
-    const DISCRIMINATOR = null;
+const DISCRIMINATOR = null;
 
-    /**
-      * The original model name.
-      *
-      * @var string
-      */
-    protected static $swaggerModelName = 'MachineCreateRequestBody';
+/**
+* The original model name.
+*
+* @var string
+*/
+protected static $swaggerModelName = 'MachineCreateRequestBody';
 
-    /**
-      * Array of property to type mappings. Used for (de)serialization
-      *
-      * @var string[]
-      */
-    protected static $swaggerTypes = [
-        'templateId' => 'int',
+/**
+* Array of property to type mappings. Used for (de)serialization
+*
+* @var string[]
+*/
+protected static $swaggerTypes = [
+'templateId' => 'int',
 'brandId' => 'int',
 'diskType' => 'string',
 'locationId' => 'int',
@@ -46,15 +35,15 @@ class MachineCreateRequestBody extends MachineEditableFields
 'addRam' => 'int',
 'addCpu' => 'int',
 'addBand' => 'int',
-'autoStart' => 'int'    ];
+'autoStart' => 'int'];
 
-    /**
-      * Array of property to format mappings. Used for (de)serialization
-      *
-      * @var string[]
-      */
-    protected static $swaggerFormats = [
-        'templateId' => null,
+/**
+* Array of property to format mappings. Used for (de)serialization
+*
+* @var string[]
+*/
+protected static $swaggerFormats = [
+'templateId' => null,
 'brandId' => null,
 'diskType' => null,
 'locationId' => null,
@@ -62,36 +51,36 @@ class MachineCreateRequestBody extends MachineEditableFields
 'addRam' => null,
 'addCpu' => null,
 'addBand' => null,
-'autoStart' => null    ];
+'autoStart' => null];
 
-    /**
-     * Array of property to type mappings. Used for (de)serialization
-     *
-     * @return array
-     */
-    public static function swaggerTypes()
-    {
-        return self::$swaggerTypes + parent::swaggerTypes();
-    }
+/**
+* Array of property to type mappings. Used for (de)serialization
+*
+* @return array
+*/
+public static function swaggerTypes()
+{
+return self::$swaggerTypes + parent::swaggerTypes();
+}
 
-    /**
-     * Array of property to format mappings. Used for (de)serialization
-     *
-     * @return array
-     */
-    public static function swaggerFormats()
-    {
-        return self::$swaggerFormats + parent::swaggerFormats();
-    }
+/**
+* Array of property to format mappings. Used for (de)serialization
+*
+* @return array
+*/
+public static function swaggerFormats()
+{
+return self::$swaggerFormats + parent::swaggerFormats();
+}
 
-    /**
-     * Array of attributes where the key is the local name,
-     * and the value is the original name
-     *
-     * @var string[]
-     */
-    protected static $attributeMap = [
-        'templateId' => 'template_id',
+/**
+* Array of attributes where the key is the local name,
+* and the value is the original name
+*
+* @var string[]
+*/
+protected static $attributeMap = [
+'templateId' => 'template_id',
 'brandId' => 'brand_id',
 'diskType' => 'disk_type',
 'locationId' => 'location_id',
@@ -99,15 +88,15 @@ class MachineCreateRequestBody extends MachineEditableFields
 'addRam' => 'add_ram',
 'addCpu' => 'add_cpu',
 'addBand' => 'add_band',
-'autoStart' => 'auto_start'    ];
+'autoStart' => 'auto_start'];
 
-    /**
-     * Array of attributes to setter functions (for deserialization of responses)
-     *
-     * @var string[]
-     */
-    protected static $setters = [
-        'templateId' => 'setTemplateId',
+/**
+* Array of attributes to setter functions (for deserialization of responses)
+*
+* @var string[]
+*/
+protected static $setters = [
+'templateId' => 'setTemplateId',
 'brandId' => 'setBrandId',
 'diskType' => 'setDiskType',
 'locationId' => 'setLocationId',
@@ -115,15 +104,15 @@ class MachineCreateRequestBody extends MachineEditableFields
 'addRam' => 'setAddRam',
 'addCpu' => 'setAddCpu',
 'addBand' => 'setAddBand',
-'autoStart' => 'setAutoStart'    ];
+'autoStart' => 'setAutoStart'];
 
-    /**
-     * Array of attributes to getter functions (for serialization of requests)
-     *
-     * @var string[]
-     */
-    protected static $getters = [
-        'templateId' => 'getTemplateId',
+/**
+* Array of attributes to getter functions (for serialization of requests)
+*
+* @var string[]
+*/
+protected static $getters = [
+'templateId' => 'getTemplateId',
 'brandId' => 'getBrandId',
 'diskType' => 'getDiskType',
 'locationId' => 'getLocationId',
@@ -131,409 +120,414 @@ class MachineCreateRequestBody extends MachineEditableFields
 'addRam' => 'getAddRam',
 'addCpu' => 'getAddCpu',
 'addBand' => 'getAddBand',
-'autoStart' => 'getAutoStart'    ];
+'autoStart' => 'getAutoStart'];
 
-    /**
-     * Array of attributes where the key is the local name,
-     * and the value is the original name
-     *
-     * @return array
-     */
-    public static function attributeMap()
-    {
-        return parent::attributeMap() + self::$attributeMap;
-    }
+/**
+* Array of attributes where the key is the local name,
+* and the value is the original name
+*
+* @return array
+*/
+public static function attributeMap()
+{
+return parent::attributeMap() + self::$attributeMap;
+}
 
-    /**
-     * Array of attributes to setter functions (for deserialization of responses)
-     *
-     * @return array
-     */
-    public static function setters()
-    {
-        return parent::setters() + self::$setters;
-    }
+/**
+* Array of attributes to setter functions (for deserialization of responses)
+*
+* @return array
+*/
+public static function setters()
+{
+return parent::setters() + self::$setters;
+}
 
-    /**
-     * Array of attributes to getter functions (for serialization of requests)
-     *
-     * @return array
-     */
-    public static function getters()
-    {
-        return parent::getters() + self::$getters;
-    }
+/**
+* Array of attributes to getter functions (for serialization of requests)
+*
+* @return array
+*/
+public static function getters()
+{
+return parent::getters() + self::$getters;
+}
 
-    /**
-     * The original name of the model.
-     *
-     * @return string
-     */
-    public function getModelName()
-    {
-        return self::$swaggerModelName;
-    }
+/**
+* The original name of the model.
+*
+* @return string
+*/
+public function getModelName()
+{
+return self::$swaggerModelName;
+}
 
-    const DISK_TYPE_HDD = 'hdd';
+const DISK_TYPE_HDD = 'hdd';
 const DISK_TYPE_SSD = 'ssd';
 
     /**
-     * Gets allowable values of the enum
-     *
-     * @return string[]
-     */
+    * Gets allowable values of the enum
+    *
+    * @return string[]
+    */
     public function getDiskTypeAllowableValues()
     {
-        return [
-            self::DISK_TYPE_HDD,
-self::DISK_TYPE_SSD,        ];
+    return [
+    self::DISK_TYPE_HDD,
+self::DISK_TYPE_SSD,    ];
     }
 
 
-    /**
-     * Constructor
-     *
-     * @param mixed[] $data Associated array of property values
-     *                      initializing the model
-     */
-    public function __construct(array $data = null)
-    {
-        parent::__construct($data);
+/**
+* Constructor
+*
+* @param mixed[] $data Associated array of property values
+*                      initializing the model
+*/
+public function __construct(array $data = null)
+{
+    parent::__construct($data);
 
-        $this->container['templateId'] = isset($data['templateId']) ? $data['templateId'] : null;
-        $this->container['brandId'] = isset($data['brandId']) ? $data['brandId'] : null;
-        $this->container['diskType'] = isset($data['diskType']) ? $data['diskType'] : null;
-        $this->container['locationId'] = isset($data['locationId']) ? $data['locationId'] : null;
-        $this->container['addDisk'] = isset($data['addDisk']) ? $data['addDisk'] : null;
-        $this->container['addRam'] = isset($data['addRam']) ? $data['addRam'] : null;
-        $this->container['addCpu'] = isset($data['addCpu']) ? $data['addCpu'] : null;
-        $this->container['addBand'] = isset($data['addBand']) ? $data['addBand'] : null;
-        $this->container['autoStart'] = isset($data['autoStart']) ? $data['autoStart'] : null;
-    }
+    $this->container['templateId'] = isset($data['templateId']) ? $data['templateId'] : null;
+    $this->container['brandId'] = isset($data['brandId']) ? $data['brandId'] : null;
+    $this->container['diskType'] = isset($data['diskType']) ? $data['diskType'] : null;
+    $this->container['locationId'] = isset($data['locationId']) ? $data['locationId'] : null;
+    $this->container['addDisk'] = isset($data['addDisk']) ? $data['addDisk'] : null;
+    $this->container['addRam'] = isset($data['addRam']) ? $data['addRam'] : null;
+    $this->container['addCpu'] = isset($data['addCpu']) ? $data['addCpu'] : null;
+    $this->container['addBand'] = isset($data['addBand']) ? $data['addBand'] : null;
+    $this->container['autoStart'] = isset($data['autoStart']) ? $data['autoStart'] : null;
+}
 
-    /**
-     * Show all the invalid properties with reasons.
-     *
-     * @return array invalid properties with reasons
-     */
-    public function listInvalidProperties()
-    {
-        $invalidProperties = parent::listInvalidProperties();
+public function setContainer($data)
+{
+$this->container = $data;
+}
 
-        $allowedValues = $this->getDiskTypeAllowableValues();
-        if (!is_null($this->container['diskType']) && !in_array($this->container['diskType'], $allowedValues, true)) {
+/**
+* Show all the invalid properties with reasons.
+*
+* @return array invalid properties with reasons
+*/
+public function listInvalidProperties()
+{
+    $invalidProperties = parent::listInvalidProperties();
+
+            $allowedValues = $this->getDiskTypeAllowableValues();
+            if (!is_null($this->container['diskType']) && !in_array($this->container['diskType'], $allowedValues, true)) {
             $invalidProperties[] = sprintf(
-                "invalid value for 'diskType', must be one of '%s'",
-                implode("', '", $allowedValues)
+            "invalid value for 'diskType', must be one of '%s'",
+            implode("', '", $allowedValues)
             );
-        }
+            }
 
-        return $invalidProperties;
-    }
+return $invalidProperties;
+}
+
+/**
+* Validate all the properties in the model
+* return true if all passed
+*
+* @return bool True if all properties are valid
+*/
+public function valid()
+{
+return count($this->listInvalidProperties()) === 0;
+}
+
 
     /**
-     * Validate all the properties in the model
-     * return true if all passed
-     *
-     * @return bool True if all properties are valid
-     */
-    public function valid()
-    {
-        return count($this->listInvalidProperties()) === 0;
-    }
-
-
-    /**
-     * Gets templateId
-     *
-     * @return int
-     */
+    * Gets templateId
+    *
+    * @return int
+    */
     public function getTemplateId()
     {
-        return $this->container['templateId'];
+    return $this->container['templateId'];
     }
 
     /**
-     * Sets templateId
-     *
-     * @param int $templateId Primary Template ID.
-     *
-     * @return $this
-     */
+    * Sets templateId
+    *
+    * @param int $templateId Primary Template ID.
+    *
+    * @return $this
+    */
     public function setTemplateId($templateId)
     {
-        $this->container['templateId'] = $templateId;
+    $this->container['templateId'] = $templateId;
 
-        return $this;
+    return $this;
     }
 
     /**
-     * Gets brandId
-     *
-     * @return int
-     */
+    * Gets brandId
+    *
+    * @return int
+    */
     public function getBrandId()
     {
-        return $this->container['brandId'];
+    return $this->container['brandId'];
     }
 
     /**
-     * Sets brandId
-     *
-     * @param int $brandId Primary Brand ID.
-     *
-     * @return $this
-     */
+    * Sets brandId
+    *
+    * @param int $brandId Primary Brand ID.
+    *
+    * @return $this
+    */
     public function setBrandId($brandId)
     {
-        $this->container['brandId'] = $brandId;
+    $this->container['brandId'] = $brandId;
 
-        return $this;
+    return $this;
     }
 
     /**
-     * Gets diskType
-     *
-     * @return string
-     */
+    * Gets diskType
+    *
+    * @return string
+    */
     public function getDiskType()
     {
-        return $this->container['diskType'];
+    return $this->container['diskType'];
     }
 
     /**
-     * Sets diskType
-     *
-     * @param string $diskType Server disk type. HDD or SSD.
-     *
-     * @return $this
-     */
+    * Sets diskType
+    *
+    * @param string $diskType Server disk type. HDD or SSD.
+    *
+    * @return $this
+    */
     public function setDiskType($diskType)
     {
         $allowedValues = $this->getDiskTypeAllowableValues();
-        if (!is_null($diskType) && !in_array($diskType, $allowedValues, true)) {
+            if (!is_null($diskType) && !in_array($diskType, $allowedValues, true)) {
             throw new \InvalidArgumentException(
-                sprintf(
-                    "Invalid value for 'diskType', must be one of '%s'",
-                    implode("', '", $allowedValues)
-                )
+            sprintf(
+            "Invalid value for 'diskType', must be one of '%s'",
+            implode("', '", $allowedValues)
+            )
             );
-        }
-        $this->container['diskType'] = $diskType;
+            }
+    $this->container['diskType'] = $diskType;
 
-        return $this;
+    return $this;
     }
 
     /**
-     * Gets locationId
-     *
-     * @return int
-     */
+    * Gets locationId
+    *
+    * @return int
+    */
     public function getLocationId()
     {
-        return $this->container['locationId'];
+    return $this->container['locationId'];
     }
 
     /**
-     * Sets locationId
-     *
-     * @param int $locationId Primary Location ID.
-     *
-     * @return $this
-     */
+    * Sets locationId
+    *
+    * @param int $locationId Primary Location ID.
+    *
+    * @return $this
+    */
     public function setLocationId($locationId)
     {
-        $this->container['locationId'] = $locationId;
+    $this->container['locationId'] = $locationId;
 
-        return $this;
+    return $this;
     }
 
     /**
-     * Gets addDisk
-     *
-     * @return int
-     */
+    * Gets addDisk
+    *
+    * @return int
+    */
     public function getAddDisk()
     {
-        return $this->container['addDisk'];
+    return $this->container['addDisk'];
     }
 
     /**
-     * Sets addDisk
-     *
-     * @param int $addDisk Additional disk saze.
-     *
-     * @return $this
-     */
+    * Sets addDisk
+    *
+    * @param int $addDisk Additional disk saze.
+    *
+    * @return $this
+    */
     public function setAddDisk($addDisk)
     {
-        $this->container['addDisk'] = $addDisk;
+    $this->container['addDisk'] = $addDisk;
 
-        return $this;
+    return $this;
     }
 
     /**
-     * Gets addRam
-     *
-     * @return int
-     */
+    * Gets addRam
+    *
+    * @return int
+    */
     public function getAddRam()
     {
-        return $this->container['addRam'];
+    return $this->container['addRam'];
     }
 
     /**
-     * Sets addRam
-     *
-     * @param int $addRam Additional RAM size in MB.
-     *
-     * @return $this
-     */
+    * Sets addRam
+    *
+    * @param int $addRam Additional RAM size in MB.
+    *
+    * @return $this
+    */
     public function setAddRam($addRam)
     {
-        $this->container['addRam'] = $addRam;
+    $this->container['addRam'] = $addRam;
 
-        return $this;
+    return $this;
     }
 
     /**
-     * Gets addCpu
-     *
-     * @return int
-     */
+    * Gets addCpu
+    *
+    * @return int
+    */
     public function getAddCpu()
     {
-        return $this->container['addCpu'];
+    return $this->container['addCpu'];
     }
 
     /**
-     * Sets addCpu
-     *
-     * @param int $addCpu Additional CPU cores count.
-     *
-     * @return $this
-     */
+    * Sets addCpu
+    *
+    * @param int $addCpu Additional CPU cores count.
+    *
+    * @return $this
+    */
     public function setAddCpu($addCpu)
     {
-        $this->container['addCpu'] = $addCpu;
+    $this->container['addCpu'] = $addCpu;
 
-        return $this;
+    return $this;
     }
 
     /**
-     * Gets addBand
-     *
-     * @return int
-     */
+    * Gets addBand
+    *
+    * @return int
+    */
     public function getAddBand()
     {
-        return $this->container['addBand'];
+    return $this->container['addBand'];
     }
 
     /**
-     * Sets addBand
-     *
-     * @param int $addBand Additional bandwidth.
-     *
-     * @return $this
-     */
+    * Sets addBand
+    *
+    * @param int $addBand Additional bandwidth.
+    *
+    * @return $this
+    */
     public function setAddBand($addBand)
     {
-        $this->container['addBand'] = $addBand;
+    $this->container['addBand'] = $addBand;
 
-        return $this;
+    return $this;
     }
 
     /**
-     * Gets autoStart
-     *
-     * @return int
-     */
+    * Gets autoStart
+    *
+    * @return int
+    */
     public function getAutoStart()
     {
-        return $this->container['autoStart'];
+    return $this->container['autoStart'];
     }
 
     /**
-     * Sets autoStart
-     *
-     * @param int $autoStart autoStart
-     *
-     * @return $this
-     */
+    * Sets autoStart
+    *
+    * @param int $autoStart autoStart
+    *
+    * @return $this
+    */
     public function setAutoStart($autoStart)
     {
-        $this->container['autoStart'] = $autoStart;
+    $this->container['autoStart'] = $autoStart;
 
-        return $this;
+    return $this;
     }
-    /**
-     * Returns true if offset exists. False otherwise.
-     *
-     * @param integer $offset Offset
-     *
-     * @return boolean
-     */
-    public function offsetExists($offset)
-    {
-        return isset($this->container[$offset]);
-    }
+/**
+* Returns true if offset exists. False otherwise.
+*
+* @param integer $offset Offset
+*
+* @return boolean
+*/
+public function offsetExists($offset)
+{
+return isset($this->container[$offset]);
+}
 
-    /**
-     * Gets offset.
-     *
-     * @param integer $offset Offset
-     *
-     * @return mixed
-     */
-    public function offsetGet($offset)
-    {
-        return isset($this->container[$offset]) ? $this->container[$offset] : null;
-    }
+/**
+* Gets offset.
+*
+* @param integer $offset Offset
+*
+* @return mixed
+*/
+public function offsetGet($offset)
+{
+return isset($this->container[$offset]) ? $this->container[$offset] : null;
+}
 
-    /**
-     * Sets value based on offset.
-     *
-     * @param integer $offset Offset
-     * @param mixed   $value  Value to be set
-     *
-     * @return void
-     */
-    public function offsetSet($offset, $value)
-    {
-        if (is_null($offset)) {
-            $this->container[] = $value;
-        } else {
-            $this->container[$offset] = $value;
-        }
-    }
+/**
+* Sets value based on offset.
+*
+* @param integer $offset Offset
+* @param mixed   $value  Value to be set
+*
+* @return void
+*/
+public function offsetSet($offset, $value)
+{
+if (is_null($offset)) {
+$this->container[] = $value;
+} else {
+$this->container[$offset] = $value;
+}
+}
 
-    /**
-     * Unsets offset.
-     *
-     * @param integer $offset Offset
-     *
-     * @return void
-     */
-    public function offsetUnset($offset)
-    {
-        unset($this->container[$offset]);
-    }
+/**
+* Unsets offset.
+*
+* @param integer $offset Offset
+*
+* @return void
+*/
+public function offsetUnset($offset)
+{
+unset($this->container[$offset]);
+}
 
-    /**
-     * Gets the string presentation of the object
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-        if (defined('JSON_PRETTY_PRINT')) { // use JSON pretty print
-            return json_encode(
-                ObjectSerializer::sanitizeForSerialization($this),
-                JSON_PRETTY_PRINT
-            );
-        }
+/**
+* Gets the string presentation of the object
+*
+* @return string
+*/
+public function __toString()
+{
+if (defined('JSON_PRETTY_PRINT')) { // use JSON pretty print
+return json_encode(
+ObjectSerializer::sanitizeForSerialization($this),
+JSON_PRETTY_PRINT
+);
+}
 
-        return json_encode(ObjectSerializer::sanitizeForSerialization($this));
-    }
+return json_encode(ObjectSerializer::sanitizeForSerialization($this));
+}
 }

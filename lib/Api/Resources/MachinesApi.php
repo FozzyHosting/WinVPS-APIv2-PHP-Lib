@@ -208,8 +208,14 @@ return $this->config;
             $this->pagination = $content->pagination;
             }
 
+            $result = ObjectSerializer::deserialize($content, $returnType, []);
+
+            if (is_object($result) && method_exists($result, 'getData')) {
+            $result = $result->getData();
+            }
+
             return [
-            ObjectSerializer::deserialize($content, $returnType, []),
+            $result,
             $response->getStatusCode(),
             $response->getHeaders()
             ];
@@ -285,8 +291,14 @@ return $this->config;
             }
             }
 
+            $result = ObjectSerializer::deserialize($content, $returnType, []);
+
+            if (is_object($result) && property_exists($result, 'getData')) {
+            $result = $result->getData();
+            }
+
             return [
-            ObjectSerializer::deserialize($content, $returnType, []),
+            $result,
             $response->getStatusCode(),
             $response->getHeaders()
             ];
@@ -487,8 +499,14 @@ return $this->config;
             $this->pagination = $content->pagination;
             }
 
+            $result = ObjectSerializer::deserialize($content, $returnType, []);
+
+            if (is_object($result) && method_exists($result, 'getData')) {
+            $result = $result->getData();
+            }
+
             return [
-            ObjectSerializer::deserialize($content, $returnType, []),
+            $result,
             $response->getStatusCode(),
             $response->getHeaders()
             ];
@@ -566,8 +584,14 @@ return $this->config;
             }
             }
 
+            $result = ObjectSerializer::deserialize($content, $returnType, []);
+
+            if (is_object($result) && property_exists($result, 'getData')) {
+            $result = $result->getData();
+            }
+
             return [
-            ObjectSerializer::deserialize($content, $returnType, []),
+            $result,
             $response->getStatusCode(),
             $response->getHeaders()
             ];
@@ -785,8 +809,14 @@ return $this->config;
             $this->pagination = $content->pagination;
             }
 
+            $result = ObjectSerializer::deserialize($content, $returnType, []);
+
+            if (is_object($result) && method_exists($result, 'getData')) {
+            $result = $result->getData();
+            }
+
             return [
-            ObjectSerializer::deserialize($content, $returnType, []),
+            $result,
             $response->getStatusCode(),
             $response->getHeaders()
             ];
@@ -866,8 +896,14 @@ return $this->config;
             }
             }
 
+            $result = ObjectSerializer::deserialize($content, $returnType, []);
+
+            if (is_object($result) && property_exists($result, 'getData')) {
+            $result = $result->getData();
+            }
+
             return [
-            ObjectSerializer::deserialize($content, $returnType, []),
+            $result,
             $response->getStatusCode(),
             $response->getHeaders()
             ];
@@ -1098,8 +1134,14 @@ return $this->config;
             $this->pagination = $content->pagination;
             }
 
+            $result = ObjectSerializer::deserialize($content, $returnType, []);
+
+            if (is_object($result) && method_exists($result, 'getData')) {
+            $result = $result->getData();
+            }
+
             return [
-            ObjectSerializer::deserialize($content, $returnType, []),
+            $result,
             $response->getStatusCode(),
             $response->getHeaders()
             ];
@@ -1177,8 +1219,14 @@ return $this->config;
             }
             }
 
+            $result = ObjectSerializer::deserialize($content, $returnType, []);
+
+            if (is_object($result) && property_exists($result, 'getData')) {
+            $result = $result->getData();
+            }
+
             return [
-            ObjectSerializer::deserialize($content, $returnType, []),
+            $result,
             $response->getStatusCode(),
             $response->getHeaders()
             ];
@@ -1394,8 +1442,14 @@ return $this->config;
             $this->pagination = $content->pagination;
             }
 
+            $result = ObjectSerializer::deserialize($content, $returnType, []);
+
+            if (is_object($result) && method_exists($result, 'getData')) {
+            $result = $result->getData();
+            }
+
             return [
-            ObjectSerializer::deserialize($content, $returnType, []),
+            $result,
             $response->getStatusCode(),
             $response->getHeaders()
             ];
@@ -1473,8 +1527,14 @@ return $this->config;
             }
             }
 
+            $result = ObjectSerializer::deserialize($content, $returnType, []);
+
+            if (is_object($result) && property_exists($result, 'getData')) {
+            $result = $result->getData();
+            }
+
             return [
-            ObjectSerializer::deserialize($content, $returnType, []),
+            $result,
             $response->getStatusCode(),
             $response->getHeaders()
             ];
@@ -1690,8 +1750,14 @@ return $this->config;
             $this->pagination = $content->pagination;
             }
 
+            $result = ObjectSerializer::deserialize($content, $returnType, []);
+
+            if (is_object($result) && method_exists($result, 'getData')) {
+            $result = $result->getData();
+            }
+
             return [
-            ObjectSerializer::deserialize($content, $returnType, []),
+            $result,
             $response->getStatusCode(),
             $response->getHeaders()
             ];
@@ -1769,8 +1835,14 @@ return $this->config;
             }
             }
 
+            $result = ObjectSerializer::deserialize($content, $returnType, []);
+
+            if (is_object($result) && property_exists($result, 'getData')) {
+            $result = $result->getData();
+            }
+
             return [
-            ObjectSerializer::deserialize($content, $returnType, []),
+            $result,
             $response->getStatusCode(),
             $response->getHeaders()
             ];
@@ -1988,8 +2060,14 @@ return $this->config;
             $this->pagination = $content->pagination;
             }
 
+            $result = ObjectSerializer::deserialize($content, $returnType, []);
+
+            if (is_object($result) && method_exists($result, 'getData')) {
+            $result = $result->getData();
+            }
+
             return [
-            ObjectSerializer::deserialize($content, $returnType, []),
+            $result,
             $response->getStatusCode(),
             $response->getHeaders()
             ];
@@ -2069,8 +2147,14 @@ return $this->config;
             }
             }
 
+            $result = ObjectSerializer::deserialize($content, $returnType, []);
+
+            if (is_object($result) && property_exists($result, 'getData')) {
+            $result = $result->getData();
+            }
+
             return [
-            ObjectSerializer::deserialize($content, $returnType, []),
+            $result,
             $response->getStatusCode(),
             $response->getHeaders()
             ];
@@ -2298,8 +2382,14 @@ return $this->config;
             $this->pagination = $content->pagination;
             }
 
+            $result = ObjectSerializer::deserialize($content, $returnType, []);
+
+            if (is_object($result) && method_exists($result, 'getData')) {
+            $result = $result->getData();
+            }
+
             return [
-            ObjectSerializer::deserialize($content, $returnType, []),
+            $result,
             $response->getStatusCode(),
             $response->getHeaders()
             ];
@@ -2379,8 +2469,14 @@ return $this->config;
             }
             }
 
+            $result = ObjectSerializer::deserialize($content, $returnType, []);
+
+            if (is_object($result) && property_exists($result, 'getData')) {
+            $result = $result->getData();
+            }
+
             return [
-            ObjectSerializer::deserialize($content, $returnType, []),
+            $result,
             $response->getStatusCode(),
             $response->getHeaders()
             ];
@@ -2606,8 +2702,14 @@ return $this->config;
             $this->pagination = $content->pagination;
             }
 
+            $result = ObjectSerializer::deserialize($content, $returnType, []);
+
+            if (is_object($result) && method_exists($result, 'getData')) {
+            $result = $result->getData();
+            }
+
             return [
-            ObjectSerializer::deserialize($content, $returnType, []),
+            $result,
             $response->getStatusCode(),
             $response->getHeaders()
             ];
@@ -2685,8 +2787,14 @@ return $this->config;
             }
             }
 
+            $result = ObjectSerializer::deserialize($content, $returnType, []);
+
+            if (is_object($result) && property_exists($result, 'getData')) {
+            $result = $result->getData();
+            }
+
             return [
-            ObjectSerializer::deserialize($content, $returnType, []),
+            $result,
             $response->getStatusCode(),
             $response->getHeaders()
             ];
@@ -2902,8 +3010,14 @@ return $this->config;
             $this->pagination = $content->pagination;
             }
 
+            $result = ObjectSerializer::deserialize($content, $returnType, []);
+
+            if (is_object($result) && method_exists($result, 'getData')) {
+            $result = $result->getData();
+            }
+
             return [
-            ObjectSerializer::deserialize($content, $returnType, []),
+            $result,
             $response->getStatusCode(),
             $response->getHeaders()
             ];
@@ -2981,8 +3095,14 @@ return $this->config;
             }
             }
 
+            $result = ObjectSerializer::deserialize($content, $returnType, []);
+
+            if (is_object($result) && property_exists($result, 'getData')) {
+            $result = $result->getData();
+            }
+
             return [
-            ObjectSerializer::deserialize($content, $returnType, []),
+            $result,
             $response->getStatusCode(),
             $response->getHeaders()
             ];
@@ -3191,8 +3311,14 @@ return $this->config;
             $this->pagination = $content->pagination;
             }
 
+            $result = ObjectSerializer::deserialize($content, $returnType, []);
+
+            if (is_object($result) && method_exists($result, 'getData')) {
+            $result = $result->getData();
+            }
+
             return [
-            ObjectSerializer::deserialize($content, $returnType, []),
+            $result,
             $response->getStatusCode(),
             $response->getHeaders()
             ];
@@ -3268,8 +3394,14 @@ return $this->config;
             }
             }
 
+            $result = ObjectSerializer::deserialize($content, $returnType, []);
+
+            if (is_object($result) && property_exists($result, 'getData')) {
+            $result = $result->getData();
+            }
+
             return [
-            ObjectSerializer::deserialize($content, $returnType, []),
+            $result,
             $response->getStatusCode(),
             $response->getHeaders()
             ];
@@ -3468,8 +3600,14 @@ return $this->config;
             $this->pagination = $content->pagination;
             }
 
+            $result = ObjectSerializer::deserialize($content, $returnType, []);
+
+            if (is_object($result) && method_exists($result, 'getData')) {
+            $result = $result->getData();
+            }
+
             return [
-            ObjectSerializer::deserialize($content, $returnType, []),
+            $result,
             $response->getStatusCode(),
             $response->getHeaders()
             ];
@@ -3545,8 +3683,14 @@ return $this->config;
             }
             }
 
+            $result = ObjectSerializer::deserialize($content, $returnType, []);
+
+            if (is_object($result) && property_exists($result, 'getData')) {
+            $result = $result->getData();
+            }
+
             return [
-            ObjectSerializer::deserialize($content, $returnType, []),
+            $result,
             $response->getStatusCode(),
             $response->getHeaders()
             ];
