@@ -1,9 +1,11 @@
-# InlineResponse2002
+# MachineUserDefinition
 
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**data** | [**\Fozzy\WinVPS\Api\Models\InlineResponse2002Data**](InlineResponse2002Data.md) |  | [optional] 
+**username** | **string** |  | [optional] 
+**role** | **string** |  | [optional] 
+**password** | **string** |  | [optional] 
 
 [[Back to Model list]](../../README.md#documentation-for-models) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to README]](../../README.md)
 

@@ -6,7 +6,7 @@ Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**machinesGet**](MachinesApi.md#machinesget) | **GET** /machines | Returns machines list in short form.
 [**machinesNameAddIpPost**](MachinesApi.md#machinesnameaddippost) | **POST** /machines/{name}/add_ip | Send unary machine command
-[**machinesNameCommandPost**](MachinesApi.md#machinesnamecommandpost) | **POST** /machines/{name}/{command} | Send single command which does not needs additional options.
+[**machinesNameCommandPost**](MachinesApi.md#machinesnamecommandpost) | **POST** /machines/{name}/{command} | Send single command which does not need additional options.
 [**machinesNameDelete**](MachinesApi.md#machinesnamedelete) | **DELETE** /machines/{name} | Terminate machine
 [**machinesNameGet**](MachinesApi.md#machinesnameget) | **GET** /machines/{name} | Returns machine details
 [**machinesNameJobsGet**](MachinesApi.md#machinesnamejobsget) | **GET** /machines/{name}/jobs | Returns list of jobs assigned to machine.
@@ -18,7 +18,7 @@ Method | HTTP request | Description
 [**machinesStoppedGet**](MachinesApi.md#machinesstoppedget) | **GET** /machines/stopped | Returns list of currently stopped or suspended machines.
 
 # **machinesGet**
-> \Fozzy\WinVPS\Api\Models\InlineResponse200[] machinesGet()
+> \Fozzy\WinVPS\Api\Models\MachinesListResponse machinesGet()
 
 Returns machines list in short form.
 
@@ -27,7 +27,9 @@ Returns machines list in short form.
 <?php
 require_once(__DIR__ . '/vendor/autoload.php');
 // Configure API key authorization: ApiKeyAuth
-$config = Fozzy\WinVPS\Api\Configuration::getDefaultConfiguration()->setApiKey('Api-Key', 'YOUR_API_KEY');
+$host = 'Endpoint from API docs';
+$key = 'API key from WinVPS client area';
+$config = Fozzy\WinVPS\Api\Configuration::getDefaultConfiguration()->setHost($host)->setApiKey($key);
 // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 // $config = Fozzy\WinVPS\Api\Configuration::getDefaultConfiguration()->setApiKeyPrefix('Api-Key', 'Bearer');
 
@@ -52,7 +54,7 @@ This endpoint does not need any parameter.
 
 ### Return type
 
-[**\Fozzy\WinVPS\Api\Models\InlineResponse200[]**](../Model/InlineResponse200.md)
+[**\Fozzy\WinVPS\Api\Models\MachinesListResponse**](../Model/MachinesListResponse.md)
 
 ### Authorization
 
@@ -66,7 +68,7 @@ This endpoint does not need any parameter.
 [[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
 
 # **machinesNameAddIpPost**
-> \Fozzy\WinVPS\Api\Models\InlineResponse2003 machinesNameAddIpPost($name)
+> \Fozzy\WinVPS\Api\Models\MachineAddIpResponse machinesNameAddIpPost($name)
 
 Send unary machine command
 
@@ -75,7 +77,9 @@ Send unary machine command
 <?php
 require_once(__DIR__ . '/vendor/autoload.php');
 // Configure API key authorization: ApiKeyAuth
-$config = Fozzy\WinVPS\Api\Configuration::getDefaultConfiguration()->setApiKey('Api-Key', 'YOUR_API_KEY');
+$host = 'Endpoint from API docs';
+$key = 'API key from WinVPS client area';
+$config = Fozzy\WinVPS\Api\Configuration::getDefaultConfiguration()->setHost($host)->setApiKey($key);
 // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 // $config = Fozzy\WinVPS\Api\Configuration::getDefaultConfiguration()->setApiKeyPrefix('Api-Key', 'Bearer');
 
@@ -104,7 +108,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**\Fozzy\WinVPS\Api\Models\InlineResponse2003**](../Model/InlineResponse2003.md)
+[**\Fozzy\WinVPS\Api\Models\MachineAddIpResponse**](../Model/MachineAddIpResponse.md)
 
 ### Authorization
 
@@ -118,16 +122,18 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
 
 # **machinesNameCommandPost**
-> \Fozzy\WinVPS\Api\Models\InlineResponse2021 machinesNameCommandPost($name, $command)
+> \Fozzy\WinVPS\Api\Models\MachineCommandResultResponse machinesNameCommandPost($name, $command)
 
-Send single command which does not needs additional options.
+Send single command which does not need additional options.
 
 ### Example
 ```php
 <?php
 require_once(__DIR__ . '/vendor/autoload.php');
 // Configure API key authorization: ApiKeyAuth
-$config = Fozzy\WinVPS\Api\Configuration::getDefaultConfiguration()->setApiKey('Api-Key', 'YOUR_API_KEY');
+$host = 'Endpoint from API docs';
+$key = 'API key from WinVPS client area';
+$config = Fozzy\WinVPS\Api\Configuration::getDefaultConfiguration()->setHost($host)->setApiKey($key);
 // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 // $config = Fozzy\WinVPS\Api\Configuration::getDefaultConfiguration()->setApiKeyPrefix('Api-Key', 'Bearer');
 
@@ -158,7 +164,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**\Fozzy\WinVPS\Api\Models\InlineResponse2021**](../Model/InlineResponse2021.md)
+[**\Fozzy\WinVPS\Api\Models\MachineCommandResultResponse**](../Model/MachineCommandResultResponse.md)
 
 ### Authorization
 
@@ -172,7 +178,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
 
 # **machinesNameDelete**
-> \Fozzy\WinVPS\Api\Models\InlineResponse2021 machinesNameDelete($name)
+> \Fozzy\WinVPS\Api\Models\MachineCommandResultResponse machinesNameDelete($name)
 
 Terminate machine
 
@@ -183,7 +189,9 @@ Creates machine deletion jobs. This action can be cancelled in two days.
 <?php
 require_once(__DIR__ . '/vendor/autoload.php');
 // Configure API key authorization: ApiKeyAuth
-$config = Fozzy\WinVPS\Api\Configuration::getDefaultConfiguration()->setApiKey('Api-Key', 'YOUR_API_KEY');
+$host = 'Endpoint from API docs';
+$key = 'API key from WinVPS client area';
+$config = Fozzy\WinVPS\Api\Configuration::getDefaultConfiguration()->setHost($host)->setApiKey($key);
 // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 // $config = Fozzy\WinVPS\Api\Configuration::getDefaultConfiguration()->setApiKeyPrefix('Api-Key', 'Bearer');
 
@@ -212,7 +220,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**\Fozzy\WinVPS\Api\Models\InlineResponse2021**](../Model/InlineResponse2021.md)
+[**\Fozzy\WinVPS\Api\Models\MachineCommandResultResponse**](../Model/MachineCommandResultResponse.md)
 
 ### Authorization
 
@@ -226,7 +234,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
 
 # **machinesNameGet**
-> \Fozzy\WinVPS\Api\Models\MachineDefinition machinesNameGet($name)
+> \Fozzy\WinVPS\Api\Models\MachineDetailsResponse machinesNameGet($name)
 
 Returns machine details
 
@@ -235,7 +243,9 @@ Returns machine details
 <?php
 require_once(__DIR__ . '/vendor/autoload.php');
 // Configure API key authorization: ApiKeyAuth
-$config = Fozzy\WinVPS\Api\Configuration::getDefaultConfiguration()->setApiKey('Api-Key', 'YOUR_API_KEY');
+$host = 'Endpoint from API docs';
+$key = 'API key from WinVPS client area';
+$config = Fozzy\WinVPS\Api\Configuration::getDefaultConfiguration()->setHost($host)->setApiKey($key);
 // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 // $config = Fozzy\WinVPS\Api\Configuration::getDefaultConfiguration()->setApiKeyPrefix('Api-Key', 'Bearer');
 
@@ -264,7 +274,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**\Fozzy\WinVPS\Api\Models\MachineDefinition**](../Model/MachineDefinition.md)
+[**\Fozzy\WinVPS\Api\Models\MachineDetailsResponse**](../Model/MachineDetailsResponse.md)
 
 ### Authorization
 
@@ -278,7 +288,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
 
 # **machinesNameJobsGet**
-> \Fozzy\WinVPS\Api\Models\JobDefinition[] machinesNameJobsGet($name)
+> \Fozzy\WinVPS\Api\Models\JobsListResponse machinesNameJobsGet($name)
 
 Returns list of jobs assigned to machine.
 
@@ -287,7 +297,9 @@ Returns list of jobs assigned to machine.
 <?php
 require_once(__DIR__ . '/vendor/autoload.php');
 // Configure API key authorization: ApiKeyAuth
-$config = Fozzy\WinVPS\Api\Configuration::getDefaultConfiguration()->setApiKey('Api-Key', 'YOUR_API_KEY');
+$host = 'Endpoint from API docs';
+$key = 'API key from WinVPS client area';
+$config = Fozzy\WinVPS\Api\Configuration::getDefaultConfiguration()->setHost($host)->setApiKey($key);
 // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 // $config = Fozzy\WinVPS\Api\Configuration::getDefaultConfiguration()->setApiKeyPrefix('Api-Key', 'Bearer');
 
@@ -316,7 +328,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**\Fozzy\WinVPS\Api\Models\JobDefinition[]**](../Model/JobDefinition.md)
+[**\Fozzy\WinVPS\Api\Models\JobsListResponse**](../Model/JobsListResponse.md)
 
 ### Authorization
 
@@ -330,7 +342,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
 
 # **machinesNamePost**
-> \Fozzy\WinVPS\Api\Models\InlineResponse2001 machinesNamePost($body, $name)
+> \Fozzy\WinVPS\Api\Models\MachineCommandResultResponse machinesNamePost($body, $name)
 
 Reinstall machine
 
@@ -339,7 +351,9 @@ Reinstall machine
 <?php
 require_once(__DIR__ . '/vendor/autoload.php');
 // Configure API key authorization: ApiKeyAuth
-$config = Fozzy\WinVPS\Api\Configuration::getDefaultConfiguration()->setApiKey('Api-Key', 'YOUR_API_KEY');
+$host = 'Endpoint from API docs';
+$key = 'API key from WinVPS client area';
+$config = Fozzy\WinVPS\Api\Configuration::getDefaultConfiguration()->setHost($host)->setApiKey($key);
 // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 // $config = Fozzy\WinVPS\Api\Configuration::getDefaultConfiguration()->setApiKeyPrefix('Api-Key', 'Bearer');
 
@@ -349,7 +363,7 @@ $apiInstance = new Fozzy\WinVPS\Api\Resources\MachinesApi(
     new GuzzleHttp\Client(),
     $config
 );
-$body = new \Fozzy\WinVPS\Api\Models\null(); //  | 
+$body = new \Fozzy\WinVPS\Api\Models\MachineReinstallRequestBody(); // \Fozzy\WinVPS\Api\Models\MachineReinstallRequestBody | 
 $name = "name_example"; // string | 
 
 try {
@@ -365,12 +379,12 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **body** | [****](../Model/.md)|  |
+ **body** | [**\Fozzy\WinVPS\Api\Models\MachineReinstallRequestBody**](../Model/MachineReinstallRequestBody.md)|  |
  **name** | **string**|  |
 
 ### Return type
 
-[**\Fozzy\WinVPS\Api\Models\InlineResponse2001**](../Model/InlineResponse2001.md)
+[**\Fozzy\WinVPS\Api\Models\MachineCommandResultResponse**](../Model/MachineCommandResultResponse.md)
 
 ### Authorization
 
@@ -384,7 +398,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
 
 # **machinesNamePut**
-> \Fozzy\WinVPS\Api\Models\MachineDefinition machinesNamePut($body, $name)
+> \Fozzy\WinVPS\Api\Models\MachineDetailsResponse machinesNamePut($body, $name)
 
 Update machine details
 
@@ -393,7 +407,9 @@ Update machine details
 <?php
 require_once(__DIR__ . '/vendor/autoload.php');
 // Configure API key authorization: ApiKeyAuth
-$config = Fozzy\WinVPS\Api\Configuration::getDefaultConfiguration()->setApiKey('Api-Key', 'YOUR_API_KEY');
+$host = 'Endpoint from API docs';
+$key = 'API key from WinVPS client area';
+$config = Fozzy\WinVPS\Api\Configuration::getDefaultConfiguration()->setHost($host)->setApiKey($key);
 // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 // $config = Fozzy\WinVPS\Api\Configuration::getDefaultConfiguration()->setApiKeyPrefix('Api-Key', 'Bearer');
 
@@ -403,7 +419,7 @@ $apiInstance = new Fozzy\WinVPS\Api\Resources\MachinesApi(
     new GuzzleHttp\Client(),
     $config
 );
-$body = new \Fozzy\WinVPS\Api\Models\null(); //  | 
+$body = new \Fozzy\WinVPS\Api\Models\MachineUpdateRequestBody(); // \Fozzy\WinVPS\Api\Models\MachineUpdateRequestBody | 
 $name = "name_example"; // string | 
 
 try {
@@ -419,12 +435,12 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **body** | [****](../Model/.md)|  |
+ **body** | [**\Fozzy\WinVPS\Api\Models\MachineUpdateRequestBody**](../Model/MachineUpdateRequestBody.md)|  |
  **name** | **string**|  |
 
 ### Return type
 
-[**\Fozzy\WinVPS\Api\Models\MachineDefinition**](../Model/MachineDefinition.md)
+[**\Fozzy\WinVPS\Api\Models\MachineDetailsResponse**](../Model/MachineDetailsResponse.md)
 
 ### Authorization
 
@@ -438,7 +454,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
 
 # **machinesNameUsersGet**
-> \Fozzy\WinVPS\Api\Models\InlineResponse2002[] machinesNameUsersGet($name)
+> \Fozzy\WinVPS\Api\Models\MachineUsersListResponse machinesNameUsersGet($name)
 
 Returns list of additional system users.
 
@@ -447,7 +463,9 @@ Returns list of additional system users.
 <?php
 require_once(__DIR__ . '/vendor/autoload.php');
 // Configure API key authorization: ApiKeyAuth
-$config = Fozzy\WinVPS\Api\Configuration::getDefaultConfiguration()->setApiKey('Api-Key', 'YOUR_API_KEY');
+$host = 'Endpoint from API docs';
+$key = 'API key from WinVPS client area';
+$config = Fozzy\WinVPS\Api\Configuration::getDefaultConfiguration()->setHost($host)->setApiKey($key);
 // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 // $config = Fozzy\WinVPS\Api\Configuration::getDefaultConfiguration()->setApiKeyPrefix('Api-Key', 'Bearer');
 
@@ -476,7 +494,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**\Fozzy\WinVPS\Api\Models\InlineResponse2002[]**](../Model/InlineResponse2002.md)
+[**\Fozzy\WinVPS\Api\Models\MachineUsersListResponse**](../Model/MachineUsersListResponse.md)
 
 ### Authorization
 
@@ -490,7 +508,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
 
 # **machinesPost**
-> \Fozzy\WinVPS\Api\Models\InlineResponse202 machinesPost($body)
+> \Fozzy\WinVPS\Api\Models\MachineCreateResponse machinesPost($body)
 
 Create new machine.
 
@@ -499,7 +517,9 @@ Create new machine.
 <?php
 require_once(__DIR__ . '/vendor/autoload.php');
 // Configure API key authorization: ApiKeyAuth
-$config = Fozzy\WinVPS\Api\Configuration::getDefaultConfiguration()->setApiKey('Api-Key', 'YOUR_API_KEY');
+$host = 'Endpoint from API docs';
+$key = 'API key from WinVPS client area';
+$config = Fozzy\WinVPS\Api\Configuration::getDefaultConfiguration()->setHost($host)->setApiKey($key);
 // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 // $config = Fozzy\WinVPS\Api\Configuration::getDefaultConfiguration()->setApiKeyPrefix('Api-Key', 'Bearer');
 
@@ -509,7 +529,7 @@ $apiInstance = new Fozzy\WinVPS\Api\Resources\MachinesApi(
     new GuzzleHttp\Client(),
     $config
 );
-$body = new \Fozzy\WinVPS\Api\Models\null(); //  | Optional description in *Markdown*
+$body = new \Fozzy\WinVPS\Api\Models\MachineCreateRequestBody(); // \Fozzy\WinVPS\Api\Models\MachineCreateRequestBody | Optional description in *Markdown*
 
 try {
     $result = $apiInstance->machinesPost($body);
@@ -524,11 +544,11 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **body** | [****](../Model/.md)| Optional description in *Markdown* |
+ **body** | [**\Fozzy\WinVPS\Api\Models\MachineCreateRequestBody**](../Model/MachineCreateRequestBody.md)| Optional description in *Markdown* |
 
 ### Return type
 
-[**\Fozzy\WinVPS\Api\Models\InlineResponse202**](../Model/InlineResponse202.md)
+[**\Fozzy\WinVPS\Api\Models\MachineCreateResponse**](../Model/MachineCreateResponse.md)
 
 ### Authorization
 
@@ -542,7 +562,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
 
 # **machinesRunningGet**
-> \Fozzy\WinVPS\Api\Models\InlineResponse200[] machinesRunningGet()
+> \Fozzy\WinVPS\Api\Models\MachinesListResponse machinesRunningGet()
 
 Returns list of currently running machines.
 
@@ -551,7 +571,9 @@ Returns list of currently running machines.
 <?php
 require_once(__DIR__ . '/vendor/autoload.php');
 // Configure API key authorization: ApiKeyAuth
-$config = Fozzy\WinVPS\Api\Configuration::getDefaultConfiguration()->setApiKey('Api-Key', 'YOUR_API_KEY');
+$host = 'Endpoint from API docs';
+$key = 'API key from WinVPS client area';
+$config = Fozzy\WinVPS\Api\Configuration::getDefaultConfiguration()->setHost($host)->setApiKey($key);
 // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 // $config = Fozzy\WinVPS\Api\Configuration::getDefaultConfiguration()->setApiKeyPrefix('Api-Key', 'Bearer');
 
@@ -576,7 +598,7 @@ This endpoint does not need any parameter.
 
 ### Return type
 
-[**\Fozzy\WinVPS\Api\Models\InlineResponse200[]**](../Model/InlineResponse200.md)
+[**\Fozzy\WinVPS\Api\Models\MachinesListResponse**](../Model/MachinesListResponse.md)
 
 ### Authorization
 
@@ -590,7 +612,7 @@ This endpoint does not need any parameter.
 [[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
 
 # **machinesStoppedGet**
-> \Fozzy\WinVPS\Api\Models\InlineResponse200[] machinesStoppedGet()
+> \Fozzy\WinVPS\Api\Models\MachinesListResponse machinesStoppedGet()
 
 Returns list of currently stopped or suspended machines.
 
@@ -599,7 +621,9 @@ Returns list of currently stopped or suspended machines.
 <?php
 require_once(__DIR__ . '/vendor/autoload.php');
 // Configure API key authorization: ApiKeyAuth
-$config = Fozzy\WinVPS\Api\Configuration::getDefaultConfiguration()->setApiKey('Api-Key', 'YOUR_API_KEY');
+$host = 'Endpoint from API docs';
+$key = 'API key from WinVPS client area';
+$config = Fozzy\WinVPS\Api\Configuration::getDefaultConfiguration()->setHost($host)->setApiKey($key);
 // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 // $config = Fozzy\WinVPS\Api\Configuration::getDefaultConfiguration()->setApiKeyPrefix('Api-Key', 'Bearer');
 
@@ -624,7 +648,7 @@ This endpoint does not need any parameter.
 
 ### Return type
 
-[**\Fozzy\WinVPS\Api\Models\InlineResponse200[]**](../Model/InlineResponse200.md)
+[**\Fozzy\WinVPS\Api\Models\MachinesListResponse**](../Model/MachinesListResponse.md)
 
 ### Authorization
 

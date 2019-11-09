@@ -10,7 +10,7 @@ Method | HTTP request | Description
 [**jobsPendingGet**](JobsApi.md#jobspendingget) | **GET** /jobs/pending | List of all planned commands.
 
 # **jobsGet**
-> \Fozzy\WinVPS\Api\Models\JobDefinition[] jobsGet()
+> \Fozzy\WinVPS\Api\Models\JobsListResponse jobsGet()
 
 List of all planned and completed commands.
 
@@ -19,7 +19,9 @@ List of all planned and completed commands.
 <?php
 require_once(__DIR__ . '/vendor/autoload.php');
 // Configure API key authorization: ApiKeyAuth
-$config = Fozzy\WinVPS\Api\Configuration::getDefaultConfiguration()->setApiKey('Api-Key', 'YOUR_API_KEY');
+$host = 'Endpoint from API docs';
+$key = 'API key from WinVPS client area';
+$config = Fozzy\WinVPS\Api\Configuration::getDefaultConfiguration()->setHost($host)->setApiKey($key);
 // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 // $config = Fozzy\WinVPS\Api\Configuration::getDefaultConfiguration()->setApiKeyPrefix('Api-Key', 'Bearer');
 
@@ -44,7 +46,7 @@ This endpoint does not need any parameter.
 
 ### Return type
 
-[**\Fozzy\WinVPS\Api\Models\JobDefinition[]**](../Model/JobDefinition.md)
+[**\Fozzy\WinVPS\Api\Models\JobsListResponse**](../Model/JobsListResponse.md)
 
 ### Authorization
 
@@ -58,7 +60,7 @@ This endpoint does not need any parameter.
 [[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
 
 # **jobsIdDelete**
-> \Fozzy\WinVPS\Api\Models\JobDefinition jobsIdDelete($id)
+> jobsIdDelete($id)
 
 Cancel specified Job.
 
@@ -67,7 +69,9 @@ Cancel specified Job.
 <?php
 require_once(__DIR__ . '/vendor/autoload.php');
 // Configure API key authorization: ApiKeyAuth
-$config = Fozzy\WinVPS\Api\Configuration::getDefaultConfiguration()->setApiKey('Api-Key', 'YOUR_API_KEY');
+$host = 'Endpoint from API docs';
+$key = 'API key from WinVPS client area';
+$config = Fozzy\WinVPS\Api\Configuration::getDefaultConfiguration()->setHost($host)->setApiKey($key);
 // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 // $config = Fozzy\WinVPS\Api\Configuration::getDefaultConfiguration()->setApiKeyPrefix('Api-Key', 'Bearer');
 
@@ -80,8 +84,7 @@ $apiInstance = new Fozzy\WinVPS\Api\Resources\JobsApi(
 $id = 56; // int | 
 
 try {
-    $result = $apiInstance->jobsIdDelete($id);
-    print_r($result);
+    $apiInstance->jobsIdDelete($id);
 } catch (Exception $e) {
     echo 'Exception when calling JobsApi->jobsIdDelete: ', $e->getMessage(), PHP_EOL;
 }
@@ -96,7 +99,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**\Fozzy\WinVPS\Api\Models\JobDefinition**](../Model/JobDefinition.md)
+void (empty response body)
 
 ### Authorization
 
@@ -110,7 +113,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
 
 # **jobsIdGet**
-> \Fozzy\WinVPS\Api\Models\JobDefinition jobsIdGet($id)
+> \Fozzy\WinVPS\Api\Models\JobDetailsResponse jobsIdGet($id)
 
 View single Job details.
 
@@ -119,7 +122,9 @@ View single Job details.
 <?php
 require_once(__DIR__ . '/vendor/autoload.php');
 // Configure API key authorization: ApiKeyAuth
-$config = Fozzy\WinVPS\Api\Configuration::getDefaultConfiguration()->setApiKey('Api-Key', 'YOUR_API_KEY');
+$host = 'Endpoint from API docs';
+$key = 'API key from WinVPS client area';
+$config = Fozzy\WinVPS\Api\Configuration::getDefaultConfiguration()->setHost($host)->setApiKey($key);
 // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 // $config = Fozzy\WinVPS\Api\Configuration::getDefaultConfiguration()->setApiKeyPrefix('Api-Key', 'Bearer');
 
@@ -148,7 +153,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**\Fozzy\WinVPS\Api\Models\JobDefinition**](../Model/JobDefinition.md)
+[**\Fozzy\WinVPS\Api\Models\JobDetailsResponse**](../Model/JobDetailsResponse.md)
 
 ### Authorization
 
@@ -162,7 +167,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
 
 # **jobsPendingGet**
-> \Fozzy\WinVPS\Api\Models\JobDefinition[] jobsPendingGet()
+> \Fozzy\WinVPS\Api\Models\JobsListResponse jobsPendingGet()
 
 List of all planned commands.
 
@@ -171,7 +176,9 @@ List of all planned commands.
 <?php
 require_once(__DIR__ . '/vendor/autoload.php');
 // Configure API key authorization: ApiKeyAuth
-$config = Fozzy\WinVPS\Api\Configuration::getDefaultConfiguration()->setApiKey('Api-Key', 'YOUR_API_KEY');
+$host = 'Endpoint from API docs';
+$key = 'API key from WinVPS client area';
+$config = Fozzy\WinVPS\Api\Configuration::getDefaultConfiguration()->setHost($host)->setApiKey($key);
 // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 // $config = Fozzy\WinVPS\Api\Configuration::getDefaultConfiguration()->setApiKeyPrefix('Api-Key', 'Bearer');
 
@@ -196,7 +203,7 @@ This endpoint does not need any parameter.
 
 ### Return type
 
-[**\Fozzy\WinVPS\Api\Models\JobDefinition[]**](../Model/JobDefinition.md)
+[**\Fozzy\WinVPS\Api\Models\JobsListResponse**](../Model/JobsListResponse.md)
 
 ### Authorization
 

@@ -1,9 +1,9 @@
-# InlineResponse2002
+# InlineResponse2001Data
 
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**data** | [**\Fozzy\WinVPS\Api\Models\InlineResponse2002Data**](InlineResponse2002Data.md) |  | [optional] 
+**jobs** | [**\Fozzy\WinVPS\Api\Models\CommandResult[]**](CommandResult.md) |  | [optional] 
 
 [[Back to Model list]](../../README.md#documentation-for-models) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to README]](../../README.md)
 

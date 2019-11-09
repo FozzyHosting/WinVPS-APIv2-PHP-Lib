@@ -1,9 +1,12 @@
-# InlineResponse2002
+# MachineUpdateRequestBody
 
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**data** | [**\Fozzy\WinVPS\Api\Models\InlineResponse2002Data**](InlineResponse2002Data.md) |  | [optional] 
+**addDisk** | **int** | Additional disk saze. | [optional] 
+**addRam** | **int** | Additional RAM size in MB. | [optional] 
+**addCpu** | **int** | Additional CPU cores count. | [optional] 
+**addBand** | **int** | Additional bandwidth. | [optional] 
 
 [[Back to Model list]](../../README.md#documentation-for-models) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to README]](../../README.md)
 

@@ -7,7 +7,7 @@ Method | HTTP request | Description
 [**templatesGet**](TemplatesApi.md#templatesget) | **GET** /templates | Returns list of all templates available for new machines.
 
 # **templatesGet**
-> \Fozzy\WinVPS\Api\Models\TemplateDefinition[] templatesGet()
+> \Fozzy\WinVPS\Api\Models\TemplatesListResponse templatesGet()
 
 Returns list of all templates available for new machines.
 
@@ -16,7 +16,9 @@ Returns list of all templates available for new machines.
 <?php
 require_once(__DIR__ . '/vendor/autoload.php');
 // Configure API key authorization: ApiKeyAuth
-$config = Fozzy\WinVPS\Api\Configuration::getDefaultConfiguration()->setApiKey('Api-Key', 'YOUR_API_KEY');
+$host = 'Endpoint from API docs';
+$key = 'API key from WinVPS client area';
+$config = Fozzy\WinVPS\Api\Configuration::getDefaultConfiguration()->setHost($host)->setApiKey($key);
 // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 // $config = Fozzy\WinVPS\Api\Configuration::getDefaultConfiguration()->setApiKeyPrefix('Api-Key', 'Bearer');
 
@@ -41,7 +43,7 @@ This endpoint does not need any parameter.
 
 ### Return type
 
-[**\Fozzy\WinVPS\Api\Models\TemplateDefinition[]**](../Model/TemplateDefinition.md)
+[**\Fozzy\WinVPS\Api\Models\TemplatesListResponse**](../Model/TemplatesListResponse.md)
 
 ### Authorization
 

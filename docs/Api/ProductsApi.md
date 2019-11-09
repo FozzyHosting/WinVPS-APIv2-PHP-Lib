@@ -7,7 +7,7 @@ Method | HTTP request | Description
 [**productsGet**](ProductsApi.md#productsget) | **GET** /products | Returns list of all available products.
 
 # **productsGet**
-> \Fozzy\WinVPS\Api\Models\ProductDefinition[] productsGet()
+> \Fozzy\WinVPS\Api\Models\ProductsListResponse productsGet()
 
 Returns list of all available products.
 
@@ -16,7 +16,9 @@ Returns list of all available products.
 <?php
 require_once(__DIR__ . '/vendor/autoload.php');
 // Configure API key authorization: ApiKeyAuth
-$config = Fozzy\WinVPS\Api\Configuration::getDefaultConfiguration()->setApiKey('Api-Key', 'YOUR_API_KEY');
+$host = 'Endpoint from API docs';
+$key = 'API key from WinVPS client area';
+$config = Fozzy\WinVPS\Api\Configuration::getDefaultConfiguration()->setHost($host)->setApiKey($key);
 // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
 // $config = Fozzy\WinVPS\Api\Configuration::getDefaultConfiguration()->setApiKeyPrefix('Api-Key', 'Bearer');
 
@@ -41,7 +43,7 @@ This endpoint does not need any parameter.
 
 ### Return type
 
-[**\Fozzy\WinVPS\Api\Models\ProductDefinition[]**](../Model/ProductDefinition.md)
+[**\Fozzy\WinVPS\Api\Models\ProductsListResponse**](../Model/ProductsListResponse.md)
 
 ### Authorization
 
