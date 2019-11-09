@@ -49,11 +49,9 @@ To be able to send requests you need to get API key as described in API Document
 <?php
 require_once(__DIR__ . '/vendor/autoload.php');
 
-use Fozzy\WinVPS\Api\ApiException;
 use Fozzy\WinVPS\Api\Configuration;
-use Fozzy\WinVPS\Api\Resource;
 use Fozzy\WinVPS\Api\Repository;
-
+use Fozzy\WinVPS\Api\Models\MachineCreateRequestBody;
 
 $host = 'Endpoint from API docs';
 $key = 'API key from WinVPS client area';
@@ -72,6 +70,16 @@ try {
     
     // Get API Instance object to make requests. 
     $machinesInstance = $repository->get('machines');
+
+    // Prepare request to create new machine.
+    $body = new \Fozzy\WinVPS\Api\Models\MachineCreateRequestBody([
+            'productId' => 17,
+            'templateId' => 72,
+            'locationId' => 1,
+        ]);
+
+    // Create new machine
+    $machinesInstance->machinesPost($body);
 
     /*
     Load all machines from the endpoint.
