@@ -12,18 +12,16 @@
  */
 
 namespace Fozzy\WinVPS\Api\Models;
-
-use \ArrayAccess;
 use \Fozzy\WinVPS\Api\ObjectSerializer;
 
 /**
- * InlineResponse2002Data Model
+ * MachineCreateRequestBody Model
  *
  * @category Class
  * @package  Fozzy\WinVPS\Api
  * @author   Fozzy Inc.
  */
-class InlineResponse2002Data implements ModelInterface, ArrayAccess
+class MachineCreateRequestBody extends MachineEditableFields 
 {
     const DISCRIMINATOR = null;
 
@@ -32,7 +30,7 @@ class InlineResponse2002Data implements ModelInterface, ArrayAccess
       *
       * @var string
       */
-    protected static $swaggerModelName = 'inline_response_200_2_data';
+    protected static $swaggerModelName = 'MachineCreateRequestBody';
 
     /**
       * Array of property to type mappings. Used for (de)serialization
@@ -40,8 +38,15 @@ class InlineResponse2002Data implements ModelInterface, ArrayAccess
       * @var string[]
       */
     protected static $swaggerTypes = [
-        'address' => 'string',
-'jobs' => '\Fozzy\WinVPS\Api\Models\CommandResult[]'    ];
+        'templateId' => 'int',
+'brandId' => 'int',
+'diskType' => 'string',
+'locationId' => 'int',
+'addDisk' => 'int',
+'addRam' => 'int',
+'addCpu' => 'int',
+'addBand' => 'int',
+'autoStart' => 'int'    ];
 
     /**
       * Array of property to format mappings. Used for (de)serialization
@@ -49,8 +54,15 @@ class InlineResponse2002Data implements ModelInterface, ArrayAccess
       * @var string[]
       */
     protected static $swaggerFormats = [
-        'address' => null,
-'jobs' => null    ];
+        'templateId' => null,
+'brandId' => null,
+'diskType' => null,
+'locationId' => null,
+'addDisk' => null,
+'addRam' => null,
+'addCpu' => null,
+'addBand' => null,
+'autoStart' => null    ];
 
     /**
      * Array of property to type mappings. Used for (de)serialization
@@ -59,7 +71,7 @@ class InlineResponse2002Data implements ModelInterface, ArrayAccess
      */
     public static function swaggerTypes()
     {
-        return self::$swaggerTypes;
+        return self::$swaggerTypes + parent::swaggerTypes();
     }
 
     /**
@@ -69,7 +81,7 @@ class InlineResponse2002Data implements ModelInterface, ArrayAccess
      */
     public static function swaggerFormats()
     {
-        return self::$swaggerFormats;
+        return self::$swaggerFormats + parent::swaggerFormats();
     }
 
     /**
@@ -79,8 +91,15 @@ class InlineResponse2002Data implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $attributeMap = [
-        'address' => 'address',
-'jobs' => 'jobs'    ];
+        'templateId' => 'template_id',
+'brandId' => 'brand_id',
+'diskType' => 'disk_type',
+'locationId' => 'location_id',
+'addDisk' => 'add_disk',
+'addRam' => 'add_ram',
+'addCpu' => 'add_cpu',
+'addBand' => 'add_band',
+'autoStart' => 'auto_start'    ];
 
     /**
      * Array of attributes to setter functions (for deserialization of responses)
@@ -88,8 +107,15 @@ class InlineResponse2002Data implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $setters = [
-        'address' => 'setAddress',
-'jobs' => 'setJobs'    ];
+        'templateId' => 'setTemplateId',
+'brandId' => 'setBrandId',
+'diskType' => 'setDiskType',
+'locationId' => 'setLocationId',
+'addDisk' => 'setAddDisk',
+'addRam' => 'setAddRam',
+'addCpu' => 'setAddCpu',
+'addBand' => 'setAddBand',
+'autoStart' => 'setAutoStart'    ];
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -97,8 +123,15 @@ class InlineResponse2002Data implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $getters = [
-        'address' => 'getAddress',
-'jobs' => 'getJobs'    ];
+        'templateId' => 'getTemplateId',
+'brandId' => 'getBrandId',
+'diskType' => 'getDiskType',
+'locationId' => 'getLocationId',
+'addDisk' => 'getAddDisk',
+'addRam' => 'getAddRam',
+'addCpu' => 'getAddCpu',
+'addBand' => 'getAddBand',
+'autoStart' => 'getAutoStart'    ];
 
     /**
      * Array of attributes where the key is the local name,
@@ -108,7 +141,7 @@ class InlineResponse2002Data implements ModelInterface, ArrayAccess
      */
     public static function attributeMap()
     {
-        return self::$attributeMap;
+        return parent::attributeMap() + self::$attributeMap;
     }
 
     /**
@@ -118,7 +151,7 @@ class InlineResponse2002Data implements ModelInterface, ArrayAccess
      */
     public static function setters()
     {
-        return self::$setters;
+        return parent::setters() + self::$setters;
     }
 
     /**
@@ -128,7 +161,7 @@ class InlineResponse2002Data implements ModelInterface, ArrayAccess
      */
     public static function getters()
     {
-        return self::$getters;
+        return parent::getters() + self::$getters;
     }
 
     /**
@@ -141,14 +174,21 @@ class InlineResponse2002Data implements ModelInterface, ArrayAccess
         return self::$swaggerModelName;
     }
 
-    
+    const DISK_TYPE_HDD = 'hdd';
+const DISK_TYPE_SSD = 'ssd';
 
     /**
-     * Associative array for storing property values
+     * Gets allowable values of the enum
      *
-     * @var mixed[]
+     * @return string[]
      */
-    protected $container = [];
+    public function getDiskTypeAllowableValues()
+    {
+        return [
+            self::DISK_TYPE_HDD,
+self::DISK_TYPE_SSD,        ];
+    }
+
 
     /**
      * Constructor
@@ -158,8 +198,17 @@ class InlineResponse2002Data implements ModelInterface, ArrayAccess
      */
     public function __construct(array $data = null)
     {
-        $this->container['address'] = isset($data['address']) ? $data['address'] : null;
-        $this->container['jobs'] = isset($data['jobs']) ? $data['jobs'] : null;
+        parent::__construct($data);
+
+        $this->container['templateId'] = isset($data['templateId']) ? $data['templateId'] : null;
+        $this->container['brandId'] = isset($data['brandId']) ? $data['brandId'] : null;
+        $this->container['diskType'] = isset($data['diskType']) ? $data['diskType'] : null;
+        $this->container['locationId'] = isset($data['locationId']) ? $data['locationId'] : null;
+        $this->container['addDisk'] = isset($data['addDisk']) ? $data['addDisk'] : null;
+        $this->container['addRam'] = isset($data['addRam']) ? $data['addRam'] : null;
+        $this->container['addCpu'] = isset($data['addCpu']) ? $data['addCpu'] : null;
+        $this->container['addBand'] = isset($data['addBand']) ? $data['addBand'] : null;
+        $this->container['autoStart'] = isset($data['autoStart']) ? $data['autoStart'] : null;
     }
 
     /**
@@ -169,7 +218,15 @@ class InlineResponse2002Data implements ModelInterface, ArrayAccess
      */
     public function listInvalidProperties()
     {
-        $invalidProperties = [];
+        $invalidProperties = parent::listInvalidProperties();
+
+        $allowedValues = $this->getDiskTypeAllowableValues();
+        if (!is_null($this->container['diskType']) && !in_array($this->container['diskType'], $allowedValues, true)) {
+            $invalidProperties[] = sprintf(
+                "invalid value for 'diskType', must be one of '%s'",
+                implode("', '", $allowedValues)
+            );
+        }
 
         return $invalidProperties;
     }
@@ -187,49 +244,226 @@ class InlineResponse2002Data implements ModelInterface, ArrayAccess
 
 
     /**
-     * Gets address
+     * Gets templateId
      *
-     * @return string
+     * @return int
      */
-    public function getAddress()
+    public function getTemplateId()
     {
-        return $this->container['address'];
+        return $this->container['templateId'];
     }
 
     /**
-     * Sets address
+     * Sets templateId
      *
-     * @param string $address address
+     * @param int $templateId Primary Template ID.
      *
      * @return $this
      */
-    public function setAddress($address)
+    public function setTemplateId($templateId)
     {
-        $this->container['address'] = $address;
+        $this->container['templateId'] = $templateId;
 
         return $this;
     }
 
     /**
-     * Gets jobs
+     * Gets brandId
      *
-     * @return \Fozzy\WinVPS\Api\Models\CommandResult[]
+     * @return int
      */
-    public function getJobs()
+    public function getBrandId()
     {
-        return $this->container['jobs'];
+        return $this->container['brandId'];
     }
 
     /**
-     * Sets jobs
+     * Sets brandId
      *
-     * @param \Fozzy\WinVPS\Api\Models\CommandResult[] $jobs jobs
+     * @param int $brandId Primary Brand ID.
      *
      * @return $this
      */
-    public function setJobs($jobs)
+    public function setBrandId($brandId)
     {
-        $this->container['jobs'] = $jobs;
+        $this->container['brandId'] = $brandId;
+
+        return $this;
+    }
+
+    /**
+     * Gets diskType
+     *
+     * @return string
+     */
+    public function getDiskType()
+    {
+        return $this->container['diskType'];
+    }
+
+    /**
+     * Sets diskType
+     *
+     * @param string $diskType Server disk type. HDD or SSD.
+     *
+     * @return $this
+     */
+    public function setDiskType($diskType)
+    {
+        $allowedValues = $this->getDiskTypeAllowableValues();
+        if (!is_null($diskType) && !in_array($diskType, $allowedValues, true)) {
+            throw new \InvalidArgumentException(
+                sprintf(
+                    "Invalid value for 'diskType', must be one of '%s'",
+                    implode("', '", $allowedValues)
+                )
+            );
+        }
+        $this->container['diskType'] = $diskType;
+
+        return $this;
+    }
+
+    /**
+     * Gets locationId
+     *
+     * @return int
+     */
+    public function getLocationId()
+    {
+        return $this->container['locationId'];
+    }
+
+    /**
+     * Sets locationId
+     *
+     * @param int $locationId Primary Location ID.
+     *
+     * @return $this
+     */
+    public function setLocationId($locationId)
+    {
+        $this->container['locationId'] = $locationId;
+
+        return $this;
+    }
+
+    /**
+     * Gets addDisk
+     *
+     * @return int
+     */
+    public function getAddDisk()
+    {
+        return $this->container['addDisk'];
+    }
+
+    /**
+     * Sets addDisk
+     *
+     * @param int $addDisk Additional disk saze.
+     *
+     * @return $this
+     */
+    public function setAddDisk($addDisk)
+    {
+        $this->container['addDisk'] = $addDisk;
+
+        return $this;
+    }
+
+    /**
+     * Gets addRam
+     *
+     * @return int
+     */
+    public function getAddRam()
+    {
+        return $this->container['addRam'];
+    }
+
+    /**
+     * Sets addRam
+     *
+     * @param int $addRam Additional RAM size in MB.
+     *
+     * @return $this
+     */
+    public function setAddRam($addRam)
+    {
+        $this->container['addRam'] = $addRam;
+
+        return $this;
+    }
+
+    /**
+     * Gets addCpu
+     *
+     * @return int
+     */
+    public function getAddCpu()
+    {
+        return $this->container['addCpu'];
+    }
+
+    /**
+     * Sets addCpu
+     *
+     * @param int $addCpu Additional CPU cores count.
+     *
+     * @return $this
+     */
+    public function setAddCpu($addCpu)
+    {
+        $this->container['addCpu'] = $addCpu;
+
+        return $this;
+    }
+
+    /**
+     * Gets addBand
+     *
+     * @return int
+     */
+    public function getAddBand()
+    {
+        return $this->container['addBand'];
+    }
+
+    /**
+     * Sets addBand
+     *
+     * @param int $addBand Additional bandwidth.
+     *
+     * @return $this
+     */
+    public function setAddBand($addBand)
+    {
+        $this->container['addBand'] = $addBand;
+
+        return $this;
+    }
+
+    /**
+     * Gets autoStart
+     *
+     * @return int
+     */
+    public function getAutoStart()
+    {
+        return $this->container['autoStart'];
+    }
+
+    /**
+     * Sets autoStart
+     *
+     * @param int $autoStart autoStart
+     *
+     * @return $this
+     */
+    public function setAutoStart($autoStart)
+    {
+        $this->container['autoStart'] = $autoStart;
 
         return $this;
     }

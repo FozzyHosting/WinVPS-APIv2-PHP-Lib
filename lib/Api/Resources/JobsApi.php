@@ -131,7 +131,7 @@ return $this->config;
         *
         * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
         * @throws \InvalidArgumentException
-        * @return object
+        * @return \Fozzy\WinVPS\Api\Models\JobsListResponse
         */
         public function jobsGet()
         {
@@ -147,11 +147,11 @@ return $this->config;
         *
         * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
         * @throws \InvalidArgumentException
-        * @return array of object, HTTP status code, HTTP response headers (array of strings)
+        * @return array of \Fozzy\WinVPS\Api\Models\JobsListResponse, HTTP status code, HTTP response headers (array of strings)
         */
         public function jobsGetWithHttpInfo()
         {
-        $returnType = 'object';
+        $returnType = '\Fozzy\WinVPS\Api\Models\JobsListResponse';
         $request = $this->jobsGetRequest();
 
         try {
@@ -268,7 +268,7 @@ return $this->config;
         */
         public function jobsGetAsyncWithHttpInfo()
         {
-        $returnType = 'object';
+        $returnType = '\Fozzy\WinVPS\Api\Models\JobsListResponse';
         $request = $this->jobsGetRequest();
 
         return $this->client
@@ -409,12 +409,11 @@ return $this->config;
         *
         * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
         * @throws \InvalidArgumentException
-        * @return \Fozzy\WinVPS\Api\Models\InlineResponse2003
+        * @return void
         */
         public function jobsIdDelete($id)
         {
-        list($response) = $this->jobsIdDeleteWithHttpInfo($id);
-            return $response;
+        $this->jobsIdDeleteWithHttpInfo($id);
         }
 
         /**
@@ -426,11 +425,11 @@ return $this->config;
         *
         * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
         * @throws \InvalidArgumentException
-        * @return array of \Fozzy\WinVPS\Api\Models\InlineResponse2003, HTTP status code, HTTP response headers (array of strings)
+        * @return array of null, HTTP status code, HTTP response headers (array of strings)
         */
         public function jobsIdDeleteWithHttpInfo($id)
         {
-        $returnType = '\Fozzy\WinVPS\Api\Models\InlineResponse2003';
+        $returnType = '';
         $request = $this->jobsIdDeleteRequest($id);
 
         try {
@@ -473,25 +472,7 @@ return $this->config;
         );
         }
 
-            $responseBody = $response->getBody();
-            if ($returnType === '\SplFileObject') {
-            $content = $responseBody; //stream goes to serializer
-            } else {
-            $content = $responseBody->getContents();
-            if (!in_array($returnType, ['string','integer','bool'])) {
-            $content = json_decode($content);
-            }
-            }
-
-            if (!empty($content) && is_object($content) && property_exists($content, 'pagination')) {
-            $this->pagination = $content->pagination;
-            }
-
-            return [
-            ObjectSerializer::deserialize($content, $returnType, []),
-            $response->getStatusCode(),
-            $response->getHeaders()
-            ];
+            return [null, $statusCode, $response->getHeaders()];
 
         } catch (ApiException $e) {
 
@@ -549,28 +530,14 @@ return $this->config;
         */
         public function jobsIdDeleteAsyncWithHttpInfo($id)
         {
-        $returnType = '\Fozzy\WinVPS\Api\Models\InlineResponse2003';
+        $returnType = '';
         $request = $this->jobsIdDeleteRequest($id);
 
         return $this->client
         ->sendAsync($request, $this->createHttpClientOption())
         ->then(
         function ($response) use ($returnType) {
-            $responseBody = $response->getBody();
-            if ($returnType === '\SplFileObject') {
-            $content = $responseBody; //stream goes to serializer
-            } else {
-            $content = $responseBody->getContents();
-            if ($returnType !== 'string') {
-            $content = json_decode($content);
-            }
-            }
-
-            return [
-            ObjectSerializer::deserialize($content, $returnType, []),
-            $response->getStatusCode(),
-            $response->getHeaders()
-            ];
+            return [null, $response->getStatusCode(), $response->getHeaders()];
         },
         function ($exception) {
         $response = $exception->getResponse();
@@ -705,7 +672,7 @@ return $this->config;
         *
         * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
         * @throws \InvalidArgumentException
-        * @return \Fozzy\WinVPS\Api\Models\InlineResponse2003
+        * @return \Fozzy\WinVPS\Api\Models\JobDetailsResponse
         */
         public function jobsIdGet($id)
         {
@@ -722,11 +689,11 @@ return $this->config;
         *
         * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
         * @throws \InvalidArgumentException
-        * @return array of \Fozzy\WinVPS\Api\Models\InlineResponse2003, HTTP status code, HTTP response headers (array of strings)
+        * @return array of \Fozzy\WinVPS\Api\Models\JobDetailsResponse, HTTP status code, HTTP response headers (array of strings)
         */
         public function jobsIdGetWithHttpInfo($id)
         {
-        $returnType = '\Fozzy\WinVPS\Api\Models\InlineResponse2003';
+        $returnType = '\Fozzy\WinVPS\Api\Models\JobDetailsResponse';
         $request = $this->jobsIdGetRequest($id);
 
         try {
@@ -845,7 +812,7 @@ return $this->config;
         */
         public function jobsIdGetAsyncWithHttpInfo($id)
         {
-        $returnType = '\Fozzy\WinVPS\Api\Models\InlineResponse2003';
+        $returnType = '\Fozzy\WinVPS\Api\Models\JobDetailsResponse';
         $request = $this->jobsIdGetRequest($id);
 
         return $this->client
@@ -1000,7 +967,7 @@ return $this->config;
         *
         * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
         * @throws \InvalidArgumentException
-        * @return object
+        * @return \Fozzy\WinVPS\Api\Models\JobsListResponse
         */
         public function jobsPendingGet()
         {
@@ -1016,11 +983,11 @@ return $this->config;
         *
         * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
         * @throws \InvalidArgumentException
-        * @return array of object, HTTP status code, HTTP response headers (array of strings)
+        * @return array of \Fozzy\WinVPS\Api\Models\JobsListResponse, HTTP status code, HTTP response headers (array of strings)
         */
         public function jobsPendingGetWithHttpInfo()
         {
-        $returnType = 'object';
+        $returnType = '\Fozzy\WinVPS\Api\Models\JobsListResponse';
         $request = $this->jobsPendingGetRequest();
 
         try {
@@ -1137,7 +1104,7 @@ return $this->config;
         */
         public function jobsPendingGetAsyncWithHttpInfo()
         {
-        $returnType = 'object';
+        $returnType = '\Fozzy\WinVPS\Api\Models\JobsListResponse';
         $request = $this->jobsPendingGetRequest();
 
         return $this->client

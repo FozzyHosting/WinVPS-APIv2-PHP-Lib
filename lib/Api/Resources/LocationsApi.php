@@ -131,7 +131,7 @@ return $this->config;
         *
         * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
         * @throws \InvalidArgumentException
-        * @return object
+        * @return \Fozzy\WinVPS\Api\Models\LocationsListResponse
         */
         public function locationsGet()
         {
@@ -147,11 +147,11 @@ return $this->config;
         *
         * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
         * @throws \InvalidArgumentException
-        * @return array of object, HTTP status code, HTTP response headers (array of strings)
+        * @return array of \Fozzy\WinVPS\Api\Models\LocationsListResponse, HTTP status code, HTTP response headers (array of strings)
         */
         public function locationsGetWithHttpInfo()
         {
-        $returnType = 'object';
+        $returnType = '\Fozzy\WinVPS\Api\Models\LocationsListResponse';
         $request = $this->locationsGetRequest();
 
         try {
@@ -268,7 +268,7 @@ return $this->config;
         */
         public function locationsGetAsyncWithHttpInfo()
         {
-        $returnType = 'object';
+        $returnType = '\Fozzy\WinVPS\Api\Models\LocationsListResponse';
         $request = $this->locationsGetRequest();
 
         return $this->client

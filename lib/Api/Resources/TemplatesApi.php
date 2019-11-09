@@ -131,7 +131,7 @@ return $this->config;
         *
         * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
         * @throws \InvalidArgumentException
-        * @return object
+        * @return \Fozzy\WinVPS\Api\Models\TemplatesListResponse
         */
         public function templatesGet()
         {
@@ -147,11 +147,11 @@ return $this->config;
         *
         * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
         * @throws \InvalidArgumentException
-        * @return array of object, HTTP status code, HTTP response headers (array of strings)
+        * @return array of \Fozzy\WinVPS\Api\Models\TemplatesListResponse, HTTP status code, HTTP response headers (array of strings)
         */
         public function templatesGetWithHttpInfo()
         {
-        $returnType = 'object';
+        $returnType = '\Fozzy\WinVPS\Api\Models\TemplatesListResponse';
         $request = $this->templatesGetRequest();
 
         try {
@@ -268,7 +268,7 @@ return $this->config;
         */
         public function templatesGetAsyncWithHttpInfo()
         {
-        $returnType = 'object';
+        $returnType = '\Fozzy\WinVPS\Api\Models\TemplatesListResponse';
         $request = $this->templatesGetRequest();
 
         return $this->client

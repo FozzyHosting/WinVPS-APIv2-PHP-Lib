@@ -17,13 +17,13 @@ use \ArrayAccess;
 use \Fozzy\WinVPS\Api\ObjectSerializer;
 
 /**
- * PaginationDefinition Model
+ * MachinesList Model
  *
  * @category Class
  * @package  Fozzy\WinVPS\Api
  * @author   Fozzy Inc.
  */
-class PaginationDefinition implements ModelInterface, ArrayAccess
+class MachinesList implements ModelInterface, ArrayAccess
 {
     const DISCRIMINATOR = null;
 
@@ -32,7 +32,7 @@ class PaginationDefinition implements ModelInterface, ArrayAccess
       *
       * @var string
       */
-    protected static $swaggerModelName = 'PaginationDefinition';
+    protected static $swaggerModelName = 'MachinesList';
 
     /**
       * Array of property to type mappings. Used for (de)serialization
@@ -40,7 +40,7 @@ class PaginationDefinition implements ModelInterface, ArrayAccess
       * @var string[]
       */
     protected static $swaggerTypes = [
-        'pagination' => '\Fozzy\WinVPS\Api\Models\PaginationDetails'    ];
+            ];
 
     /**
       * Array of property to format mappings. Used for (de)serialization
@@ -48,7 +48,7 @@ class PaginationDefinition implements ModelInterface, ArrayAccess
       * @var string[]
       */
     protected static $swaggerFormats = [
-        'pagination' => null    ];
+            ];
 
     /**
      * Array of property to type mappings. Used for (de)serialization
@@ -77,7 +77,7 @@ class PaginationDefinition implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $attributeMap = [
-        'pagination' => 'pagination'    ];
+            ];
 
     /**
      * Array of attributes to setter functions (for deserialization of responses)
@@ -85,7 +85,7 @@ class PaginationDefinition implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $setters = [
-        'pagination' => 'setPagination'    ];
+            ];
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -93,7 +93,7 @@ class PaginationDefinition implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $getters = [
-        'pagination' => 'getPagination'    ];
+            ];
 
     /**
      * Array of attributes where the key is the local name,
@@ -153,7 +153,6 @@ class PaginationDefinition implements ModelInterface, ArrayAccess
      */
     public function __construct(array $data = null)
     {
-        $this->container['pagination'] = isset($data['pagination']) ? $data['pagination'] : null;
     }
 
     /**
@@ -163,7 +162,7 @@ class PaginationDefinition implements ModelInterface, ArrayAccess
      */
     public function listInvalidProperties()
     {
-        $invalidProperties = [];
+        $invalidProperties = parent::listInvalidProperties();
 
         return $invalidProperties;
     }
@@ -179,30 +178,6 @@ class PaginationDefinition implements ModelInterface, ArrayAccess
         return count($this->listInvalidProperties()) === 0;
     }
 
-
-    /**
-     * Gets pagination
-     *
-     * @return \Fozzy\WinVPS\Api\Models\PaginationDetails
-     */
-    public function getPagination()
-    {
-        return $this->container['pagination'];
-    }
-
-    /**
-     * Sets pagination
-     *
-     * @param \Fozzy\WinVPS\Api\Models\PaginationDetails $pagination pagination
-     *
-     * @return $this
-     */
-    public function setPagination($pagination)
-    {
-        $this->container['pagination'] = $pagination;
-
-        return $this;
-    }
     /**
      * Returns true if offset exists. False otherwise.
      *

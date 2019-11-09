@@ -17,13 +17,13 @@ use \ArrayAccess;
 use \Fozzy\WinVPS\Api\ObjectSerializer;
 
 /**
- * InlineResponse2002 Model
+ * MachinesListResponse Model
  *
  * @category Class
  * @package  Fozzy\WinVPS\Api
  * @author   Fozzy Inc.
  */
-class InlineResponse2002 implements ModelInterface, ArrayAccess
+class MachinesListResponse implements ModelInterface, ArrayAccess
 {
     const DISCRIMINATOR = null;
 
@@ -32,7 +32,7 @@ class InlineResponse2002 implements ModelInterface, ArrayAccess
       *
       * @var string
       */
-    protected static $swaggerModelName = 'inline_response_200_2';
+    protected static $swaggerModelName = 'MachinesListResponse';
 
     /**
       * Array of property to type mappings. Used for (de)serialization
@@ -40,7 +40,8 @@ class InlineResponse2002 implements ModelInterface, ArrayAccess
       * @var string[]
       */
     protected static $swaggerTypes = [
-        'data' => '\Fozzy\WinVPS\Api\Models\InlineResponse2002Data'    ];
+        'data' => '\Fozzy\WinVPS\Api\Models\MachinesList',
+'pagination' => '\Fozzy\WinVPS\Api\Models\PaginationDetails'    ];
 
     /**
       * Array of property to format mappings. Used for (de)serialization
@@ -48,7 +49,8 @@ class InlineResponse2002 implements ModelInterface, ArrayAccess
       * @var string[]
       */
     protected static $swaggerFormats = [
-        'data' => null    ];
+        'data' => null,
+'pagination' => null    ];
 
     /**
      * Array of property to type mappings. Used for (de)serialization
@@ -77,7 +79,8 @@ class InlineResponse2002 implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $attributeMap = [
-        'data' => 'data'    ];
+        'data' => 'data',
+'pagination' => 'pagination'    ];
 
     /**
      * Array of attributes to setter functions (for deserialization of responses)
@@ -85,7 +88,8 @@ class InlineResponse2002 implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $setters = [
-        'data' => 'setData'    ];
+        'data' => 'setData',
+'pagination' => 'setPagination'    ];
 
     /**
      * Array of attributes to getter functions (for serialization of requests)
@@ -93,7 +97,8 @@ class InlineResponse2002 implements ModelInterface, ArrayAccess
      * @var string[]
      */
     protected static $getters = [
-        'data' => 'getData'    ];
+        'data' => 'getData',
+'pagination' => 'getPagination'    ];
 
     /**
      * Array of attributes where the key is the local name,
@@ -154,6 +159,7 @@ class InlineResponse2002 implements ModelInterface, ArrayAccess
     public function __construct(array $data = null)
     {
         $this->container['data'] = isset($data['data']) ? $data['data'] : null;
+        $this->container['pagination'] = isset($data['pagination']) ? $data['pagination'] : null;
     }
 
     /**
@@ -183,7 +189,7 @@ class InlineResponse2002 implements ModelInterface, ArrayAccess
     /**
      * Gets data
      *
-     * @return \Fozzy\WinVPS\Api\Models\InlineResponse2002Data
+     * @return \Fozzy\WinVPS\Api\Models\MachinesList
      */
     public function getData()
     {
@@ -193,13 +199,37 @@ class InlineResponse2002 implements ModelInterface, ArrayAccess
     /**
      * Sets data
      *
-     * @param \Fozzy\WinVPS\Api\Models\InlineResponse2002Data $data data
+     * @param \Fozzy\WinVPS\Api\Models\MachinesList $data data
      *
      * @return $this
      */
     public function setData($data)
     {
         $this->container['data'] = $data;
+
+        return $this;
+    }
+
+    /**
+     * Gets pagination
+     *
+     * @return \Fozzy\WinVPS\Api\Models\PaginationDetails
+     */
+    public function getPagination()
+    {
+        return $this->container['pagination'];
+    }
+
+    /**
+     * Sets pagination
+     *
+     * @param \Fozzy\WinVPS\Api\Models\PaginationDetails $pagination pagination
+     *
+     * @return $this
+     */
+    public function setPagination($pagination)
+    {
+        $this->container['pagination'] = $pagination;
 
         return $this;
     }

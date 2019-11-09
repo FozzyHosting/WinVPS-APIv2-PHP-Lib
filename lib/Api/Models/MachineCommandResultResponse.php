@@ -17,13 +17,13 @@ use \ArrayAccess;
 use \Fozzy\WinVPS\Api\ObjectSerializer;
 
 /**
- * InlineResponse2001 Model
+ * MachineCommandResultResponse Model
  *
  * @category Class
  * @package  Fozzy\WinVPS\Api
  * @author   Fozzy Inc.
  */
-class InlineResponse2001 implements ModelInterface, ArrayAccess
+class MachineCommandResultResponse implements ModelInterface, ArrayAccess
 {
     const DISCRIMINATOR = null;
 
@@ -32,7 +32,7 @@ class InlineResponse2001 implements ModelInterface, ArrayAccess
       *
       * @var string
       */
-    protected static $swaggerModelName = 'inline_response_200_1';
+    protected static $swaggerModelName = 'MachineCommandResultResponse';
 
     /**
       * Array of property to type mappings. Used for (de)serialization
@@ -40,7 +40,7 @@ class InlineResponse2001 implements ModelInterface, ArrayAccess
       * @var string[]
       */
     protected static $swaggerTypes = [
-        'data' => '\Fozzy\WinVPS\Api\Models\InlineResponse2001Data'    ];
+        'data' => '\Fozzy\WinVPS\Api\Models\MachineCommandResultResponseData'    ];
 
     /**
       * Array of property to format mappings. Used for (de)serialization
@@ -183,7 +183,7 @@ class InlineResponse2001 implements ModelInterface, ArrayAccess
     /**
      * Gets data
      *
-     * @return \Fozzy\WinVPS\Api\Models\InlineResponse2001Data
+     * @return \Fozzy\WinVPS\Api\Models\MachineCommandResultResponseData
      */
     public function getData()
     {
@@ -193,7 +193,7 @@ class InlineResponse2001 implements ModelInterface, ArrayAccess
     /**
      * Sets data
      *
-     * @param \Fozzy\WinVPS\Api\Models\InlineResponse2001Data $data data
+     * @param \Fozzy\WinVPS\Api\Models\MachineCommandResultResponseData $data data
      *
      * @return $this
      */
