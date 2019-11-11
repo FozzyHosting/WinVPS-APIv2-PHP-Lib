@@ -29,7 +29,7 @@ protected static $swaggerModelName = 'MachineCommandResultResponse_data';
 * @var string[]
 */
 protected static $swaggerTypes = [
-'jobs' => '\Fozzy\WinVPS\Api\Models\CommandResult[]'];
+'jobs' => '\Fozzy\WinVPS\Api\Models\JobDefinition[]'];
 
 /**
 * Array of property to format mappings. Used for (de)serialization
@@ -177,7 +177,7 @@ return count($this->listInvalidProperties()) === 0;
     /**
     * Gets jobs
     *
-    * @return \Fozzy\WinVPS\Api\Models\CommandResult[]
+    * @return \Fozzy\WinVPS\Api\Models\JobDefinition[]
     */
     public function getJobs()
     {
@@ -187,7 +187,7 @@ return count($this->listInvalidProperties()) === 0;
     /**
     * Sets jobs
     *
-    * @param \Fozzy\WinVPS\Api\Models\CommandResult[] $jobs jobs
+    * @param \Fozzy\WinVPS\Api\Models\JobDefinition[] $jobs jobs
     *
     * @return $this
     */
