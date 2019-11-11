@@ -193,7 +193,7 @@ return count($this->listInvalidProperties()) === 0;
     /**
     * Sets version
     *
-    * @param int $version IP version. 4 or 5
+    * @param int $version IP version. 4 or 6
     *
     * @return $this
     */

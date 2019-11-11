@@ -2310,7 +2310,7 @@ return $this->config;
         *
         * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
         * @throws \InvalidArgumentException
-        * @return \Fozzy\WinVPS\Api\Models\MachineDetailsResponse
+        * @return \Fozzy\WinVPS\Api\Models\MachineCommandResultResponse
         */
         public function machinesNamePut($body, $name)
         {
@@ -2328,11 +2328,11 @@ return $this->config;
         *
         * @throws \Fozzy\WinVPS\Api\ApiException on non-2xx response
         * @throws \InvalidArgumentException
-        * @return array of \Fozzy\WinVPS\Api\Models\MachineDetailsResponse, HTTP status code, HTTP response headers (array of strings)
+        * @return array of \Fozzy\WinVPS\Api\Models\MachineCommandResultResponse, HTTP status code, HTTP response headers (array of strings)
         */
         public function machinesNamePutWithHttpInfo($body, $name)
         {
-        $returnType = '\Fozzy\WinVPS\Api\Models\MachineDetailsResponse';
+        $returnType = '\Fozzy\WinVPS\Api\Models\MachineCommandResultResponse';
         $request = $this->machinesNamePutRequest($body, $name);
 
         try {
@@ -2460,7 +2460,7 @@ return $this->config;
         */
         public function machinesNamePutAsyncWithHttpInfo($body, $name)
         {
-        $returnType = '\Fozzy\WinVPS\Api\Models\MachineDetailsResponse';
+        $returnType = '\Fozzy\WinVPS\Api\Models\MachineCommandResultResponse';
         $request = $this->machinesNamePutRequest($body, $name);
 
         return $this->client

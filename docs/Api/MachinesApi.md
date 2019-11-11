@@ -398,7 +398,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
 
 # **machinesNamePut**
-> \Fozzy\WinVPS\Api\Models\MachineDetailsResponse machinesNamePut($body, $name)
+> \Fozzy\WinVPS\Api\Models\MachineCommandResultResponse machinesNamePut($body, $name)
 
 Update machine details
 
@@ -440,7 +440,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**\Fozzy\WinVPS\Api\Models\MachineDetailsResponse**](../Model/MachineDetailsResponse.md)
+[**\Fozzy\WinVPS\Api\Models\MachineCommandResultResponse**](../Model/MachineCommandResultResponse.md)
 
 ### Authorization
 
