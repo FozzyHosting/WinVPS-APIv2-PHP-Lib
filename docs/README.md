@@ -54,6 +54,7 @@ Class | Method | HTTP request | Description
  - [MachineListItem](Model/MachineListItem.md)
  - [MachineNonReinstallableFields](Model/MachineNonReinstallableFields.md)
  - [MachineOS](Model/MachineOS.md)
+ - [MachineOSUpdateStatus](Model/MachineOSUpdateStatus.md)
  - [MachineReinstallRequestBody](Model/MachineReinstallRequestBody.md)
  - [MachineReinstallableFields](Model/MachineReinstallableFields.md)
  - [MachineUpdateRequestBody](Model/MachineUpdateRequestBody.md)

@@ -6,14 +6,13 @@ use \ArrayAccess;
 use \Fozzy\WinVPS\Api\ObjectSerializer;
 
 /**
- * MachineOS Model
+ * MachineOSUpdateStatus Model
  *
  * @category Class
- * @description Details of the Machine operating system and brand.
  * @package  Fozzy\WinVPS\Api
  * @author   Fozzy Inc.
  */
-class MachineOS implements ModelInterface, ArrayAccess
+class MachineOSUpdateStatus implements ModelInterface, ArrayAccess
 {
 const DISCRIMINATOR = null;
 
@@ -22,7 +21,7 @@ const DISCRIMINATOR = null;
 *
 * @var string
 */
-protected static $swaggerModelName = 'MachineOS';
+protected static $swaggerModelName = 'MachineOS_update_status';
 
 /**
 * Array of property to type mappings. Used for (de)serialization
@@ -30,9 +29,10 @@ protected static $swaggerModelName = 'MachineOS';
 * @var string[]
 */
 protected static $swaggerTypes = [
-'templateId' => 'int',
-'brandId' => 'int',
-'updateStatus' => '\Fozzy\WinVPS\Api\Models\MachineOSUpdateStatus'];
+'hResult' => 'int',
+'rebootRequired' => 'bool',
+'resultCode' => 'int',
+'updateTime' => 'string'];
 
 /**
 * Array of property to format mappings. Used for (de)serialization
@@ -40,9 +40,10 @@ protected static $swaggerTypes = [
 * @var string[]
 */
 protected static $swaggerFormats = [
-'templateId' => null,
-'brandId' => null,
-'updateStatus' => null];
+'hResult' => null,
+'rebootRequired' => null,
+'resultCode' => null,
+'updateTime' => null];
 
 /**
 * Array of property to type mappings. Used for (de)serialization
@@ -71,9 +72,10 @@ return self::$swaggerFormats;
 * @var string[]
 */
 protected static $attributeMap = [
-'templateId' => 'template_id',
-'brandId' => 'brand_id',
-'updateStatus' => 'update_status'];
+'hResult' => 'h_result',
+'rebootRequired' => 'reboot_required',
+'resultCode' => 'result_code',
+'updateTime' => 'update_time'];
 
 /**
 * Array of attributes to setter functions (for deserialization of responses)
@@ -81,9 +83,10 @@ protected static $attributeMap = [
 * @var string[]
 */
 protected static $setters = [
-'templateId' => 'setTemplateId',
-'brandId' => 'setBrandId',
-'updateStatus' => 'setUpdateStatus'];
+'hResult' => 'setHResult',
+'rebootRequired' => 'setRebootRequired',
+'resultCode' => 'setResultCode',
+'updateTime' => 'setUpdateTime'];
 
 /**
 * Array of attributes to getter functions (for serialization of requests)
@@ -91,9 +94,10 @@ protected static $setters = [
 * @var string[]
 */
 protected static $getters = [
-'templateId' => 'getTemplateId',
-'brandId' => 'getBrandId',
-'updateStatus' => 'getUpdateStatus'];
+'hResult' => 'getHResult',
+'rebootRequired' => 'getRebootRequired',
+'resultCode' => 'getResultCode',
+'updateTime' => 'getUpdateTime'];
 
 /**
 * Array of attributes where the key is the local name,
@@ -153,9 +157,10 @@ return self::$swaggerModelName;
 */
 public function __construct(array $data = null)
 {
-    $this->container['templateId'] = isset($data['templateId']) ? $data['templateId'] : null;
-    $this->container['brandId'] = isset($data['brandId']) ? $data['brandId'] : null;
-    $this->container['updateStatus'] = isset($data['updateStatus']) ? $data['updateStatus'] : null;
+    $this->container['hResult'] = isset($data['hResult']) ? $data['hResult'] : null;
+    $this->container['rebootRequired'] = isset($data['rebootRequired']) ? $data['rebootRequired'] : null;
+    $this->container['resultCode'] = isset($data['resultCode']) ? $data['resultCode'] : null;
+    $this->container['updateTime'] = isset($data['updateTime']) ? $data['updateTime'] : null;
 }
 
 public function setContainer($data)
@@ -188,73 +193,97 @@ return count($this->listInvalidProperties()) === 0;
 
 
     /**
-    * Gets templateId
+    * Gets hResult
     *
     * @return int
     */
-    public function getTemplateId()
+    public function getHResult()
     {
-    return $this->container['templateId'];
+    return $this->container['hResult'];
     }
 
     /**
-    * Sets templateId
+    * Sets hResult
     *
-    * @param int $templateId templateId
+    * @param int $hResult hResult
     *
     * @return $this
     */
-    public function setTemplateId($templateId)
+    public function setHResult($hResult)
     {
-    $this->container['templateId'] = $templateId;
+    $this->container['hResult'] = $hResult;
 
     return $this;
     }
 
     /**
-    * Gets brandId
+    * Gets rebootRequired
     *
-    * @return int
+    * @return bool
     */
-    public function getBrandId()
+    public function getRebootRequired()
     {
-    return $this->container['brandId'];
+    return $this->container['rebootRequired'];
     }
 
     /**
-    * Sets brandId
+    * Sets rebootRequired
     *
-    * @param int $brandId brandId
+    * @param bool $rebootRequired rebootRequired
     *
     * @return $this
     */
-    public function setBrandId($brandId)
+    public function setRebootRequired($rebootRequired)
     {
-    $this->container['brandId'] = $brandId;
+    $this->container['rebootRequired'] = $rebootRequired;
 
     return $this;
     }
 
     /**
-    * Gets updateStatus
+    * Gets resultCode
     *
-    * @return \Fozzy\WinVPS\Api\Models\MachineOSUpdateStatus
+    * @return int
     */
-    public function getUpdateStatus()
+    public function getResultCode()
     {
-    return $this->container['updateStatus'];
+    return $this->container['resultCode'];
     }
 
     /**
-    * Sets updateStatus
+    * Sets resultCode
     *
-    * @param \Fozzy\WinVPS\Api\Models\MachineOSUpdateStatus $updateStatus updateStatus
+    * @param int $resultCode resultCode
     *
     * @return $this
     */
-    public function setUpdateStatus($updateStatus)
+    public function setResultCode($resultCode)
     {
-    $this->container['updateStatus'] = $updateStatus;
+    $this->container['resultCode'] = $resultCode;
+
+    return $this;
+    }
+
+    /**
+    * Gets updateTime
+    *
+    * @return string
+    */
+    public function getUpdateTime()
+    {
+    return $this->container['updateTime'];
+    }
+
+    /**
+    * Sets updateTime
+    *
+    * @param string $updateTime updateTime
+    *
+    * @return $this
+    */
+    public function setUpdateTime($updateTime)
+    {
+    $this->container['updateTime'] = $updateTime;
 
     return $this;
     }
