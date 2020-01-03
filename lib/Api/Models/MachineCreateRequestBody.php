@@ -35,7 +35,8 @@ protected static $swaggerTypes = [
 'addRam' => 'int',
 'addCpu' => 'int',
 'addBand' => 'int',
-'autoStart' => 'int'];
+'autoStart' => 'int',
+'addIpv6' => 'int'];
 
 /**
 * Array of property to format mappings. Used for (de)serialization
@@ -51,7 +52,8 @@ protected static $swaggerFormats = [
 'addRam' => null,
 'addCpu' => null,
 'addBand' => null,
-'autoStart' => null];
+'autoStart' => null,
+'addIpv6' => null];
 
 /**
 * Array of property to type mappings. Used for (de)serialization
@@ -88,7 +90,8 @@ protected static $attributeMap = [
 'addRam' => 'add_ram',
 'addCpu' => 'add_cpu',
 'addBand' => 'add_band',
-'autoStart' => 'auto_start'];
+'autoStart' => 'auto_start',
+'addIpv6' => 'add_ipv6'];
 
 /**
 * Array of attributes to setter functions (for deserialization of responses)
@@ -104,7 +107,8 @@ protected static $setters = [
 'addRam' => 'setAddRam',
 'addCpu' => 'setAddCpu',
 'addBand' => 'setAddBand',
-'autoStart' => 'setAutoStart'];
+'autoStart' => 'setAutoStart',
+'addIpv6' => 'setAddIpv6'];
 
 /**
 * Array of attributes to getter functions (for serialization of requests)
@@ -120,7 +124,8 @@ protected static $getters = [
 'addRam' => 'getAddRam',
 'addCpu' => 'getAddCpu',
 'addBand' => 'getAddBand',
-'autoStart' => 'getAutoStart'];
+'autoStart' => 'getAutoStart',
+'addIpv6' => 'getAddIpv6'];
 
 /**
 * Array of attributes where the key is the local name,
@@ -198,6 +203,7 @@ public function __construct(array $data = null)
     $this->container['addCpu'] = isset($data['addCpu']) ? $data['addCpu'] : null;
     $this->container['addBand'] = isset($data['addBand']) ? $data['addBand'] : null;
     $this->container['autoStart'] = isset($data['autoStart']) ? $data['autoStart'] : null;
+    $this->container['addIpv6'] = isset($data['addIpv6']) ? $data['addIpv6'] : null;
 }
 
 public function setContainer($data)
@@ -458,6 +464,30 @@ return count($this->listInvalidProperties()) === 0;
     public function setAutoStart($autoStart)
     {
     $this->container['autoStart'] = $autoStart;
+
+    return $this;
+    }
+
+    /**
+    * Gets addIpv6
+    *
+    * @return int
+    */
+    public function getAddIpv6()
+    {
+    return $this->container['addIpv6'];
+    }
+
+    /**
+    * Sets addIpv6
+    *
+    * @param int $addIpv6 addIpv6
+    *
+    * @return $this
+    */
+    public function setAddIpv6($addIpv6)
+    {
+    $this->container['addIpv6'] = $addIpv6;
 
     return $this;
     }
