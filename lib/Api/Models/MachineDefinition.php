@@ -31,6 +31,7 @@ protected static $swaggerModelName = 'MachineDefinition';
 protected static $swaggerTypes = [
 'name' => 'string',
 'status' => 'string',
+'notes' => 'string',
 'ips' => '\Fozzy\WinVPS\Api\Models\IpDefinition[]',
 'os' => '\Fozzy\WinVPS\Api\Models\MachineOS',
 'config' => '\Fozzy\WinVPS\Api\Models\MachineConfig'];
@@ -43,6 +44,7 @@ protected static $swaggerTypes = [
 protected static $swaggerFormats = [
 'name' => null,
 'status' => null,
+'notes' => null,
 'ips' => null,
 'os' => null,
 'config' => null];
@@ -76,6 +78,7 @@ return self::$swaggerFormats;
 protected static $attributeMap = [
 'name' => 'name',
 'status' => 'status',
+'notes' => 'notes',
 'ips' => 'ips',
 'os' => 'os',
 'config' => 'config'];
@@ -88,6 +91,7 @@ protected static $attributeMap = [
 protected static $setters = [
 'name' => 'setName',
 'status' => 'setStatus',
+'notes' => 'setNotes',
 'ips' => 'setIps',
 'os' => 'setOs',
 'config' => 'setConfig'];
@@ -100,6 +104,7 @@ protected static $setters = [
 protected static $getters = [
 'name' => 'getName',
 'status' => 'getStatus',
+'notes' => 'getNotes',
 'ips' => 'getIps',
 'os' => 'getOs',
 'config' => 'getConfig'];
@@ -164,6 +169,7 @@ public function __construct(array $data = null)
 {
     $this->container['name'] = isset($data['name']) ? $data['name'] : null;
     $this->container['status'] = isset($data['status']) ? $data['status'] : null;
+    $this->container['notes'] = isset($data['notes']) ? $data['notes'] : null;
     $this->container['ips'] = isset($data['ips']) ? $data['ips'] : null;
     $this->container['os'] = isset($data['os']) ? $data['os'] : null;
     $this->container['config'] = isset($data['config']) ? $data['config'] : null;
@@ -242,6 +248,30 @@ return count($this->listInvalidProperties()) === 0;
     public function setStatus($status)
     {
     $this->container['status'] = $status;
+
+    return $this;
+    }
+
+    /**
+    * Gets notes
+    *
+    * @return string
+    */
+    public function getNotes()
+    {
+    return $this->container['notes'];
+    }
+
+    /**
+    * Sets notes
+    *
+    * @param string $notes Machine notes.
+    *
+    * @return $this
+    */
+    public function setNotes($notes)
+    {
+    $this->container['notes'] = $notes;
 
     return $this;
     }

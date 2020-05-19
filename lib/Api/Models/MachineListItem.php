@@ -30,7 +30,8 @@ protected static $swaggerModelName = 'MachineListItem';
 */
 protected static $swaggerTypes = [
 'name' => 'string',
-'status' => 'string'];
+'status' => 'string',
+'notes' => 'string'];
 
 /**
 * Array of property to format mappings. Used for (de)serialization
@@ -39,7 +40,8 @@ protected static $swaggerTypes = [
 */
 protected static $swaggerFormats = [
 'name' => null,
-'status' => null];
+'status' => null,
+'notes' => null];
 
 /**
 * Array of property to type mappings. Used for (de)serialization
@@ -69,7 +71,8 @@ return self::$swaggerFormats;
 */
 protected static $attributeMap = [
 'name' => 'name',
-'status' => 'status'];
+'status' => 'status',
+'notes' => 'notes'];
 
 /**
 * Array of attributes to setter functions (for deserialization of responses)
@@ -78,7 +81,8 @@ protected static $attributeMap = [
 */
 protected static $setters = [
 'name' => 'setName',
-'status' => 'setStatus'];
+'status' => 'setStatus',
+'notes' => 'setNotes'];
 
 /**
 * Array of attributes to getter functions (for serialization of requests)
@@ -87,7 +91,8 @@ protected static $setters = [
 */
 protected static $getters = [
 'name' => 'getName',
-'status' => 'getStatus'];
+'status' => 'getStatus',
+'notes' => 'getNotes'];
 
 /**
 * Array of attributes where the key is the local name,
@@ -149,6 +154,7 @@ public function __construct(array $data = null)
 {
     $this->container['name'] = isset($data['name']) ? $data['name'] : null;
     $this->container['status'] = isset($data['status']) ? $data['status'] : null;
+    $this->container['notes'] = isset($data['notes']) ? $data['notes'] : null;
 }
 
 public function setContainer($data)
@@ -224,6 +230,30 @@ return count($this->listInvalidProperties()) === 0;
     public function setStatus($status)
     {
     $this->container['status'] = $status;
+
+    return $this;
+    }
+
+    /**
+    * Gets notes
+    *
+    * @return string
+    */
+    public function getNotes()
+    {
+    return $this->container['notes'];
+    }
+
+    /**
+    * Sets notes
+    *
+    * @param string $notes Machine notes.
+    *
+    * @return $this
+    */
+    public function setNotes($notes)
+    {
+    $this->container['notes'] = $notes;
 
     return $this;
     }
